@@ -30,7 +30,14 @@ from .api import (
     supports_peft_request,
 )
 from .io import _find_original_model_class, load_lora_adapters, merge_lora_weights, save_lora_adapters
-from .sensitivity import GradientSensitivitySelector, LayerSensitivity, SensitivityReport, select_targets_by_sensitivity
+try:
+    from .sensitivity import GradientSensitivitySelector, LayerSensitivity, SensitivityReport, select_targets_by_sensitivity
+except ImportError:
+    # sensitivity 模块在当前分支缺失（上游已移除），置 None 保持兼容
+    GradientSensitivitySelector = None  # type: ignore
+    LayerSensitivity = None  # type: ignore
+    SensitivityReport = None  # type: ignore
+    select_targets_by_sensitivity = None  # type: ignore
 from .training import LoraTrainingStrategy, get_lora_training_stats, suggest_lora_config_for_dataset
 
 __all__ = [
