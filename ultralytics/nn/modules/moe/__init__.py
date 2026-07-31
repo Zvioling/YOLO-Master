@@ -34,6 +34,8 @@ from .modules import (
     ABlockMoE,
 )
 
+from .shared_expert_moe import SharedExpertMoE, _SHARED_EXPERT_POOLS
+
 from .experts import (
     OptimizedSimpleExpert,
     FusedGhostExpert,
@@ -92,6 +94,8 @@ __all__ = [
     "VisualEnhancedAdaptiveGateMoE",
     "A2C2fMoE",
     "ABlockMoE",
+    "SharedExpertMoE",
+    "_SHARED_EXPERT_POOLS",
     "OptimizedSimpleExpert",
     "FusedGhostExpert",
     "SimpleExpert",

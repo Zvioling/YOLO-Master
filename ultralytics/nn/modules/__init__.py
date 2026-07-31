@@ -137,6 +137,7 @@ from .moe import (
     VisualEnhancedAdaptiveGateMoE,
     A2C2fMoE,
     ABlockMoE,
+    SharedExpertMoE,
 )
 
 __all__ = (
@@ -249,6 +250,7 @@ __all__ = (
     "VisualEnhancedAdaptiveGateMoE",
     "A2C2fMoE",
     "ABlockMoE",
+    "SharedExpertMoE",
     "MoABlock",
     "C2fMoA",
     "NeckMoAFusion",

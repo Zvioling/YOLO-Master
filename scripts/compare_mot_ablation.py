@@ -60,6 +60,31 @@ SPECS = {
         label="YOLO-Master v0.8 MoA+MoT",
         cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moa-mot-n.yaml",
     ),
+    "v08_moe_mot": ModelSpec(
+        key="v08_moe_mot",
+        label="YOLO-Master v0.8 MoE+MoT Hybrid (方案A: 4 C2fMoT)",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moe-mot-hybrid-n.yaml",
+    ),
+    "v08_moe_mot_lite": ModelSpec(
+        key="v08_moe_mot_lite",
+        label="YOLO-Master v0.8 MoE+MoT Lite (方案D: 2 MoE + 3 C2fMoT)",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moe-mot-lite-n.yaml",
+    ),
+    "v08_moe_mot_aggr": ModelSpec(
+        key="v08_moe_mot_aggr",
+        label="YOLO-Master v0.8 MoE+MoT Aggressive (方案B: 5 MoE + 5 C2fMoT)",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moe-mot-aggressive-n.yaml",
+    ),
+    "v08_moe_mot_moa_scene": ModelSpec(
+        key="v08_moe_mot_moa_scene",
+        label="YOLO-Master v0.8 MoE+MoT+MoA Scene (方案C: 4 MoE + 2 MoA + 3 C2fMoT + 2 C2fMoA)",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moe-mot-moa-scene-n.yaml",
+    ),
+    "v08_moe_mot_shared": ModelSpec(
+        key="v08_moe_mot_shared",
+        label="YOLO-Master v0.8 MoE+MoT Cross-Scale Shared (方案D: P3/P4 共享 expert pool)",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moe-mot-shared-n.yaml",
+    ),
 }
 
 METRIC_KEYS = (
@@ -108,6 +133,13 @@ def count_modules(model: torch.nn.Module, cls: type[torch.nn.Module]) -> int:
 
 
 def build_model(spec: ModelSpec, device: str = "cpu") -> DetectionModel:
+    # 重置 SharedExpertMoE 的 class-level registry, 防止上次构建的 pool 干扰本次
+    try:
+        from ultralytics.nn.modules.moe.shared_expert_moe import SharedExpertMoE
+        SharedExpertMoE.reset_shared_pools()
+    except ImportError:
+        pass
+
     model = DetectionModel(str(spec.cfg), ch=3, nc=80, verbose=False).eval()
     if device:
         model.to(torch.device(device))
@@ -291,7 +323,9 @@ def main() -> int:
 
     if args.benchmark:
         rows = [benchmark_row(spec, args.device, args.imgsz, args.warmup, args.reps) for spec in specs]
-        out = project / f"latency_{args.device}_{args.imgsz}.csv"
+        # Windows 文件名不允许含 ':'，将 'cuda:0' 转为 'cuda_0'
+        device_safe = args.device.replace(":", "_") if args.device else "cpu"
+        out = project / f"latency_{device_safe}_{args.imgsz}.csv"
         write_csv(out, rows)
         print(json.dumps(rows, indent=2, ensure_ascii=False))
         print(f"[benchmark] wrote {out}")

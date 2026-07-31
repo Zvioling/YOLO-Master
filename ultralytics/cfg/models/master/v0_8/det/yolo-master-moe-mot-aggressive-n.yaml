@@ -1,0 +1,48 @@
+# YOLO-Master v0.8 MoE+MoT Aggressive (方案 B) 🚀 AGPL-3.0 License
+# Backbone: 5 MoE blocks (v08_mot 基础上 +2：在 P2 浅层 +1、P3 +1)
+# Head: 5 C2fMoT blocks (v08_mot 基础上 +2：P3 替换 C3k2 → C2fMoT + P3→P4 串联 2 个 C2fMoT)
+# 论文未来工作方向，本次不训练，仅 benchmark Latency/FLOPs/Params
+
+nc: 80
+scales:
+  n: [0.50, 0.25, 1024]
+
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]                          # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]                         # 1-P2/4
+  - [-1, 2, C3k2, [256, False, 0.25]]                  # 2
+  - [-1, 1, LowRankHybridAdaptiveGateMoE, [256, 2, 2, 0.5]]  # 3 - P2 浅层 MoE（创新：+1 MoE）
+  - [-1, 1, Conv, [256, 3, 2]]                         # 4-P3/8
+  - [-1, 2, C3k2, [512, False, 0.25]]                  # 5
+  - [-1, 1, LowRankHybridAdaptiveGateMoE, [512, 4, 2, 0.5]]  # 6 - P3 MoE（保留）
+  - [-1, 1, Conv, [512, 3, 2]]                         # 7-P4/16
+  - [-1, 4, A2C2f, [512, True, 4]]                     # 8
+  - [-1, 1, LowRankHybridAdaptiveGateMoE, [512, 8, 2, 0.5]]  # 9 - P4 MoE（保留）
+  - [-1, 1, Conv, [1024, 3, 2]]                        # 10-P5/32
+  - [-1, 4, A2C2f, [1024, True, 1]]                    # 11
+  - [-1, 1, LowRankHybridAdaptiveGateMoE, [1024, 16, 2, 0.5]] # 12 - P5 MoE（保留）
+
+head:
+  # P5 → P4
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]         # 13
+  - [[-1, 9], 1, Concat, [1]]                          # 14 - cat backbone P4
+  # C2fMoT: [c2, n, num_heads, top_k, window_size, n_points, mlp_ratio, temp, balance_coeff, e]
+  - [-1, 2, C2fMoT, [512, 2, 8, 2, 7, 4, 2.0, 1.0, 0.01, 0.5]]  # 15 - MoT in neck P4
+
+  # P4 → P3
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]         # 16
+  - [[-1, 6], 1, Concat, [1]]                          # 17 - cat backbone P3
+  - [-1, 2, C2fMoT, [256, 2, 8, 2, 7, 4, 2.0, 0.8, 0.01, 0.5]]  # 18 - P3 浅层 MoT（创新：+1 C2fMoT）
+
+  # P3 → P4 bottom-up
+  - [-1, 1, Conv, [256, 3, 2]]                         # 19
+  - [[-1, 15], 1, Concat, [1]]                         # 20 - cat head P4
+  - [-1, 2, C2fMoT, [512, 2, 8, 2, 7, 4, 2.0, 0.8, 0.01, 0.5]]  # 21 - MoT in head P4
+  - [-1, 2, C2fMoT, [512, 2, 8, 2, 7, 4, 2.0, 0.8, 0.01, 0.5]]  # 22 - 串联 MoT（创新：+1 C2fMoT）
+
+  # P4 → P5 bottom-up
+  - [-1, 1, Conv, [512, 3, 2]]                         # 23
+  - [[-1, 12], 1, Concat, [1]]                         # 24 - cat backbone P5
+  - [-1, 2, C2fMoT, [512, 2, 8, 1, 7, 4, 2.0, 0.8, 0.01, 0.5]]  # 25 - MoT in head P5 (top_k=1)
+
+  - [[18, 22, 25], 1, Detect, [nc]]                    # 26 - Detect(P3, P4, P5)

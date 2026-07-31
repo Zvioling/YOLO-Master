@@ -241,7 +241,9 @@ class SharedInvertedExpertGroup(nn.Module):
             batch_indices, k_indices = torch.where(expert_mask)
             expert_out = projection(features[batch_indices])
             expert_weight = weights[batch_indices, k_indices].view(-1, 1, 1, 1).to(expert_out.dtype)
-            output.index_add_(0, batch_indices, expert_out * expert_weight)
+            # 修复 AMP 混合精度类型不匹配：将结果转换为 output 的 dtype
+            update = (expert_out * expert_weight).to(output.dtype)
+            output.index_add_(0, batch_indices, update)
 
         return output
 

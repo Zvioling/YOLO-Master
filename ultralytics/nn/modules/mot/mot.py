@@ -426,6 +426,8 @@ class _DeformableTransformerExpert(nn.Module):
         # grid_sample expects [B, C, H_out, W_out] query grid
         # Here H_out=N, W_out=np  → treat N*np as 2D grid
         # Reshape locs → [B*nh, N, np, 2] already correct for grid_sample
+        # 确保 input 和 grid 类型一致（修复 AMP 混合精度类型不匹配）
+        locs = locs.to(v_4d.dtype)
         sampled = F.grid_sample(
             v_4d,                                              # [B*nh, hd, H, W]
             locs,                                              # [B*nh, N, np, 2]

@@ -1,0 +1,46 @@
+# YOLO-Master v0.8 MoE+MoT Lite (方案 D) 🚀 AGPL-3.0 License
+# Backbone: 2 MoE blocks (v08_mot 基础上 -1，去掉 P5 MoE)
+# Head: 3 C2fMoT blocks (与 v08_mot 保持)
+# 轻量型变体，验证 backbone 最小容量对模型的影响
+
+nc: 80
+scales:
+  n: [0.50, 0.25, 1024]
+
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]                          # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]                         # 1-P2/4
+  - [-1, 2, C3k2, [256, False, 0.25]]                  # 2
+  - [-1, 1, Conv, [256, 3, 2]]                         # 3-P3/8
+  - [-1, 2, C3k2, [512, False, 0.25]]                  # 4
+  - [-1, 1, LowRankHybridAdaptiveGateMoE, [512, 4, 2, 0.5]]  # 5 - P3/P4 MoE（保留）
+  - [-1, 1, Conv, [512, 3, 2]]                         # 6-P4/16
+  - [-1, 4, A2C2f, [512, True, 4]]                     # 7
+  - [-1, 1, LowRankHybridAdaptiveGateMoE, [512, 8, 2, 0.5]]  # 8 - P4/P5 MoE（保留）
+  - [-1, 1, Conv, [1024, 3, 2]]                        # 9-P5/32
+  - [-1, 4, A2C2f, [1024, True, 1]]                    # 10
+  # 去掉 v08_mot 的 P5 MoE 块（layer 11，-1 个 MoE）
+
+head:
+  # P5 → P4
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]         # 11
+  - [[-1, 8], 1, Concat, [1]]                          # 12 - cat backbone P4
+  # C2fMoT: [c2, n, num_heads, top_k, window_size, n_points, mlp_ratio, temp, balance_coeff, e]
+  - [-1, 2, C2fMoT, [512, 2, 8, 2, 7, 4, 2.0, 1.0, 0.01, 0.5]]  # 13 - MoT in neck P4
+
+  # P4 → P3
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]         # 14
+  - [[-1, 5], 1, Concat, [1]]                          # 15 - cat backbone P3
+  - [-1, 2, C3k2, [256, True]]                         # 16 - P3 保留轻量 C3k2（与 v08_mot 保持）
+
+  # P3 → P4 bottom-up
+  - [-1, 1, Conv, [256, 3, 2]]                         # 17
+  - [[-1, 13], 1, Concat, [1]]                         # 18 - cat head P4（第一个 C2fMoT）
+  - [-1, 2, C2fMoT, [512, 2, 8, 2, 7, 4, 2.0, 0.8, 0.01, 0.5]]  # 19 - MoT in head P4
+
+  # P4 → P5 bottom-up
+  - [-1, 1, Conv, [512, 3, 2]]                         # 20
+  - [[-1, 10], 1, Concat, [1]]                         # 21 - cat backbone P5
+  - [-1, 2, C2fMoT, [512, 2, 8, 2, 7, 4, 2.0, 0.8, 0.01, 0.5]]  # 22 - MoT in head P5
+
+  - [[16, 19, 22], 1, Detect, [nc]]                    # 23 - Detect(P3, P4, P5)
