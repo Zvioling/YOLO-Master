@@ -1,0 +1,5 @@
+c2fmoa,c2fmot,cfg,key,label,moablocks,motblocks,params,params_m
+0,0,ultralytics\cfg\models\master\v0_8\det\yolo-master-n.yaml,v08,YOLO-Master v0.8 baseline,0,0,3137637,3.137637
+3,0,ultralytics\cfg\models\master\v0_8\det\yolo-master-moa-n.yaml,v08_moa,YOLO-Master v0.8 MoA,6,0,3233538,3.233538
+0,3,ultralytics\cfg\models\master\v0_8\det\yolo-master-mot-n.yaml,v08_mot,YOLO-Master v0.8 MoT,0,6,3712284,3.712284
+2,3,ultralytics\cfg\models\master\v0_8\det\yolo-master-moa-mot-n.yaml,v08_moa_mot,YOLO-Master v0.8 MoA+MoT,2,6,3760829,3.760829

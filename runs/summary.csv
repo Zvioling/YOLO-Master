@@ -1,0 +1,2 @@
+cfg,epoch,key,label,metrics/mAP50(B),metrics/mAP50-95(B),metrics/precision(B),metrics/recall(B),run_dir,train/box_loss,train/cls_loss,train/dfl_loss,val/box_loss,val/cls_loss,val/dfl_loss
+ultralytics\cfg\models\master\v0_8\det\yolo-master-moe-mot-shared-n.yaml,100,v08_moe_mot_shared,YOLO-Master v0.8 MoE+MoT Cross-Scale Shared (·½°¸D: P3/P4 ¹²Ïí expert pool),0.29524,0.168,0.38472,0.31357,runs\mot_ablation\v08_moe_mot_shared,1.37041,1.00341,0.97122,1.37704,1.02142,0.95114

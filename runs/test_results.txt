@@ -1,0 +1,82 @@
+============================= test session starts =============================
+platform win32 -- Python 3.10.9, pytest-9.1.1, pluggy-1.6.0 -- E:\Apps\Codes\Conda\envs\yolo-master\python.exe
+cachedir: .pytest_cache
+rootdir: G:\Codes\OpenSource\Rhino-bird\Codes\YOLO-Master
+configfile: pyproject.toml
+plugins: anyio-4.12.0, cov-7.1.0
+collecting ... collected 30 items
+
+tests/test_mot.py::test_mot_block_forward_backward_all_experts_trainable PASSED [  3%]
+tests/test_mot.py::test_c2fmot_collects_aux_loss_and_keeps_shape PASSED  [  6%]
+tests/test_mot.py::test_mot_router_z_loss_uses_expert_axis PASSED        [ 10%]
+tests/test_mot.py::test_mot_block_reuses_router_logits_for_z_loss PASSED [ 13%]
+tests/test_mot.py::test_mot_temperature_anneal PASSED                    [ 16%]
+tests/test_mot.py::test_trainer_detects_and_anneals_moa_mot_temperatures PASSED [ 20%]
+tests/test_mot.py::test_mot_model_configs_parse PASSED                   [ 23%]
+tests/test_mot.py::test_mot_deformable_align_corners_option PASSED       [ 26%]
+tests/test_mot.py::test_mot_window_expert_padding_non_divisible PASSED   [ 30%]
+tests/test_mot.py::test_mot_window_expert_shift_spatial_alignment PASSED [ 33%]
+tests/test_mot.py::test_mot_inference_sparsity_skips_inactive_experts PASSED [ 36%]
+tests/test_mot.py::test_mot_window_size_larger_than_feature_map PASSED   [ 40%]
+tests/test_mot.py::test_mot_shifted_window_odd_feature_map_size PASSED   [ 43%]
+tests/test_mot.py::test_mot_eval_disables_exploration_eps_dense_floor PASSED [ 46%]
+tests/test_moa.py::test_moa_modules_forward_backward PASSED              [ 50%]
+tests/test_moa.py::test_neck_moa_fusion_forward_backward PASSED          [ 53%]
+tests/test_moa.py::test_neck_moa_fusion_handles_non_strict_scale_ratio PASSED [ 56%]
+tests/test_moa.py::test_moa_router_stays_finite_at_tiny_annealed_temperature PASSED [ 60%]
+tests/test_moa.py::test_moa_attention_heads_handle_non_divisible_dim_and_heads PASSED [ 63%]
+tests/test_moa.py::test_c2fmoa_aux_loss_not_double_counted_for_nested_blocks PASSED [ 66%]
+tests/test_moa.py::test_flash_attn_supports_sdpa_without_scale_keyword PASSED [ 70%]
+tests/test_moa.py::test_moa_aux_loss_collected_for_c2f_and_neck PASSED   [ 73%]
+tests/test_moa.py::test_c2fmoa_aux_loss_does_not_double_count_nested_blocks PASSED [ 76%]
+tests/test_moa.py::test_c2fmoa_small_channels_keep_valid_head_count PASSED [ 80%]
+tests/test_moa.py::test_c2fmoa_rounds_head_count_to_expert_groups PASSED [ 83%]
+tests/test_moa.py::test_neck_moa_fusion_eval_projects_self_path_and_zero_aux_loss PASSED [ 86%]
+tests/test_moa.py::test_collect_moa_aux_loss_handles_empty_module_and_standalone_block FAILED [ 90%]
+tests/test_moa.py::test_moa_temperature_anneal PASSED                    [ 93%]
+tests/test_moa.py::test_moa_global_head_per_block_seed PASSED            [ 96%]
+tests/test_moa.py::test_moa_model_configs_parse PASSED                   [100%]
+
+================================== FAILURES ===================================
+_____ test_collect_moa_aux_loss_handles_empty_module_and_standalone_block _____
+
+    def test_collect_moa_aux_loss_handles_empty_module_and_standalone_block():
+>       empty_aux = collect_moa_aux_loss(nn.Identity())
+E       NameError: name 'nn' is not defined
+
+tests\test_moa.py:188: NameError
+============================== warnings summary ===============================
+<frozen importlib._bootstrap>:241
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:241
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 30 durations =============================
+0.58s call     tests/test_mot.py::test_mot_model_configs_parse
+0.28s call     tests/test_moa.py::test_moa_model_configs_parse
+0.05s call     tests/test_mot.py::test_mot_block_forward_backward_all_experts_trainable
+0.02s call     tests/test_moa.py::test_moa_modules_forward_backward
+0.02s call     tests/test_moa.py::test_c2fmoa_aux_loss_does_not_double_count_nested_blocks
+0.02s call     tests/test_moa.py::test_c2fmoa_aux_loss_not_double_counted_for_nested_blocks
+0.02s call     tests/test_mot.py::test_c2fmot_collects_aux_loss_and_keeps_shape
+0.01s call     tests/test_moa.py::test_neck_moa_fusion_forward_backward
+0.01s call     tests/test_moa.py::test_moa_aux_loss_collected_for_c2f_and_neck
+0.01s call     tests/test_moa.py::test_neck_moa_fusion_handles_non_strict_scale_ratio
+0.01s call     tests/test_mot.py::test_mot_block_reuses_router_logits_for_z_loss
+0.01s call     tests/test_mot.py::test_mot_shifted_window_odd_feature_map_size
+0.01s call     tests/test_mot.py::test_mot_window_size_larger_than_feature_map
+0.01s call     tests/test_moa.py::test_c2fmoa_rounds_head_count_to_expert_groups
+0.01s call     tests/test_mot.py::test_mot_temperature_anneal
+0.01s call     tests/test_moa.py::test_moa_router_stays_finite_at_tiny_annealed_temperature
+0.01s call     tests/test_moa.py::test_moa_attention_heads_handle_non_divisible_dim_and_heads
+0.01s call     tests/test_mot.py::test_trainer_detects_and_anneals_moa_mot_temperatures
+0.01s call     tests/test_mot.py::test_mot_inference_sparsity_skips_inactive_experts
+0.01s call     tests/test_mot.py::test_mot_router_z_loss_uses_expert_axis
+
+(10 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_moa.py::test_collect_moa_aux_loss_handles_empty_module_and_standalone_block
+================== 1 failed, 29 passed, 2 warnings in 2.10s ===================
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

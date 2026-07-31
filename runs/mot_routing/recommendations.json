@@ -1,0 +1,5 @@
+[
+  "Dense or small-object scenes should inspect WindowTransformer first when its activation ratio is high (0.126).",
+  "Occluded or irregular-object scenes should inspect DeformableTransformer when its activation ratio rises (0.180).",
+  "Latency-sensitive simple scenes can prefer LocalConvTransformer-heavy routing (0.694) before enabling deeper MoT/MoE hybrids."
+]
