@@ -60,13 +60,46 @@ from .routers import (
 from .utils import (
     FlopsUtils,
     get_safe_groups,
-    BatchedExpertComputation
+    BatchedExpertComputation,
 )
+
+# 兼容旧版缺失符号（YOLO-Master Fork 未实现以下函数）
+try:
+    from .utils import is_core_moe_block  # type: ignore
+except ImportError:
+    is_core_moe_block = None  # type: ignore
+try:
+    from .utils import model_has_core_moe  # type: ignore
+except ImportError:
+    model_has_core_moe = None  # type: ignore
+try:
+    from .utils import iter_core_moe_expert_params  # type: ignore
+except ImportError:
+    iter_core_moe_expert_params = None  # type: ignore
 
 from .analysis import ExpertUsageTracker, diagnose_model, RoutingCollapseDetector
 from .diagnostics import MoELayerDiagnostic, collect_moe_diagnostics, diagnostics_to_dict, format_moe_diagnostics
-from .history import MoEDiagnosticsRecorder, export_moe_history_plots
-from .pruning import prune_moe_model
+
+# 兼容 YOLO-Master Fork 缺失的模块
+try:
+    from .history import MoEDiagnosticsRecorder, export_moe_history_plots  # type: ignore
+except ImportError:
+    MoEDiagnosticsRecorder = None  # type: ignore
+    export_moe_history_plots = None  # type: ignore
+try:
+    from .pruning import prune_moe_model  # type: ignore
+except ImportError:
+    prune_moe_model = None  # type: ignore
+try:
+    from .scheduler import (  # type: ignore
+        MoEDynamicScheduler, MoEDynamicSchedulerConfig,
+        MoEDynamicScheduleState, compute_gini,
+    )
+except ImportError:
+    MoEDynamicScheduler = None  # type: ignore
+    MoEDynamicSchedulerConfig = None  # type: ignore
+    MoEDynamicScheduleState = None  # type: ignore
+    compute_gini = None  # type: ignore
 
 __all__ = [
     "UltraOptimizedMoE",
@@ -114,6 +147,9 @@ __all__ = [
     "FlopsUtils",
     "get_safe_groups",
     "BatchedExpertComputation",
+    "is_core_moe_block",
+    "model_has_core_moe",
+    "iter_core_moe_expert_params",
     "ExpertUsageTracker",
     "RoutingCollapseDetector",
     "diagnose_model",
@@ -123,5 +159,9 @@ __all__ = [
     "format_moe_diagnostics",
     "MoEDiagnosticsRecorder",
     "export_moe_history_plots",
-    "prune_moe_model"
+    "prune_moe_model",
+    "MoEDynamicScheduler",
+    "MoEDynamicSchedulerConfig",
+    "MoEDynamicScheduleState",
+    "compute_gini",
 ]
