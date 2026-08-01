@@ -1,2 +1,6 @@
 c2fmoa,c2fmot,cfg,device,imgsz,key,label,latency_ms_max,latency_ms_mean,latency_ms_min,moablocks,motblocks,params,params_m,reps
-0,3,ultralytics\cfg\models\master\v0_8\det\yolo-master-moe-mot-shared-n.yaml,cpu,640,v08_moe_mot_shared,YOLO-Master v0.8 MoE+MoT Cross-Scale Shared (鏂规D: P3/P4 鍏变韩 expert pool),257.166,182.146,162.350,0,6,3001766,3.001766,100
+0,4,ultralytics\cfg\models\master\v0_8\det\yolo-master-moe-mot-hybrid-n.yaml,cpu,640,v08_moe_mot,YOLO-Master v0.8 MoE+MoT Hybrid (方案A: 4 C2fMoT),702.849,578.763,552.690,0,8,3766138,3.766138,2000
+0,5,ultralytics\cfg\models\master\v0_8\det\yolo-master-moe-mot-aggressive-n.yaml,cpu,640,v08_moe_mot_aggr,YOLO-Master v0.8 MoE+MoT Aggressive (方案B: 5 MoE + 5 C2fMoT),708.815,629.001,603.415,0,10,4065228,4.065228,2000
+4,3,ultralytics\cfg\models\master\v0_8\det\yolo-master-moe-mot-moa-scene-n.yaml,cpu,640,v08_moe_mot_moa_scene,YOLO-Master v0.8 MoE+MoT+MoA Scene (方案C: 4 MoE + 2 MoA + 3 C2fMoT + 2 C2fMoA),288.863,217.322,200.255,4,6,3923357,3.923357,2000
+0,3,ultralytics\cfg\models\master\v0_8\det\yolo-master-moe-mot-shared-n.yaml,cpu,640,v08_moe_mot_shared,YOLO-Master v0.8 MoE+MoT Cross-Scale Shared (方案D: P3/P4 共享 expert pool),254.773,170.853,158.024,0,6,3013606,3.013606,2000
+0,3,ultralytics\cfg\models\master\v0_8\det\yolo-master-mot-n.yaml,cpu,640,v08_mot,YOLO-Master v0.8 MoT,236.453,172.660,158.800,0,6,3712284,3.712284,2000

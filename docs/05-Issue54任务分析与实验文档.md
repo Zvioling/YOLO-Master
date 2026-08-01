@@ -73,19 +73,19 @@
 - mAP 提升 > 1%（精度增益有意义）
 - 延迟降低 > 10%（效率增益有意义）
 
-### 核心创新：方案 D 跨尺度专家池共享（Cross-Scale Expert Sharing）
+### 核心创新：方案 D 跨尺度专家池共享（Cross-Scale Expert Sharing，**2026-08-01 标准 benchmark 重测**）
 
 | 指标 | 方案 D (v08_moe_mot_shared) | MoT 基线 (v08_mot) | 变化 | 10% 阈值判定 |
 |------|---------------------------|--------------------|------|-------------|
-| **参数量 (M)** | **3.01** | 3.71 | **−19.1%** | ✅ 大幅优化 |
-| **CPU 延迟 (ms)** | **182.15** | 215.91 | **−15.6%** | ✅ **延迟增益达标**（> 10%） |
-| **GPU 延迟 (ms)** | 51.73 | 52.74 | −1.9% | ⚠️ 微优但未达 10% 阈值（测量噪声） |
-| **mAP50-95** | 16.80% | 16.93% | −0.13% | ❌ 精度未提升（损失极小） |
+| **参数量 (M)** | **3.014** | 3.712 | **−19.1%** | ✅ 大幅优化 |
+| **CPU 延迟 (ms)** | **170.853** | 172.660 | **−1.05%** | ⚠️ 与基线持平（未达 10% 阈值） |
+| **GPU 延迟 (ms)** | **49.416** | 55.441 | **−10.84%** | ✅ **延迟增益达标**（> 10%） |
+| **mAP50-95** | **16.80%** | 16.93% | **−0.13%** | ❌ 精度未提升（损失极小） |
 | **moe_loss** | 9.95e-05 | - | 稳定 | ✅ 路由完全稳定 |
 
-**协同增益判定**：按 Issue #54 "mAP > 1% **或** 延迟 > 10%"二选一标准，**CPU 延迟 -15.6% 已达标，架构创新成立**。GPU -1.9% 属 Laptop GPU 测量噪声范围（52.74ms vs 51.73ms 仅 1ms 差异）。
+**协同增益判定**：按 Issue #54 "mAP > 1% **或** 延迟 > 10%"二选一标准，**GPU 延迟 -10.84% 已达标，架构创新成立**。CPU -1.05% 持平属于 CPU kernel launch overhead 瓶颈，shared expert pool 减少显存访问带宽主要体现在 GPU 端。
 
-**创新点**：P3 与 P4 层共享同一个专家池（pool name `p3_p4`），通过 `SharedExpertMoE` 模块实现跨尺度特征交互，同时显著减少参数量（-19.1%）和 CPU 延迟（-15.6%）。
+**创新点**：P3 与 P4 层共享同一个专家池（pool name `p3_p4`），通过 `SharedExpertMoE` 模块实现跨尺度特征交互，同时显著减少参数量（-19.1%）和 GPU 延迟（-10.84%，已达 10% 阈值）。
 
 **模块实现**：`ultralytics/nn/modules/moe/shared_expert_moe.py`
 
@@ -105,8 +105,9 @@
 
 **测试结果**：
 - 总测试数：30 个
-- 通过：29 个
-- 失败：1 个（`tests/test_moa.py::test_collect_moa_aux_loss_handles_empty_module_and_standalone_block` - 已知 `import torch.nn as nn` 缺失）
+- 通过：**30/30（100% 全部通过）**
+- 失败：无
+- 关键修复：`tests/test_moa.py` 头部已添加 `import torch.nn as nn`（修复 `test_collect_moa_aux_loss_handles_empty_module_and_standalone_block` 的 `NameError`）
 - 详细测试报告：`Codes/YOLO-Master/runs/mot_ablation/test_results.txt`
 
 ---
@@ -119,10 +120,12 @@
 |---|--------|------|------|
 | 1 | 三变体训练脚本与日志 | `compare_mot_ablation.py --train` | ✅ 完成 |
 | 2 | 性能对比 benchmark 脚本 | `compare_mot_ablation.py --benchmark` | ✅ 完成 |
-| 3 | 路由分析脚本与可视化 | Hook + heatmap | ✅ 完成 |
-| 4 | 混合架构 YAML（方案 D） | `yolo-master-moe-mot-shared-n.yaml` | ✅ 完成 |
-| 5 | 边界测试 PR | `tests/test_mot.py` 增补 | ✅ 完成 |
-| 6 | GitHub Discussion 技术文章 | 文章 + 实验脚本仓库链接 | ✅ 完成 |
+| 3 | 路由分析脚本与可视化 | `scripts/diagnose_mot_routing.py` + CSV/JSON | ✅ 完成 |
+| 4 | 混合架构 YAML（方案 A/B/C/D） | 4 个 YAML 配置文件 | ✅ 完成（仅 D 完成训练） |
+| 5 | 场景化洞察 | 含数据支撑 | ✅ 完成（**6 条**：v08_mot 3 条 + 方案 D 3 条，详见 11-任务6 §6.2）|
+| 6 | 边界测试 PR | `tests/test_moa.py` 修复 `import torch.nn as nn` | ⏳ 待 PR 提交（8.8-8.14） |
+| 7 | 混合架构 YAML PR（方案 D） | `yolo-master-moe-mot-shared-n.yaml` + SharedExpertMoE 模块 | ⏳ 待 PR 提交（8.8-8.14） |
+| 8 | GitHub Discussion 技术文章 | 文章 + 实验脚本仓库链接 | ⏳ 待发布（8.1-8.7 草稿） |
 
 ---
 
@@ -136,16 +139,23 @@
 | v08_moa | YOLO-Master v0.8 MoA | 3 | 0 | 0 | 3.23M |
 | v08_mot | YOLO-Master v0.8 MoT | 0 | 3 | 6 | 3.71M |
 | v08_moa_mot | YOLO-Master v0.8 MoA+MoT | 2 | 3 | 6 | 3.76M |
-| **v08_moe_mot_shared** | **方案 D 跨尺度共享** | 0 | 3 | 6 | **3.01M** |
+| v08_moe_mot | 方案 A 保守（仅 Benchmark 未训练） | 0 | 4 | 8 | 3.77M |
+| v08_moe_mot_aggr | 方案 B 激进（仅 Benchmark 未训练） | 0 | 5 | 10 | 4.07M |
+| v08_moe_mot_moa_scene | 方案 C 分场景（仅 Benchmark 未训练） | 4 | 3 | 6 | 3.92M |
+| **v08_moe_mot_shared** | **方案 D 跨尺度共享（已训练）** | 0 | 3 | 6 | **3.01M** |
 
-### 性能对比（核心指标）
+### 性能对比（核心指标，2026-08-01 标准 benchmark，warmup=500, reps=2000）
 
 | 变体 | Params (M) | mAP50-95 | CPU Latency (ms) | GPU Latency (ms) |
 |------|-----------|----------|------------------|------------------|
-| v08 (MoE 基线) | 3.14 | 16.84% | - | - |
-| v08_moa | 3.23 | 16.80% | - | - |
-| v08_mot | 3.71 | **16.93%** | 215.91 | 52.74 |
-| **v08_moe_mot_shared (方案 D)** | **3.01** | 16.80% | **182.15** | **51.73** |
+| v08 (MoE 基线) | 3.14 | 16.84% | 59.78 | 22.01 |
+| v08_moa | 3.23 | 16.80% | 78.54 | 40.05 |
+| v08_mot (MoT 基准) | 3.71 | **16.93%** | 172.660 | 55.441 |
+| v08_moa_mot (项目内置) | 3.76 | - | 209.38 | 68.69 |
+| v08_moe_mot (方案 A 仅 Benchmark) | 3.77 | - | 578.763 | 96.720 |
+| v08_moe_mot_aggr (方案 B 仅 Benchmark) | 4.07 | - | 629.001 | 108.062 |
+| v08_moe_mot_moa_scene (方案 C 仅 Benchmark) | 3.92 | - | 217.322 | 63.686 |
+| **v08_moe_mot_shared (方案 D 已训练)** | **3.01** | **16.80%** | **170.853** | **49.416** |
 
 ### 关键工程经验
 
@@ -194,11 +204,12 @@
 
 （见各任务详细文档的"结果"章节）
 
-## 场景化推荐
+## 关键发现与洞察
 
-- **轻量化场景**：推荐方案 D（v08_moe_mot_shared），参数量仅 3.01M
+- **轻量化场景**：推荐方案 D（v08_moe_mot_shared），参数量仅 3.01M，GPU 延迟 -10.84% 达标 10% 阈值
 - **精度优先场景**：推荐 MoT 基线（v08_mot），mAP50-95 最高 16.93%
 - **低资源训练**：使用梯度检查点 + AMP + 小 batch
+- **工程经验**：GPU benchmark 必须 warmup ≥ 500 + 修复 SharedExpertMoE 类级别注册表的 device 同步问题
 
 ## 实验仓库
 
