@@ -182,7 +182,7 @@ for name, m in model.named_modules():
 
 ### 方案 D（跨尺度共享）
 4. **密集场景（共享架构）**：WindowTransformer 激活率提升到 **36.1%**（+23.4%）→ 更适合密集场景
-5. **遮挡场景（共享架构）**：DeformableTransformer 激活率 18.8% → 保持稳定
+5. **遮挡场景（共享架构）**：DeformableTransformer 激活率 20.8% → 保持稳定（实测方案 D v08_mot 19.2% → 方案 D 20.8%，变化 +1.6%）
 6. **轻量化场景**：方案 D 路由更均匀（LocalConv 43.2% 主导性下降）→ 专家池共享让路由多样化
 
 **综合建议**：
