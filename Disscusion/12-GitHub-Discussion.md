@@ -177,13 +177,13 @@ for name, m in model.named_modules():
 
 ### MoT 基准（v08_mot）
 1. **密集/小目标场景**：WindowTransformer 激活率 12.7%（model.23.m.1 达 44%）→ 优先检查 Window 路径
-2. **遮挡/不规则目标**：DeformableTransformer 激活率 18.0%（model.23.m.1 达 56%）→ 优先检查 Deformable 路径
-3. **延迟敏感简单场景**：LocalConvTransformer 激活率 69.4% → 优先使用 LocalConv
+2. **遮挡/不规则目标**：DeformableTransformer 激活率 19.2%（model.23.m.1 达 56%）→ 优先检查 Deformable 路径
+3. **延迟敏感简单场景**：LocalConvTransformer 激活率 68.2% → 优先使用 LocalConv
 
 ### 方案 D（跨尺度共享）
-4. **密集场景（共享架构）**：WindowTransformer 激活率提升到 **35.0%**（+22.4%）→ 更适合密集场景
+4. **密集场景（共享架构）**：WindowTransformer 激活率提升到 **36.1%**（+23.4%）→ 更适合密集场景
 5. **遮挡场景（共享架构）**：DeformableTransformer 激活率 18.8% → 保持稳定
-6. **轻量化场景**：方案 D 路由更均匀（LocalConv 46.2% 主导性下降）→ 专家池共享让路由多样化
+6. **轻量化场景**：方案 D 路由更均匀（LocalConv 43.2% 主导性下降）→ 专家池共享让路由多样化
 
 **综合建议**：
 - 追求精度 → `v08_mot`（mAP 16.93% 最高）
