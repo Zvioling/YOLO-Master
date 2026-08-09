@@ -1,4 +1,5 @@
 key,label,cfg,params,params_m,device,imgsz,latency_ms_mean,latency_ms_min,latency_ms_max,reps,warmup
-esmoe_v0_k2,"YOLO-Master ES-MoE (K=2, baseline)",ultralytics/cfg/models/master/v0/det/yolo-master-esmoe-n-visdrone.yaml,2814406,2.814406,cpu,640,75.777,,,500,100
-v084,YOLO-Master v0.8 MoE baseline,ultralytics/cfg/models/master/v0_8/det/yolo-master-n.yaml,3107395,3.107395,cpu,640,80.636,,,500,100
-v08_mot,YOLO-Master v0.8 MoT (3 experts),ultralytics/cfg/models/master/v0_8/det/yolo-master-mot-n.yaml,3712284,3.712284,cpu,640,313.489,,,500,100
+esmoe_v0_k2,"YOLO-Master ES-MoE (K=2, baseline)",ultralytics/cfg/models/master/v0/det/yolo-master-esmoe-n-visdrone.yaml,2814406,2.814406,cpu,640,85.929,,,1000,200
+v084,YOLO-Master v0.8 MoE baseline,ultralytics/cfg/models/master/v0_8/det/yolo-master-n.yaml,3107395,3.107395,cpu,640,84.030,,,1000,200
+v08_mot,YOLO-Master v0.8 MoT (3 experts),ultralytics/cfg/models/master/v0_8/det/yolo-master-mot-n.yaml,3712284,3.712284,cpu,640,227.119,,,1000,200
+v08_moa,YOLO-Master v0.8 MoA (attention),ultralytics/cfg/models/master/v0_8/det/yolo-master-moa-n.yaml,3233538,3.233538,cpu,640,78.436,,,1000,200

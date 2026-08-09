@@ -201,6 +201,8 @@ def main():
     parser.add_argument("--model", type=str, required=True, help="权重 (.pt) 或 YAML 路径")
     parser.add_argument("--device", type=str, default="cpu", help="cpu / cuda / cuda:0 / mps")
     parser.add_argument("--dry-run", action="store_true", help="合成输入模式（无需数据集）")
+    parser.add_argument("--image-dir", type=str, default=None, help="真实图像目录（与 --dry-run 二选一）")
+    parser.add_argument("--num-images", type=int, default=20, help="真实图像采样数")
     parser.add_argument("--plot", action="store_true", help="生成热力图 PNG")
     parser.add_argument("--output", type=str, default="experiments_zviolin/runs/esmoe_routing",
                         help="输出目录")
@@ -213,31 +215,83 @@ def main():
     model = YOLO(args.model).model
     model.eval()
 
-    # 合成输入
-    x = torch.randn(1, 3, 640, 640, device=args.device)
+    # 决定输入来源
+    inputs = []
+    if args.dry_run:
+        print(f"[diagnose_esmoe_routing] Using synthetic input (1 random tensor)")
+        inputs = [torch.randn(1, 3, 640, 640, device=args.device)]
+    elif args.image_dir:
+        from PIL import Image
+        import numpy as np
+        image_dir = Path(args.image_dir)
+        if not image_dir.exists():
+            raise FileNotFoundError(f"Image dir not found: {image_dir}")
+        # 加载 jpg/png
+        candidates = []
+        for ext in ["*.jpg", "*.jpeg", "*.png"]:
+            candidates.extend(sorted(image_dir.glob(ext)))
+        candidates = candidates[:args.num_images]
+        if not candidates:
+            raise FileNotFoundError(f"No images found in {image_dir}")
+        print(f"[diagnose_esmoe_routing] Using {len(candidates)} real images from {image_dir}")
+        for img_path in candidates:
+            img = Image.open(img_path).convert("RGB").resize((640, 640))
+            arr = np.asarray(img, dtype=np.float32) / 255.0
+            arr = arr.transpose(2, 0, 1)  # HWC -> CHW
+            tensor = torch.from_numpy(arr).unsqueeze(0).to(args.device)
+            inputs.append(tensor)
+    else:
+        print(f"[diagnose_esmoe_routing] No input specified, using synthetic")
+        inputs = [torch.randn(1, 3, 640, 640, device=args.device)]
 
-    print(f"[diagnose_esmoe_routing] Running forward pass on {args.device} ...")
-    rows, handles = collect_routing(model)
-    with torch.no_grad():
-        _ = model(x)
-    for h in handles:
-        h.remove()
+    print(f"[diagnose_esmoe_routing] Running forward pass on {args.device} ({len(inputs)} inputs) ...")
 
-    n_esmoe_layers = len({r["layer"] for r in rows})
+    # 收集多张图像的路由数据
+    all_rows_per_image = []
+    for idx, x in enumerate(inputs):
+        rows, handles = collect_routing(model)
+        with torch.no_grad():
+            _ = model(x)
+        for h in handles:
+            h.remove()
+        all_rows_per_image.append((idx, rows))
+        if (idx + 1) % 5 == 0:
+            print(f"  Processed {idx + 1}/{len(inputs)} images")
+
+    # 聚合所有图像的路由数据（按 layer+expert 求平均）
+    aggregated = {}
+    for idx, rows in all_rows_per_image:
+        for r in rows:
+            key = (r["layer"], r["expert"])
+            aggregated.setdefault(key, []).append(r["mean_weight"])
+
+    final_rows = []
+    for (layer, expert), weights in aggregated.items():
+        # 取最后一个 row 的 kernel_size/is_top_k 字段（同一层同一专家这些值不变）
+        sample_row = next(r for r in all_rows_per_image[-1][1] if r["layer"] == layer and r["expert"] == expert)
+        final_rows.append({
+            "layer": layer,
+            "expert": expert,
+            "kernel_size": sample_row["kernel_size"],
+            "mean_weight": float(np.mean(weights)),
+            "is_top_k": sample_row["is_top_k"],
+        })
+
+    n_esmoe_layers = len({r["layer"] for r in final_rows})
     print(f"[diagnose_esmoe_routing] ES_MOE hooked: {n_esmoe_layers}")
-    print(f"[diagnose_esmoe_routing] Total routing records: {len(rows)}")
+    print(f"[diagnose_esmoe_routing] Aggregated routing records: {len(final_rows)}")
 
     # 保存 CSV
     csv_path = output_dir / "routing_summary.csv"
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=["layer", "expert", "kernel_size", "mean_weight", "is_top_k"])
         writer.writeheader()
-        for r in rows:
+        for r in final_rows:
             writer.writerow(r)
-    print(f"[diagnose_esmoe_routing] wrote {csv_path} ({len(rows)} rows)")
+    print(f"[diagnose_esmoe_routing] wrote {csv_path} ({len(final_rows)} rows)")
 
     # 场景化推荐 + summary
-    recs = generate_recommendations(rows)
+    recs = generate_recommendations(final_rows)
     rec_path = output_dir / "recommendations.json"
     rec_path.write_text(json.dumps(recs, indent=2, ensure_ascii=False))
     print(f"[diagnose_esmoe_routing] wrote {rec_path}")

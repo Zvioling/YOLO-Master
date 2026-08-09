@@ -1,39 +1,39 @@
 {
   "recommendations": [
-    "Layer model.3 (P3, channel=256): Top expert is Expert 3 (kernel_size=9, mean_weight=0.638)",
-    "Layer model.6 (P6, channel=512): Top expert is Expert 0 (kernel_size=3, mean_weight=0.538)",
-    "Layer model.9 (P9, channel=512): Top expert is Expert 1 (kernel_size=5, mean_weight=0.504)",
-    "Layer model.12 (P12, channel=1024): Top expert is Expert 3 (kernel_size=9, mean_weight=0.675)"
+    "Layer model.3 (P3, channel=256): Top expert is Expert 3 (kernel_size=9, mean_weight=0.519)",
+    "Layer model.6 (P6, channel=512): Top expert is Expert 0 (kernel_size=3, mean_weight=0.509)",
+    "Layer model.9 (P9, channel=512): Top expert is Expert 2 (kernel_size=7, mean_weight=0.501)",
+    "Layer model.12 (P12, channel=1024): Top expert is Expert 2 (kernel_size=7, mean_weight=0.764)"
   ],
   "summary": {
     "expert_0": {
       "kernel_size": 3,
-      "mean": 0.21562950313091278,
-      "std": 0.2637278735637665,
-      "is_top1_active_rate": 0.5,
-      "routing_entropy": 0.47778668999671936
+      "mean": 0.18623152375221252,
+      "std": 0.24222585558891296,
+      "is_top1_active_rate": 0.25,
+      "routing_entropy": 0.45037513971328735
     },
     "expert_1": {
       "kernel_size": 5,
-      "mean": 0.24153298139572144,
-      "std": 0.27941474318504333,
-      "is_top1_active_rate": 0.5,
-      "routing_entropy": 0.4993312358856201
+      "mean": 0.36752498149871826,
+      "std": 0.24512791633605957,
+      "is_top1_active_rate": 0.75,
+      "routing_entropy": 0.7923992276191711
     },
     "expert_2": {
       "kernel_size": 7,
-      "mean": 0.21455471217632294,
-      "std": 0.25371912121772766,
+      "mean": 0.31638073921203613,
+      "std": 0.3807359039783478,
       "is_top1_active_rate": 0.5,
-      "routing_entropy": 0.491163969039917
+      "routing_entropy": 0.48435094952583313
     },
     "expert_3": {
       "kernel_size": 9,
-      "mean": 0.32828280329704285,
-      "std": 0.3793739974498749,
-      "is_top1_active_rate": 0.5,
-      "routing_entropy": 0.49970901012420654
+      "mean": 0.12986281514167786,
+      "std": 0.2597256302833557,
+      "is_top1_active_rate": 0.25,
+      "routing_entropy": 0.0
     },
-    "__avg_routing_entropy__": 0.49199772626161575
+    "__avg_routing_entropy__": 0.4317813292145729
   }
 }

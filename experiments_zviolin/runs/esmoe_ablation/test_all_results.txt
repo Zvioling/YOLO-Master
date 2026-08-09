@@ -1,0 +1,237 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- E:\Apps\Codes\python\3.11.9\python.exe
+cachedir: .pytest_cache
+rootdir: G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master
+configfile: pyproject.toml
+plugins: anyio-4.11.0
+collecting ... collected 124 items
+
+tests/test_esmoe.py::test_esmoe_top_k_none_uses_all_experts PASSED       [  0%]
+tests/test_esmoe.py::test_esmoe_top_k_exceeds_num_experts_raises PASSED  [  1%]
+tests/test_esmoe.py::test_esmoe_top_k_zero_raises PASSED                 [  2%]
+tests/test_esmoe.py::test_esmoe_num_experts_zero_raises PASSED           [  3%]
+tests/test_esmoe.py::test_esmoe_expert_kernel_sizes_length_mismatch PASSED [  4%]
+tests/test_esmoe.py::test_esmoe_expert_kernel_sizes_too_many_raises PASSED [  4%]
+tests/test_esmoe.py::test_esmoe_expert_kernel_sizes_even_normalized PASSED [  5%]
+tests/test_esmoe.py::test_esmoe_no_sparse_inference_dense_forward PASSED [  6%]
+tests/test_esmoe.py::test_esmoe_onnx_export_dense_fallback SKIPPED (...) [  7%]
+tests/test_esmoe.py::test_esmoe_eager_sparse_enabled_logic[True-True-2-4-True] PASSED [  8%]
+tests/test_esmoe.py::test_esmoe_eager_sparse_enabled_logic[False-True-2-4-False] PASSED [  8%]
+tests/test_esmoe.py::test_esmoe_eager_sparse_enabled_logic[True-False-None-4-False] PASSED [  9%]
+tests/test_esmoe.py::test_esmoe_eager_sparse_enabled_logic[True-True-4-4-False] PASSED [ 10%]
+tests/test_esmoe.py::test_esmoe_eager_sparse_enabled_logic[True-True-1-4-True] PASSED [ 11%]
+tests/test_esmoe.py::test_esmoe_balance_loss_extreme_values[0.001] PASSED [ 12%]
+tests/test_esmoe.py::test_esmoe_balance_loss_extreme_values[1.0] PASSED  [ 12%]
+tests/test_esmoe.py::test_esmoe_balance_loss_extreme_values[10.0] PASSED [ 13%]
+tests/test_esmoe.py::test_esmoe_no_z_loss_logit_growth PASSED            [ 14%]
+tests/test_esmoe.py::test_esmoe_forward_backward_gradient_flow PASSED    [ 15%]
+tests/test_esmoe.py::test_esmoe_top_k2_top_k1_outputs_differ PASSED      [ 16%]
+tests/test_mot.py::test_mot_block_forward_backward_all_experts_trainable PASSED [ 16%]
+tests/test_mot.py::test_c2fmot_collects_aux_loss_and_keeps_shape PASSED  [ 17%]
+tests/test_mot.py::test_mot_router_z_loss_uses_expert_axis PASSED        [ 18%]
+tests/test_mot.py::test_mot_block_reuses_router_logits_for_z_loss PASSED [ 19%]
+tests/test_mot.py::test_mot_temperature_anneal PASSED                    [ 20%]
+tests/test_mot.py::test_localconv_window_attention_is_opt_in_and_shape_preserving PASSED [ 20%]
+tests/test_mot.py::test_mot_local_window_config_applies_to_nested_expert PASSED [ 21%]
+tests/test_mot.py::test_trainer_detects_and_anneals_moa_mot_temperatures PASSED [ 22%]
+tests/test_mot.py::test_mot_model_configs_parse PASSED                   [ 23%]
+tests/test_mot.py::test_mot_deformable_align_corners_option PASSED       [ 24%]
+tests/test_mot.py::test_mot_window_size_larger_than_feature_map PASSED   [ 25%]
+tests/test_mot.py::test_mot_window_expert_handles_window_larger_than_feature_map PASSED [ 25%]
+tests/test_mot.py::test_mot_window_expert_shift_spatial_alignment PASSED [ 26%]
+tests/test_mot.py::test_mot_window_expert_shift_handles_odd_spatial_sizes PASSED [ 27%]
+tests/test_mot.py::test_mot_router_disables_exploration_eps_in_eval PASSED [ 28%]
+tests/test_mot.py::test_mot_router_warns_when_exploration_eps_is_clamped PASSED [ 29%]
+tests/test_mot.py::test_mot_scene_consistency_rejects_unsupported_expert_count PASSED [ 29%]
+tests/test_mot.py::test_mot_deformable_attention_falls_back_for_non_grid_tokens PASSED [ 30%]
+tests/test_mot.py::test_mot_deformable_reference_grid_cache_clears_on_module_apply SKIPPED [ 31%]
+tests/test_mot.py::test_mot_inference_sparsity_skips_inactive_experts PASSED [ 32%]
+tests/test_mot.py::test_mot_block_handles_1x1_feature_map PASSED         [ 33%]
+tests/test_mot.py::test_mot_block_handles_all_zero_input PASSED          [ 33%]
+tests/test_mot.py::test_mot_block_handles_very_wide_feature_map PASSED   [ 34%]
+tests/test_mot.py::test_mot_deformable_expert_handles_extreme_offsets PASSED [ 35%]
+tests/test_mot.py::test_mot_deformable_expert_handles_single_pixel PASSED [ 36%]
+tests/test_mot.py::test_c2fmot_handles_minimal_channels PASSED           [ 37%]
+tests/test_mot.py::test_mot_router_z_loss_handles_extreme_logits PASSED  [ 37%]
+tests/test_mot.py::test_mot_sparse_train_mode PASSED                     [ 38%]
+tests/test_mot.py::test_mot_model_configs_include_mixed_variants PASSED  [ 39%]
+tests/test_mot.py::test_c2fmot_aux_loss_aggregation PASSED               [ 40%]
+tests/test_mot.py::test_mot_window_expert_handles_window_larger_than_feature_map_train PASSED [ 41%]
+tests/test_mot.py::test_mot_block_handles_window_larger_than_feature_map_train PASSED [ 41%]
+tests/test_mot.py::test_mot_window_expert_shift_odd_spatial_train PASSED [ 42%]
+tests/test_mot.py::test_mot_block_shift_odd_spatial_train PASSED         [ 43%]
+tests/test_mot.py::test_mot_exploration_eps_active_in_train_disabled_in_eval PASSED [ 44%]
+tests/test_mot.py::test_mot_exploration_eps_strict_zero_in_eval PASSED   [ 45%]
+tests/test_moa.py::test_moa_modules_forward_backward PASSED              [ 45%]
+tests/test_moa.py::test_neck_moa_fusion_forward_backward PASSED          [ 46%]
+tests/test_moa.py::test_neck_moa_fusion_handles_non_strict_scale_ratio PASSED [ 47%]
+tests/test_moa.py::test_neck_moa_interpolation_cache_is_bounded_and_cleared_for_training PASSED [ 48%]
+tests/test_moa.py::test_neck_moa_interpolation_cache_does_not_break_deepcopy PASSED [ 49%]
+tests/test_moa.py::test_moa_router_stays_finite_at_tiny_annealed_temperature PASSED [ 50%]
+tests/test_moa.py::test_moa_attention_heads_handle_non_divisible_dim_and_heads PASSED [ 50%]
+tests/test_moa.py::test_c2fmoa_aux_loss_not_double_counted_for_nested_blocks PASSED [ 51%]
+tests/test_moa.py::test_flash_attn_supports_sdpa_without_scale_keyword PASSED [ 52%]
+tests/test_moa.py::test_moa_aux_loss_collected_for_c2f_and_neck PASSED   [ 53%]
+tests/test_moa.py::test_c2fmoa_aux_loss_does_not_double_count_nested_blocks PASSED [ 54%]
+tests/test_moa.py::test_c2fmoa_small_channels_keep_valid_head_count PASSED [ 54%]
+tests/test_moa.py::test_c2fmoa_rounds_head_count_to_expert_groups PASSED [ 55%]
+tests/test_moa.py::test_neck_moa_fusion_eval_projects_self_path_and_zero_aux_loss PASSED [ 56%]
+tests/test_moa.py::test_collect_moa_aux_loss_handles_empty_module_and_standalone_block PASSED [ 57%]
+tests/test_moa.py::test_moa_temperature_anneal PASSED                    [ 58%]
+tests/test_moa.py::test_moa_default_temperature_anneal_matches_shared_schedule PASSED [ 58%]
+tests/test_moa.py::test_moa_global_head_per_block_seed PASSED            [ 59%]
+tests/test_moa.py::test_moa_model_configs_parse PASSED                   [ 60%]
+tests/test_moa.py::test_neck_moa_fusion_non_strict_scale_many_cases PASSED [ 61%]
+tests/test_moa.py::test_neck_moa_fusion_single_pixel_lo PASSED           [ 62%]
+tests/test_moa.py::test_neck_moa_fusion_no_shortcut PASSED               [ 62%]
+tests/test_moa.py::test_neck_moa_fusion_channel_mismatch_projection PASSED [ 63%]
+tests/test_moa.py::test_moa_router_extreme_temperature_numerical_stability PASSED [ 64%]
+tests/test_moa.py::test_moa_router_anneal_to_zero_like_temperature PASSED [ 65%]
+tests/test_moa.py::test_moa_router_return_logits PASSED                  [ 66%]
+tests/test_moa.py::test_regional_attn_head_non_divisible_dim_and_heads PASSED [ 66%]
+tests/test_moa.py::test_regional_attn_head_small_spatial_dims PASSED     [ 67%]
+tests/test_moa.py::test_window_partition_unpartition_round_trip PASSED   [ 68%]
+tests/test_moa.py::test_window_flash_attn_matches_spatial_reference PASSED [ 69%]
+tests/test_moa.py::test_regional_attn_head_invalid_pool_stride PASSED    [ 70%]
+tests/test_moa.py::test_regional_attn_head_default_and_unlimited_kv_budgets PASSED [ 70%]
+tests/test_moa.py::test_local_attn_head_window_size_clamping PASSED      [ 71%]
+tests/test_moa.py::test_attention_heads_all_variants_non_divisible PASSED [ 72%]
+tests/test_moa.py::test_c2fmoa_covered_modules_mechanism PASSED          [ 73%]
+tests/test_moa.py::test_c2fmoa_single_block_aux_loss_equals_block_loss PASSED [ 74%]
+tests/test_moa.py::test_c2fmoa_eval_mode_zero_aux_loss PASSED            [ 75%]
+tests/test_moa.py::test_moa_block_no_shortcut PASSED                     [ 75%]
+tests/test_moa.py::test_moa_block_sequential_heads PASSED                [ 76%]
+tests/test_moa.py::test_moa_block_sequential_vs_parallel_equivalence PASSED [ 77%]
+tests/test_moa.py::test_moa_block_with_attn_dropout PASSED               [ 78%]
+tests/test_moa.py::test_moa_block_different_mlp_ratios PASSED            [ 79%]
+tests/test_moa.py::test_global_head_linear_attn_large_spatial PASSED     [ 79%]
+tests/test_moa.py::test_global_head_smooth_blend_window PASSED           [ 80%]
+tests/test_moa.py::test_global_head_very_large_spatial PASSED            [ 81%]
+tests/test_moa.py::test_global_head_exact_attn_small_spatial PASSED      [ 82%]
+tests/test_moa.py::test_flash_attn_fallback_no_sdpa PASSED               [ 83%]
+tests/test_moa.py::test_flash_attn_sdpa_without_scale_typeerror PASSED   [ 83%]
+tests/test_moa.py::test_flash_attn_sdpa_scale_typeerror_fallback PASSED  [ 84%]
+tests/test_moa.py::test_window_flash_attn_edge_cases PASSED              [ 85%]
+tests/test_moa.py::test_fp_min_across_dtypes PASSED                      [ 86%]
+tests/test_moa.py::test_moa_router_aux_loss_no_nan_from_biased_logits PASSED [ 87%]
+tests/test_moa.py::test_moa_router_aux_loss_finite_guard_triggers PASSED [ 87%]
+tests/test_moa.py::test_moa_block_routed_module_protocol PASSED          [ 88%]
+tests/test_moa.py::test_c2fmoa_routed_module_protocol PASSED             [ 89%]
+tests/test_moa.py::test_neck_moa_fusion_routed_module_protocol PASSED    [ 90%]
+tests/test_moa.py::test_publish_aux_loss_in_eval_mode PASSED             [ 91%]
+tests/test_moa.py::test_c2fmoa_multiple_expansion_ratios PASSED          [ 91%]
+tests/test_moa.py::test_c2fmoa_large_n_many_blocks PASSED                [ 92%]
+tests/test_moa.py::test_c2fmoa_inference_mode_no_aux_loss_grad PASSED    [ 93%]
+tests/test_moa.py::test_anneal_moa_temperature_respects_min_temp PASSED  [ 94%]
+tests/test_moa.py::test_anneal_moa_temperature_skips_non_moa_modules PASSED [ 95%]
+tests/test_moa.py::test_collect_moa_aux_loss_multiple_module_types PASSED [ 95%]
+tests/test_moa.py::test_collect_moa_aux_loss_with_none_model PASSED      [ 96%]
+tests/test_moa.py::test_global_head_rf_matrix_deterministic PASSED       [ 97%]
+tests/test_moa.py::test_global_head_rf_matrix_different_seeds PASSED     [ 98%]
+tests/test_moa.py::test_moa_block_diverse_spatial_sizes PASSED           [ 99%]
+tests/test_moa.py::test_neck_moa_fusion_diverse_spatial_sizes PASSED     [100%]
+
+============================== warnings summary ===============================
+tests/test_mot.py::test_trainer_detects_and_anneals_moa_mot_temperatures
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_mot.py:125: UserWarning: C2fMoA(num_heads=4) adjusted to 6 to be divisible by NUM_GROUPS=3. To avoid silent adjustment, set num_heads ≡ 0 (mod 3) directly.
+    moa = C2fMoA(64, 64, n=1, num_heads=4)
+
+tests/test_mot.py::test_trainer_detects_and_anneals_moa_mot_temperatures
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_mot.py:125: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    moa = C2fMoA(64, 64, n=1, num_heads=4)
+
+tests/test_mot.py::test_mot_model_configs_parse
+tests/test_mot.py::test_mot_model_configs_include_mixed_variants
+tests/test_moa.py::test_moa_model_configs_parse
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\ultralytics\nn\tasks.py:2261: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    m_ = torch.nn.Sequential(*(m(*args) for _ in range(n))) if n > 1 else m(*args)  # module
+
+tests/test_moa.py::test_moa_modules_forward_backward
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:40: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    (C2fMoA(64, 64, n=2, num_heads=6), torch.randn(2, 64, 8, 8), (2, 64, 8, 8)),
+
+tests/test_moa.py::test_c2fmoa_aux_loss_not_double_counted_for_nested_blocks
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:135: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(32, 32, n=3, num_heads=6).train()
+
+tests/test_moa.py::test_c2fmoa_aux_loss_does_not_double_count_nested_blocks
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:190: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(32, 32, n=3, num_heads=6).train()
+
+tests/test_moa.py::test_c2fmoa_small_channels_keep_valid_head_count
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:206: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(8, 8, n=1, num_heads=6, e=0.5).train()
+
+tests/test_moa.py::test_c2fmoa_rounds_head_count_to_expert_groups
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:212: UserWarning: C2fMoA(num_heads=4) adjusted to 6 to be divisible by NUM_GROUPS=3. To avoid silent adjustment, set num_heads ≡ 0 (mod 3) directly.
+    module = C2fMoA(256, 256, n=1, num_heads=4, e=0.5).train()
+
+tests/test_moa.py::test_moa_temperature_anneal
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:243: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=1, num_heads=6)
+
+tests/test_moa.py::test_moa_default_temperature_anneal_matches_shared_schedule
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:251: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=1, num_heads=6)
+
+tests/test_moa.py::test_c2fmoa_covered_modules_mechanism
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:509: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=n_blocks, num_heads=6).train()
+
+tests/test_moa.py::test_c2fmoa_single_block_aux_loss_equals_block_loss
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:530: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=1, num_heads=6).train()
+
+tests/test_moa.py::test_c2fmoa_eval_mode_zero_aux_loss
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:537: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=2, num_heads=6).eval()
+
+tests/test_moa.py::test_c2fmoa_routed_module_protocol
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:801: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=2, num_heads=6)
+
+tests/test_moa.py::test_c2fmoa_multiple_expansion_ratios
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:849: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(c, c, n=1, num_heads=6, e=e_val).train()
+
+tests/test_moa.py::test_c2fmoa_inference_mode_no_aux_loss_grad
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:869: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=2, num_heads=6).eval()
+
+tests/test_moa.py::test_anneal_moa_temperature_respects_min_temp
+  G:\Codes\OpenSource\Rhino-bird\practices\Codes\YOLO-Master\tests\test_moa.py:880: UserWarning: C2fMoA(num_heads=6) adjusted to 3 to maintain head_dim ≥ 16 (c//heads ≥ 16).
+    module = C2fMoA(64, 64, n=2, num_heads=6)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 30 durations =============================
+2.01s call     tests/test_esmoe.py::test_esmoe_no_z_loss_logit_growth
+0.65s call     tests/test_mot.py::test_mot_model_configs_include_mixed_variants
+0.64s call     tests/test_mot.py::test_mot_model_configs_parse
+0.32s call     tests/test_moa.py::test_moa_model_configs_parse
+0.12s call     tests/test_esmoe.py::test_esmoe_top_k_none_uses_all_experts
+0.09s call     tests/test_mot.py::test_mot_temperature_anneal
+0.07s call     tests/test_moa.py::test_neck_moa_fusion_non_strict_scale_many_cases
+0.04s call     tests/test_moa.py::test_moa_router_extreme_temperature_numerical_stability
+0.03s call     tests/test_moa.py::test_moa_block_diverse_spatial_sizes
+0.03s call     tests/test_moa.py::test_c2fmoa_large_n_many_blocks
+0.03s call     tests/test_moa.py::test_neck_moa_fusion_diverse_spatial_sizes
+0.03s call     tests/test_mot.py::test_mot_block_forward_backward_all_experts_trainable
+0.03s call     tests/test_moa.py::test_moa_modules_forward_backward
+0.02s call     tests/test_moa.py::test_c2fmoa_multiple_expansion_ratios
+0.02s call     tests/test_mot.py::test_c2fmot_aux_loss_aggregation
+0.02s call     tests/test_moa.py::test_moa_block_different_mlp_ratios
+0.02s call     tests/test_moa.py::test_neck_moa_fusion_handles_non_strict_scale_ratio
+0.02s call     tests/test_mot.py::test_c2fmot_collects_aux_loss_and_keeps_shape
+0.01s call     tests/test_mot.py::test_mot_block_shift_odd_spatial_train
+0.01s call     tests/test_moa.py::test_moa_block_sequential_heads
+0.01s call     tests/test_mot.py::test_mot_block_handles_window_larger_than_feature_map_train
+0.01s call     tests/test_moa.py::test_neck_moa_fusion_forward_backward
+0.01s call     tests/test_moa.py::test_c2fmoa_aux_loss_not_double_counted_for_nested_blocks
+0.01s call     tests/test_moa.py::test_neck_moa_interpolation_cache_is_bounded_and_cleared_for_training
+0.01s call     tests/test_moa.py::test_neck_moa_fusion_no_shortcut
+0.01s call     tests/test_moa.py::test_c2fmoa_aux_loss_does_not_double_count_nested_blocks
+0.01s call     tests/test_moa.py::test_global_head_smooth_blend_window
+0.01s call     tests/test_moa.py::test_moa_router_stays_finite_at_tiny_annealed_temperature
+0.01s call     tests/test_mot.py::test_mot_block_handles_very_wide_feature_map
+0.01s call     tests/test_moa.py::test_moa_block_sequential_vs_parallel_equivalence
+================= 122 passed, 2 skipped, 19 warnings in 5.33s =================

@@ -1,0 +1,9 @@
+image,complexity,top_k
+complex_00_t001.jpg,0.0001,1
+complex_01_t008.jpg,0.0245,1
+complex_02_t015.jpg,0.0689,2
+complex_03_t025.jpg,0.1193,2
+complex_04_t035.jpg,0.1617,3
+complex_05_t050.jpg,0.2245,3
+complex_06_t070.jpg,0.2513,3
+complex_07_t100.jpg,0.2302,3

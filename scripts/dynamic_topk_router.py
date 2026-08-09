@@ -31,6 +31,14 @@ ES-MoE 训练时固定 top_k=2（激活 2/4 专家），但在真实推理场景
 """
 from __future__ import annotations
 
+# 确保 sys.path 正确（PowerShell 下 cwd 不会自动加入 sys.path）
+import sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 import argparse
 import csv
 from pathlib import Path
