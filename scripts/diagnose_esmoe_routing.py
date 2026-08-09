@@ -25,10 +25,17 @@ ES-MoE (Efficient Sparse Mixture-of-Experts) 路由诊断脚本。
 """
 from __future__ import annotations
 
+# 必须在所有 ultralytics 导入前确保 sys.path 正确（PowerShell 下 cwd 不会自动加入 sys.path）
+import sys
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 import argparse
 import csv
 import json
-from pathlib import Path
 
 import numpy as np
 import torch
@@ -87,7 +94,13 @@ def plot_heatmap(rows: list[dict], output_path: Path) -> None:
         return
 
     # 提取唯一层和专家
-    layers = sorted({r["layer"] for r in rows}, key=lambda s: int(s.split(".")[-2]))
+    def layer_sort_key(name: str) -> int:
+        try:
+            return int(name.split(".")[-1])
+        except (ValueError, IndexError):
+            return 0
+
+    layers = sorted({r["layer"] for r in rows}, key=layer_sort_key)
     expert_ids = sorted({r["expert"] for r in rows})
 
     matrix = np.zeros((len(layers), len(expert_ids)))
@@ -127,7 +140,14 @@ def plot_heatmap(rows: list[dict], output_path: Path) -> None:
 
 def generate_recommendations(rows: list[dict]) -> dict:
     """基于路由数据生成场景化推荐 + summary。"""
-    layers = sorted({r["layer"] for r in rows}, key=lambda s: int(s.split(".")[-2]))
+    # layer 名格式：model.3 / model.6 / model.9 / model.12
+    def layer_sort_key(name: str) -> int:
+        try:
+            return int(name.split(".")[-1])
+        except (ValueError, IndexError):
+            return 0
+
+    layers = sorted({r["layer"] for r in rows}, key=layer_sort_key)
 
     recommendations = []
     expert_weight_sums = {}
@@ -137,9 +157,20 @@ def generate_recommendations(rows: list[dict]) -> dict:
         if not entries:
             continue
         top_entry = max(entries, key=lambda r: r["mean_weight"])
-        layer_num = layer.split(".")[-2]  # 例如 "model.3.m.0" → "3"
+        layer_num = layer.split(".")[-1]  # "model.3" → "3"
+        # 通道映射：3/6 → 256/512, 9 → 512, 12 → 1024
+        try:
+            ln = int(layer_num)
+            if ln <= 3:
+                channel = 256
+            elif ln <= 9:
+                channel = 512
+            else:
+                channel = 1024
+        except ValueError:
+            channel = "?"
         recommendations.append(
-            f"Layer {layer} (P{layer_num}, channel={256 if layer_num == '3' else (512 if layer_num in ('5', '8') else 1024)}): "
+            f"Layer {layer} (P{layer_num}, channel={channel}): "
             f"Top expert is Expert {top_entry['expert']} (kernel_size={top_entry['kernel_size']}, "
             f"mean_weight={top_entry['mean_weight']:.3f})"
         )

@@ -271,19 +271,27 @@ def test_esmoe_no_z_loss_logit_growth(esmoe_module, small_input):
 # Bonus: 端到端前向 + 反向传播测试
 # ============================================================
 
-def test_esmoe_forward_backward_gradient_flow(esmoe_module, small_input):
-    """ES_MOE 前向 + 反向传播正常，梯度流过所有专家。"""
-    esmoe_module.train()
+def test_esmoe_forward_backward_gradient_flow(small_input):
+    """ES_MOE 前向 + 反向传播正常：dense 模式下所有 4 个专家都应有梯度。
 
-    output = esmoe_module(small_input)
+    验证点：
+    - 使用 top_k=None 强制 dense 路径（不走 top-k 过滤）
+    - 4 个 expert 都应收到梯度
+    """
+    # 使用 top_k=None 强制 dense 路径
+    module = ES_MOE(in_channels=64, num_experts=4, top_k=None)
+    module.train()
+
+    # 单一前向 + 反向
+    output = module(small_input)
     loss = output.mean()
     loss.backward()
 
-    # 检查每个专家都有梯度
-    for i, expert in enumerate(esmoe_module.experts):
+    # 检查所有 4 个专家都有梯度
+    for i, expert in enumerate(module.experts):
         has_grad = any(p.grad is not None and p.grad.abs().sum() > 0
                        for p in expert.parameters())
-        assert has_grad, f"Expert {i} has no gradient"
+        assert has_grad, f"Expert {i} has no gradient (top_k=None should use dense_forward)"
 
 
 def test_esmoe_top_k2_top_k1_outputs_differ():

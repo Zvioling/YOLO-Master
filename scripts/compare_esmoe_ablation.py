@@ -35,6 +35,14 @@ ES-MoE 消融实验性能对比脚本。
 """
 from __future__ import annotations
 
+# 必须在 ultralytics 导入前确保 sys.path 正确（PowerShell 下 cwd 不会自动加入 sys.path）
+import sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 import argparse
 import csv
 import json
@@ -155,10 +163,15 @@ def cmd_benchmark(args):
 
         variant = all_variants[key]
         # 优先从训练输出目录找 best.pt，否则用 YAML（YAML 模式路由不生效）
-        ckpt = Path(args.project) / key / "weights" / "best.pt"
-        if not ckpt.exists():
-            ckpt = Path(args.project) / f"{key}2" / "weights" / "best.pt"
-        if not ckpt.exists():
+        # 支持多种命名：esmoe_v0_k2 / esmoe_v0_k2-2 / esmoe_v0_k2_2
+        candidate_names = [key, f"{key}-2", f"{key}_2", f"{key}2"]
+        ckpt = None
+        for name in candidate_names:
+            candidate = Path(args.project) / name / "weights" / "best.pt"
+            if candidate.exists():
+                ckpt = candidate
+                break
+        if ckpt is None:
             print(f"[benchmark] No checkpoint for {key}, using YAML cfg")
             ckpt = variant["cfg"]
 

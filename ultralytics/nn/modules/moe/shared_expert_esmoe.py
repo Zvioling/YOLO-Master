@@ -136,4 +136,8 @@ class SharedExpertESMoE(ES_MOE):
         )
 
 
+# 在类定义后挂载：让 tasks.py 可用 SharedExpertESMoE.reset_shared_esmoe_pools() 调用
+SharedExpertESMoE.reset_shared_esmoe_pools = staticmethod(reset_shared_esmoe_pools)
+
+
 __all__ = ["SharedExpertESMoE", "_SHARED_ESMOE_POOLS", "reset_shared_esmoe_pools"]
