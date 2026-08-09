@@ -1,0 +1,71 @@
+# YOLO-Master-EsMoE-N for VisDrone (10 classes) - Cross-Scale Shared Variant
+# 端侧轻量化版本：跨尺度专家共享（Cross-Scale Expert Pool Sharing）
+#
+# 与基线 yolo-master-esmoe-n-visdrone.yaml 的差异：
+#   - P3 和 P4（256 通道）共享同一组 experts → 总 expert 数从 8 减到 4
+#   - P5 和 P6（512 通道）共享同一组 experts → 总 expert 数从 8 减到 4
+#   - P7（1024 通道）保持独立 expert pool
+#   - 总 expert 数：16 → 12（-25% 内存）
+#
+# 预期收益（基于 Issue #54 方案 D 的 -19.1% 参数、-10.84% GPU 延迟经验）：
+#   - 参数量 ↓ 20-30%
+#   - GPU 延迟 ↓ 10-20%
+#   - 内存占用 ↓ 25%
+#   - 精度损失 < 1%
+
+nc: 10 # number of classes
+scales:
+  n: [0.50, 0.25, 1024]
+
+# ES-MoE 跨尺度共享配置
+# moe_share_p3_p4: P3 和 P4 共享 256-channel expert pool
+# moe_share_p5_p6: P5 和 P6 共享 512-channel expert pool
+# 注意：SharedExpertESMoE 通过 pool_id 字符串识别共享关系
+
+backbone:
+  # ===== P1: 标准卷积（无 MoE） =====
+  - [-1, 1, Conv, [64, 3, 2]]
+  - [-1, 1, Conv, [128, 3, 2]]
+  - [-1, 2, C3k2, [256, False, 0.25]]
+
+  # ===== P3: 256-channel expert pool owner =====
+  - [-1, 1, SharedExpertESMoE, [256, 4, 2, "esmoe_p3_p4"]]
+
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [-1, 2, C3k2, [512, False, 0.25]]
+
+  # ===== P4: 256-channel expert pool 复用 =====
+  # 与 P3 共享同一组 experts
+  - [-1, 1, SharedExpertESMoE, [256, 4, 2, "esmoe_p3_p4"]]
+
+  - [-1, 1, Conv, [512, 3, 2]]
+  - [-1, 4, A2C2f, [512, True, 4]]
+
+  # ===== P5: 512-channel expert pool owner =====
+  - [-1, 1, SharedExpertESMoE, [512, 4, 2, "esmoe_p5_p6"]]
+
+  - [-1, 1, Conv, [1024, 3, 2]]
+  - [-1, 4, A2C2f, [1024, True, 1]]
+
+  # ===== P6: 512-channel expert pool 复用 =====
+  # 与 P5 共享同一组 experts
+  - [-1, 1, SharedExpertESMoE, [512, 4, 2, "esmoe_p5_p6"]]
+
+head:
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
+  [[-1, 9], 1, Concat, [1]]
+  - [-1, 2, C3k2, [512, True]]
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
+  [[-1, 6], 1, Concat, [1]]
+  - [-1, 2, C3k2, [256, True]]
+
+  - [-1, 1, Conv, [256, 3, 2]]
+  [[-1, 15], 1, Concat, [1]]
+  - [-1, 2, C3k2, [512, True]]
+
+  - [-1, 1, Conv, [512, 3, 2]]
+  [[-1, 12], 1, Concat, [1]]
+  - [-1, 2, C3k2, [512, True]]
+
+  [[18, 21, 24], 1, Detect, [nc]]

@@ -126,6 +126,7 @@ from .moe import (
     OptimalHybridGateMoE,
     RefinedLowRankHybridAdaptiveGateMoE,
     SharedExpertMoE,  # Issue #54: Cross-Scale Expert Pool Sharing
+    SharedExpertESMoE,  # Issue #54-ESMoE: ES-MoE Cross-Scale Expert Sharing
     UltimateOptimizedMoE,
     UltraOptimizedMoE,
     VisualEnhancedAdaptiveGateMoE,
@@ -239,6 +240,7 @@ __all__ = (
     "OptimalHybridGateMoE",
     "RefinedLowRankHybridAdaptiveGateMoE",
     "SharedExpertMoE",  # Issue #54: Cross-Scale Expert Pool Sharing
+    "SharedExpertESMoE",  # Issue #54-ESMoE: ES-MoE Cross-Scale Expert Sharing
     "UltimateOptimizedMoE",
     "UltraOptimizedMoE",
     "VisualEnhancedAdaptiveGateMoE",

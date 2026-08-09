@@ -63,6 +63,7 @@ from ultralytics.nn.modules import (
     Index,
     MultiTaskHead,
     SharedExpertMoE,
+    SharedExpertESMoE,
     LRPCHead,
     Pose,
     Pose26,
@@ -2035,6 +2036,7 @@ def parse_model(d, ch, verbose=True):
 
     # Scope named shared-expert pools to this model build.
     SharedExpertMoE.reset_shared_pools()
+    SharedExpertESMoE.reset_shared_esmoe_pools()
 
     # Args
     legacy = True  # backward compatibility for v3/v5/v8/v9 models
@@ -2270,6 +2272,7 @@ def parse_model(d, ch, verbose=True):
         ch.append(c2)
     model = torch.nn.Sequential(*layers)
     SharedExpertMoE.reset_shared_pools()
+    SharedExpertESMoE.reset_shared_esmoe_pools()
     return model, sorted(save)
 
 

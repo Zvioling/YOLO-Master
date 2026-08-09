@@ -40,6 +40,13 @@ from .modules import (
     ABlockMoE,
 )
 
+# Issue #54-ESMoE: Cross-Scale Expert Sharing for v0 ES-MoE (端侧轻量化)
+from .shared_expert_esmoe import (
+    SharedExpertESMoE,
+    _SHARED_ESMOE_POOLS,
+    reset_shared_esmoe_pools,
+)
+
 from .experts import (
     OptimizedSimpleExpert,
     FusedGhostExpert,
