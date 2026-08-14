@@ -57,7 +57,7 @@ practices/DATA/
 │   └── 08-任务5-可视化分析与交付物.md
 └── experiments_zviolin/        # 实验数据（4 模型权重 + runs 完整结果）
     ├── README.md               # 实验数据索引
-    ├── weights/                # 6 个 best.pt 权重（>10MB，经 .gitignore 排除，不随仓库上传）
+    ├── weights/                # 6 个 best.pt 权重（约 6MB/个，随仓库上传）
     └── runs/                   # 训练日志 / 路由诊断 / benchmark / 动态 Top-K
 ```
 
