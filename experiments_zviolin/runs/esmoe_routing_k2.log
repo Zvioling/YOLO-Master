@@ -1,0 +1,22 @@
+[diagnose_esmoe_routing] Loading model from experiments_zviolin/runs/esmoe_v0_k2-2/weights/best.pt
+[diagnose_esmoe_routing] Using synthetic input (1 random tensor)
+[diagnose_esmoe_routing] Running forward pass on cpu (1 inputs) ...
+[diagnose_esmoe_routing] ES_MOE hooked: 4
+[diagnose_esmoe_routing] Aggregated routing records: 16
+[diagnose_esmoe_routing] wrote experiments_zviolin\runs\esmoe_routing_k2\routing_summary.csv (16 rows)
+[diagnose_esmoe_routing] wrote experiments_zviolin\runs\esmoe_routing_k2\recommendations.json
+
+=== ES-MoE 璺敱鎽樿锛堣法 4 涓?ES_MOE 灞傦級===
+  Expert 0 (ks=3): mean=0.212  std=0.262  top1_rate=0.50
+  Expert 1 (ks=5): mean=0.241  std=0.279  top1_rate=0.50
+  Expert 2 (ks=7): mean=0.215  std=0.254  top1_rate=0.50
+  Expert 3 (ks=9): mean=0.331  std=0.383  top1_rate=0.50
+  __avg_routing_entropy__: H_norm=0.491
+  total_records=16
+
+=== 鍦烘櫙鍖栨帹鑽?===
+  鈥?Layer model.3 (P3, channel=256): Top expert is Expert 3 (kernel_size=9, mean_weight=0.638)
+  鈥?Layer model.6 (P6, channel=512): Top expert is Expert 0 (kernel_size=3, mean_weight=0.538)
+  鈥?Layer model.9 (P9, channel=512): Top expert is Expert 1 (kernel_size=5, mean_weight=0.503)
+  鈥?Layer model.12 (P12, channel=1024): Top expert is Expert 3 (kernel_size=9, mean_weight=0.688)
+[diagnose_esmoe_routing] wrote experiments_zviolin\runs\esmoe_routing_k2\routing_heatmap.png

@@ -1,0 +1,7 @@
+weights_path,total_params,total_params_m,trainable_params,file_size_mb,flops_g,latency_ms_mean,peak_memory_mb,device,imgsz,reps,warmup,key
+experiments_zviolin\runs\esmoe_v0_k1-3\weights\best.pt,2814406,2.814406,0,5.815433502197266,7.309696e-09,56.69076619995758,0,cpu,640,500,100,esmoe_v0_k1
+experiments_zviolin\runs\esmoe_v0_k2-2\weights\best.pt,2814406,2.814406,0,5.815128326416016,8.102681600000001e-09,59.93544179998571,0,cpu,640,500,100,esmoe_v0_k2-2
+experiments_zviolin\runs\esmoe_v0_k3\weights\best.pt,2814406,2.814406,0,5.815433502197266,7.2720128e-09,59.44088299997384,0,cpu,640,500,100,esmoe_v0_k3
+experiments_zviolin\runs\esmoe_v0_k2_bl01\weights\best.pt,2814406,2.814406,0,5.815433502197266,7.6596992e-09,60.17106980003882,0,cpu,640,500,100,esmoe_v0_k2_bl01
+experiments_zviolin\runs\esmoe_v0_k2_bl20\weights\best.pt,2814406,2.814406,0,5.815433502197266,8.1024768e-09,63.25726059998851,0,cpu,640,500,100,esmoe_v0_k2_bl20
+experiments_zviolin\runs\esmoe_v0_shared\weights\best.pt,2726854,2.726854,0,5.6317949295043945,9.7875712e-09,59.05021780001698,0,cpu,640,500,100,esmoe_v0_shared

@@ -1,0 +1,39 @@
+{
+  "recommendations": [
+    "Layer model.3 (P3, channel=256): Top expert is Expert 3 (kernel_size=9, mean_weight=0.422)",
+    "Layer model.6 (P6, channel=512): Top expert is Expert 1 (kernel_size=5, mean_weight=0.352)",
+    "Layer model.9 (P9, channel=512): Top expert is Expert 0 (kernel_size=3, mean_weight=0.676)",
+    "Layer model.12 (P12, channel=1024): Top expert is Expert 3 (kernel_size=9, mean_weight=0.387)"
+  ],
+  "summary": {
+    "expert_0": {
+      "kernel_size": 3,
+      "mean": 0.263900488615036,
+      "std": 0.32785212993621826,
+      "is_top1_active_rate": 0.5,
+      "routing_entropy": 0.47120401263237
+    },
+    "expert_1": {
+      "kernel_size": 5,
+      "mean": 0.2240128070116043,
+      "std": 0.16572678089141846,
+      "is_top1_active_rate": 0.5,
+      "routing_entropy": 0.770061194896698
+    },
+    "expert_2": {
+      "kernel_size": 7,
+      "mean": 0.191389799118042,
+      "std": 0.1316593587398529,
+      "is_top1_active_rate": 0.25,
+      "routing_entropy": 0.7867954969406128
+    },
+    "expert_3": {
+      "kernel_size": 9,
+      "mean": 0.32069694995880127,
+      "std": 0.13272738456726074,
+      "is_top1_active_rate": 0.75,
+      "routing_entropy": 0.9448559880256653
+    },
+    "__avg_routing_entropy__": 0.7432291731238365
+  }
+}

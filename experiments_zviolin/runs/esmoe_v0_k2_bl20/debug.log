@@ -1,0 +1,4 @@
+Keys: ['epoch', 'optimizer_steps', 'best_fitness', 'model', 'ema', 'updates', 'optimizer', 'scaler', 'train_args', 'train_metrics', 'train_results', 'date', 'version', 'git', 'license', 'docs', 'mixture_checkpoint', 'runtime_state']
+scaler empty: True
+epoch: 40
+best_fitness: 0.1478

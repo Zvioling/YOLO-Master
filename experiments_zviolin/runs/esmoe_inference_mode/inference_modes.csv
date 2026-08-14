@@ -1,0 +1,3 @@
+mode,latency_ms,compute_experts,note
+hard_default_sparse,45.932,2/4 (sparse),推理 Hard Top-K，默认 _eager_sparse_enabled=True
+dense_forced,45.07,4/4 (dense),强制 dense softmax，所有 4 个专家都计算

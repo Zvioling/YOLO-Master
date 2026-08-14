@@ -1,0 +1,30 @@
+{
+  "recommendations": [
+    "Dense or small-object scenes should inspect WindowTransformer first when its top-1 activation ratio is high (0.361).",
+    "Occluded or irregular-object scenes should inspect DeformableTransformer when its top-1 activation ratio rises (0.208).",
+    "Latency-sensitive simple scenes can prefer LocalConvTransformer-heavy routing (top-1 0.432) before enabling deeper MoT/MoE hybrids.",
+    "Routing confidence (avg normalized entropy): 0.631 (lower = more confident expert selection)."
+  ],
+  "summary": {
+    "LocalConvTransformer": {
+      "top1_mean": 0.43166666666666664,
+      "topk_mean": 0.2866666666666666,
+      "weight_mean": 0.2888575313457598
+    },
+    "WindowTransformer": {
+      "top1_mean": 0.36083333333333334,
+      "topk_mean": 0.3866666666666667,
+      "weight_mean": 0.38627856969833374
+    },
+    "DeformableTransformer": {
+      "top1_mean": 0.20750000000000002,
+      "topk_mean": 0.3266666666666667,
+      "weight_mean": 0.3248638945321242
+    },
+    "__avg_routing_entropy__": {
+      "top1_mean": 0.6307812134424845,
+      "topk_mean": 0.0,
+      "weight_mean": 0.0
+    }
+  }
+}
