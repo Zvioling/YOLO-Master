@@ -47,7 +47,7 @@ feat: ES-MoE Adaptive Inference Optimization (Top-K Sparse + Dynamic Routing + S
 | **MoE v084** | 官方基线（YOLO-Master 仓库 v0.8.4）| 3.14 | 16.84% | 29.79% | 39.47% | 31.05% | 13.3 h |
 | **MoT v08_mot6** | 官方 MoT（Mixture-of-Transformers）| 3.71 | 16.93% | 29.77% | 39.37% | 31.22% | 19.5 h |
 | **MoA v08_moa2** | 官方 MoA（Mixture-of-Attention）| 3.23 | 16.80% | 29.55% | 40.75% | 30.04% | 10.9 h |
-| **MoE+MoT Shared v08_moe_mot_shared** | 官方 Issue #54 方案 D（MoE+MoT 跨尺度共享 P3/P4）| 3.71+ | 16.80% | 29.52% | 38.47% | 31.36% | — |
+| **MoE+MoT Shared v08_moe_mot_shared** | 官方 Issue #54 跨尺度共享实验（MoE+MoT, P3/P4 共享 expert pool）| — | 16.80% | 29.52% | 38.47% | 31.36% | — |
 | **ES-MoE K=2** ⭐ | 本项目（ES-MoE, top_k=2）| **2.814** | **17.27%** | **30.55%** | **43.48%** | **32.70%** | 13.0 h |
 | ES-MoE K=1 | 本项目（同架构 top_k=1）| 2.814 | 16.13% | 28.79% | — | — | — |
 | ES-MoE K=3 | 本项目（同架构 top_k=3）| 2.814 | 15.20% | 27.44% | — | — | — |
@@ -61,7 +61,7 @@ feat: ES-MoE Adaptive Inference Optimization (Top-K Sparse + Dynamic Routing + S
 | **mAP50** | +0.76pp | +0.78pp | +1.00pp | +1.03pp |
 | **Precision** | **+4.01pp**（43.48% − 39.47%，10.16% 相对提升，最显著）| +4.11pp | +2.73pp | **+5.01pp**（43.48% − 38.47%，13.02% 相对提升，**最显著**）|
 | **Recall** | +1.65pp | +1.48pp | +2.66pp | +1.34pp |
-| **参数量** | **−10.4%**（2.814M vs 3.14M）| **−24.2%**（2.814M vs 3.71M）| −12.9% | **−24.2%+**（2.814M vs 3.71M+，重型 Transformer 专家共享）|
+| **参数量** | **−10.4%**（2.814M vs 3.14M）| **−24.2%**（2.814M vs 3.71M）| −12.9% | **（未实测）** best.pt 参数量未在本项目读出；理论上 MoT 重型 Transformer 专家共享应带来更大削减 |
 | **训练时长** | −0.3h（持平）| **−33.3%**（13.0h vs 19.5h）| +19.3%（+2.1h）| — |
 
 **结论**：在项目仓库自带的 4 个官方变体（MoE/MoT/MoA/MoE+MoT Shared 方案 D）+ 本项目 4 个 ES-MoE 变体 = **8 个变体**的同硬件同 epoch 对照中，**ES-MoE K=2 在 mAP/mAP50/Precision/Recall 全部 4 项主指标上都达到最高分**——这是项目原文 §1.4 验收 #3"相对基线增益"的硬性证据。
@@ -262,7 +262,7 @@ python -m pytest tests/test_esmoe.py tests/test_shared_expert_esmoe.py -v --colo
 **结论**：
 
 1. ✅ **同硬件同 epoch 同 batch（最公平对比，L2 层）**：ES-MoE K=2 vs MoE v084 = **+0.43pp**，**超过原文 §1.4 隐含的 +0.27% 通过阈值**
-2. ✅ **同硬件下超越所有可比基线**：比 MoE v084 +0.43pp、比 MoT +0.34pp、比 MoA +0.47pp、比 YOLOv8n +8.17pp、比 SidKC fork YOLO-Master +9.46pp
+2. ✅ **同硬件下超越所有可比基线**：比 MoE v084 +0.43pp、比 MoT +0.34pp、比 MoA +0.47pp、比 MoE+MoT Shared方案 D +0.47pp（**Issue #54 官方跨尺度共享实现，本项目实测**）、比 YOLOv8n +8.17pp、比 SidKC fork YOLO-Master +9.46pp
 3. ⚠️ **跨硬件（官方 A100 + 300 epoch）对比**：比官方 EsMoE-N (20.3%) 低 3.03pp——硬件代差 10× + epoch 3×，**这是同一量级内的合理差异**
 4. ❌ **项目原文绝对阈值（38%/40%）**：未达，但**官方 A100 + 300 epoch 也只有 19.6%~20.3%**——硬件约束而非架构问题
 
