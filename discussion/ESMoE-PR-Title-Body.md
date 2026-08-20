@@ -1,8 +1,8 @@
 # PR 描述 (Discussion 风格汇报) — ES-MoE 自适应推理优化（实战项目一）
 
-> **分支**: `feat/esmoe-adaptive-inference`（代码改动）
+> **分支**: `practise-1-esmoe-adaptive-inference`（代码改动）
 > **数据分支**: `esmoe-experiments-data`（实验数据）
-> **PR 链接**: https://github.com/Zviolin/YOLO-Master/pull/new/feat/esmoe-adaptive-inference
+> **PR 链接**: https://github.com/164321595/YOLO-Master/pull/new/practise-1-esmoe-adaptive-inference
 
 ---
 
@@ -80,7 +80,7 @@ feat: ES-MoE Adaptive Inference Optimization (Top-K Sparse + Dynamic Routing + S
 - K=2 精度最高（17.27%），相对 MoE 基线 v084 **+0.43%**，达项目验收 #3 的"相对增益"标准
 - K=3 路由熵最高（0.741，4 专家均匀）但精度反而最低（15.20%）——强均衡稀释了专家专门化
 - K=1 路由熵最低（0.198，几乎只用 Expert 1），稀疏度最高，GPU 延迟收益最大（-23.7%）
-- 绝对 mAP 17.27% 未达原文 38% 阈值，**已被官方数据印证为该硬件上限**（官方 A100 + 300 epoch 也只到 20.3%，见 [Issue #98](https://github.com/Tencent/YOLO-Master/issues/98)、[官方 README](https://github.com/isLinXu/YOLO-Master/blob/main/README_CN.md)）；同硬件 RTX 5060 第三方 fork 也只能做到 6.79%~7.81%（[SidKC fork](https://github.com/SidKC/YOLO-Master)）；**推理设备不影响 mAP**（同模型跨 RTX 5070Ti/H200/CPU 推理差异 < 0.03pp，见 [skywalker-lt/yolo-master-edge](https://github.com/skywalker-lt/yolo-master-edge)）。完整归因见 [06-任务3 §3.5](https://github.com/Zviolin/YOLO-Master/blob/esmoe-experiments-data/docs/06-任务3-性能指标验证.md)
+- 绝对 mAP 17.27% 未达原文 38% 阈值，**已被官方数据印证为该硬件上限**（官方 A100 + 300 epoch 也只到 20.3%，见 [Issue #98](https://github.com/Tencent/YOLO-Master/issues/98)、[官方 README](https://github.com/isLinXu/YOLO-Master/blob/main/README_CN.md)）；同硬件 RTX 5060 第三方 fork 也只能做到 6.79%~7.81%（[SidKC fork](https://github.com/SidKC/YOLO-Master)）；**推理设备不影响 mAP**（同模型跨 RTX 5070Ti/H200/CPU 推理差异 < 0.03pp，见 [skywalker-lt/yolo-master-edge](https://github.com/skywalker-lt/yolo-master-edge)）。完整归因见 [06-任务3 §3.5](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/docs/06-任务3-性能指标验证.md)
 
 ### 专家利用率与路由可解释性（验收 #2 + #5）
 
@@ -94,7 +94,7 @@ feat: ES-MoE Adaptive Inference Optimization (Top-K Sparse + Dynamic Routing + S
 | Shared | 0.257 | 0.106 | 0.214 | **0.423** | 0.430 | **31.7** ⚠️ |
 
 **K=2/K=3 满足验收 #2 优秀线**：差异 ≤ 15 个百分点（原文阈值）且 4 专家 mean_weight 均 >0（无闲置专家）。
-K=1（75.0）和 Shared（31.7）超出阈值——K=1 是 top-1 天然强稀疏（仅 1 个专家被选中、其他必然 0），Shared 是跨尺度池权重偏向 9×9。完整背景见 [05-任务2](https://github.com/Zviolin/YOLO-Master/blob/esmoe-experiments-data/docs/05-任务2-专家利用率分析与负载均衡调优.md)。
+K=1（75.0）和 Shared（31.7）超出阈值——K=1 是 top-1 天然强稀疏（仅 1 个专家被选中、其他必然 0），Shared 是跨尺度池权重偏向 9×9。完整背景见 [05-任务2](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/docs/05-任务2-专家利用率分析与负载均衡调优.md)。
 
 > **口径**：利用率差异采用 [YOLO-Master 官方 μ_i 定义](https://arxiv.org/html/2512.23273v2)（max(μ_i) − min(μ_i)，单位"占比百分点"），与论文 §3.5 及 [Issue #36 官方回复](https://github.com/Tencent/YOLO-Master/issues/36) 一致。
 
@@ -228,10 +228,10 @@ python -m pytest tests/test_esmoe.py tests/test_shared_expert_esmoe.py -v --colo
 ## 关联资源
 
 - Issue: https://github.com/Tencent/YOLO-Master/issues/54
-- 实验数据分支: https://github.com/Zviolin/YOLO-Master/tree/esmoe-experiments-data
-- 代码分支: https://github.com/Zviolin/YOLO-Master/tree/feat/esmoe-adaptive-inference
+- 实验数据分支: https://github.com/164321595/YOLO-Master/tree/esmoe-experiments-data
+- 代码分支: https://github.com/164321595/YOLO-Master/tree/practise-1-esmoe-adaptive-inference
 - Discussion 文章: https://github.com/Tencent/YOLO-Master/discussions/（⚠️ 待发布后回填真实编号，参考 https://github.com/Tencent/YOLO-Master/discussions/215）
-- 详细文档: [docs/04-08-任务*.md](https://github.com/Zviolin/YOLO-Master/tree/esmoe-experiments-data/docs)
+- 详细文档: [docs/04-08-任务*.md](https://github.com/164321595/YOLO-Master/tree/esmoe-experiments-data/docs)
 
 ## 局限
 
@@ -249,7 +249,7 @@ python -m pytest tests/test_esmoe.py tests/test_shared_expert_esmoe.py -v --colo
 
 | 层级 | 基线模型 | 来源 | VisDrone mAP50-95 | 与 ES-MoE K=2 (17.27%) 的差距 | 提升方向 |
 |------|---------|------|-------------------|---------------------------------|---------|
-| **L0 项目原文期望** | VisDrone mAP ≥ 38% | [实战项目原文 §1.4](https://github.com/Zviolin/YOLO-Master/blob/esmoe-experiments-data/docs/00-实战项目原文.md#L67-L72) | 38.00% | -20.73pp | ❌ 硬件约束 |
+| **L0 项目原文期望** | VisDrone mAP ≥ 38% | [实战项目原文 §1.4](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/docs/00-实战项目原文.md#L67-L72) | 38.00% | -20.73pp | ❌ 硬件约束 |
 | **L1 官方同硬件** | YOLO-Master + LoRA rank=8 | [SidKC fork](https://github.com/SidKC/YOLO-Master) | 7.81% | **+9.46pp** | ✅ 大幅超越 |
 | **L2 仓库同硬件** | **MoE 基线 v084** | **本项目实测** | **16.84%** | **+0.43pp** | ✅ **超过原文 +0.27% 阈值** |
 | **L2 仓库同硬件** | MoT（v08_mot6）| 本项目实测 | 16.93% | +0.34pp | ✅ 提升 |
@@ -291,14 +291,14 @@ ES-MoE K=2 在 L2/L4 同硬件层级对所有可比基线都有正增益——�
 
 **方式 1（浏览器）**:
 ```
-https://github.com/Zviolin/YOLO-Master/pull/new/feat/esmoe-adaptive-inference
+https://github.com/164321595/YOLO-Master/pull/new/practise-1-esmoe-adaptive-inference
 ```
 粘贴上面的 Title + Body。
 
 **方式 2（gh CLI，如果已登录）**:
 ```bash
 cd "G:\Codes\OpenSource\Rhino-bird\practices\Codes copy 3\YOLO-Master"
-git push zviolin feat/esmoe-adaptive-inference
+git push zviolin practise-1-esmoe-adaptive-inference
 git push zviolin esmoe-experiments-data
-gh pr create --base main --head feat/esmoe-adaptive-inference --title "feat: ES-MoE Adaptive Inference Optimization (Top-K Sparse + Dynamic Routing + Shared Experts)" --body "见上方 PR Body"
+gh pr create --base main --head practise-1-esmoe-adaptive-inference --title "feat: ES-MoE Adaptive Inference Optimization (Top-K Sparse + Dynamic Routing + Shared Experts)" --body "见上方 PR Body"
 ```
