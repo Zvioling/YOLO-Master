@@ -2,7 +2,7 @@
 
 > 本仓库是 **2026 腾讯犀牛鸟实战项目一（ES-MoE 自适应推理优化）** 的实验数据 & 文档仓库。
 >
-> 配套代码分支：[164321595/YOLO-Master @ practise-1-esmoe-adaptive-inference](https://github.com/164321595/YOLO-Master/tree/practise-1-esmoe-adaptive-inference)
+> 配套代码分支：[164321595/YOLO-Master @ practise-1-esmoe-adaptive-inference](https://gitee.com/Zvioling/YOLO-Master/tree/practise-1-esmoe-adaptive-inference)
 >
 > 个人博客：[https://zviolin.online/](https://zviolin.online/)
 
@@ -111,7 +111,7 @@ practices/DATA/
   title  = {YOLO-Master ES-MoE 自适应推理优化：Top-K 稀疏化与动态路由实践},
   author = {张伟林 (Zviolin)},
   year   = {2026},
-  url    = {https://github.com/164321595/YOLO-Master/tree/practise-1-esmoe-adaptive-inference}
+  url    = {https://gitee.com/Zvioling/YOLO-Master/tree/practise-1-esmoe-adaptive-inference}
 }
 ```
 

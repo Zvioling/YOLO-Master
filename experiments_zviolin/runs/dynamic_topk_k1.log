@@ -1,7 +1,0 @@
-[main] image_dir 'None' not found, falling back to synthetic data
-[main] Generating synthetic images for demo ...
-[verify_distribution] wrote experiments_zviolin\runs\dynamic_topk_k1\dynamic_topk_per_image.csv
-
-[verify_distribution] Summary: 50 images
-  avg_complexity=0.0619, avg_top_k=1.66
-  distribution: Counter({2: 33, 1: 17})

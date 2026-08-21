@@ -8,7 +8,7 @@
 
 | 仓库类型 | 用途 | 位置 | 说明 |
 |---------|------|------|------|
-| **代码贡献仓库** | 向 YOLO-Master 提交 PR | `github.com/164321595/YOLO-Master` | Fork 自原仓库，用于代码贡献 |
+| **代码贡献仓库** | 向 YOLO-Master 提交 PR | `gitee.com/Zvioling/YOLO-Master` | Fork 自原仓库，用于代码贡献 |
 | **实验成果仓库** | 展示实验结果和文档 | `github.com/164321595/Rhino-bird` | 独立仓库，用于展示完整项目过程 |
 
 ### 1.2 为什么采用双仓库
@@ -19,8 +19,8 @@
 ## 二、代码贡献仓库（YOLO-Master Fork）
 
 > **本项目的 Fork 仓库**：
-> - Fork 仓库：`https://github.com/164321595/YOLO-Master`
-> - 功能分支：`https://github.com/164321595/YOLO-Master/tree/issue-54-mot-experiments`
+> - Fork 仓库：`https://gitee.com/Zvioling/YOLO-Master`
+> - 功能分支：`https://gitee.com/Zvioling/YOLO-Master/tree/issue-54-mot-experiments`
 > - 原仓库（上游）：`https://github.com/Tencent/YOLO-Master`
 
 ### 2.1 Fork 与克隆
@@ -32,7 +32,7 @@
 
 # 2. 克隆 Fork 后的仓库
 cd g:\Codes\OpenSource\Rhino-bird\Codes
-git clone https://github.com/164321595/YOLO-Master.git
+git clone https://gitee.com/Zvioling/YOLO-Master.git
 cd YOLO-Master
 
 # 3. 添加上游远程仓库（用于同步原项目更新）
@@ -41,8 +41,8 @@ git remote add upstream https://github.com/Tencent/YOLO-Master.git
 # 4. 验证远程仓库配置
 git remote -v
 # 应显示:
-# origin    https://github.com/164321595/YOLO-Master.git (fetch)
-# origin    https://github.com/164321595/YOLO-Master.git (push)
+# origin    https://gitee.com/Zvioling/YOLO-Master.git (fetch)
+# origin    https://gitee.com/Zvioling/YOLO-Master.git (push)
 # upstream  https://github.com/Tencent/YOLO-Master.git (fetch)
 # upstream  https://github.com/Tencent/YOLO-Master.git (push)
 ```
@@ -57,7 +57,7 @@ main
 
 # 功能分支（用于 Issue #54，本项目使用）
 issue-54-mot-experiments
-# → https://github.com/164321595/YOLO-Master/tree/issue-54-mot-experiments
+# → https://gitee.com/Zvioling/YOLO-Master/tree/issue-54-mot-experiments
 
 # 其他可能的分支
 issue-54-boundary-tests       # 边界测试专用
@@ -117,7 +117,7 @@ git commit -m "feat: 添加 MoT 架构消融实验脚本和边界测试"
 git push origin issue-54-mot-experiments
 
 # 4. 在 GitHub 上创建 PR
-# 访问: https://github.com/164321595/YOLO-Master/pulls
+# 访问: https://gitee.com/Zvioling/YOLO-Master/pulls
 # 点击 "New pull request"
 # 选择: base repository: Tencent/YOLO-Master, base: main
 #        head repository: Zviolin/YOLO-Master, compare: issue-54-mot-experiments
@@ -168,7 +168,7 @@ Rhino-bird/
 │       ├── 02-Conda环境配置说明.md
 │       └── 03-GitHub仓库与项目结构说明.md
 ├── Codes/                         # 代码目录
-│   └── YOLO-Master/               # Zviolin Fork: https://github.com/164321595/YOLO-Master
+│   └── YOLO-Master/               # Zviolin Fork: https://gitee.com/Zvioling/YOLO-Master
 ├── Experiments/                   # 实验结果
 │   ├── logs/                      # 训练日志
 │   ├── weights/                   # 模型权重
@@ -274,7 +274,7 @@ git push origin issue-54-mot-experiments
 
 # 6. 在 GitHub 上创建 PR（如果是首次推送）
 # 或更新现有 PR
-# PR 链接：https://github.com/164321595/YOLO-Master/pull/new/issue-54-mot-experiments
+# PR 链接：https://gitee.com/Zvioling/YOLO-Master/pull/new/issue-54-mot-experiments
 ```
 
 ### 4.2 实验记录流程
@@ -428,8 +428,8 @@ Closes #54
 ✅ **双仓库策略**：代码贡献仓库用于 PR，实验成果仓库用于展示。
 
 **本项目仓库链接**：
-- Fork 仓库：`https://github.com/164321595/YOLO-Master`
-- 功能分支：`https://github.com/164321595/YOLO-Master/tree/issue-54-mot-experiments`
+- Fork 仓库：`https://gitee.com/Zvioling/YOLO-Master`
+- 功能分支：`https://gitee.com/Zvioling/YOLO-Master/tree/issue-54-mot-experiments`
 - 实验仓库：`https://github.com/164321595/Rhino-bird`
 
 **关键要点**：

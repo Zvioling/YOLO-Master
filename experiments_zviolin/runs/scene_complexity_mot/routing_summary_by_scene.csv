@@ -1,7 +1,0 @@
-DeformableTransformer_mean_weight,DeformableTransformer_top1_token_frac,LocalConvTransformer_mean_weight,LocalConvTransformer_top1_token_frac,WindowTransformer_mean_weight,WindowTransformer_top1_token_frac,density,occlusion,samples,scale,shape
-0.0,0.0,0.5,1.0,0.5,0.0,dense,unknown,12,mixed,regular
-0.0,0.0,0.5,1.0,0.5,0.0,dense,unknown,168,small,irregular
-0.0,0.0,0.5,1.0,0.5,0.0,dense,unknown,24,small,regular
-0.0,0.0,0.5,1.0,0.5,0.0,medium,unknown,36,mixed,regular
-0.0,0.0,0.5,1.0,0.5,0.0,medium,unknown,54,small,irregular
-0.0,0.0,0.5,1.0,0.5,0.0,medium,unknown,6,small,regular

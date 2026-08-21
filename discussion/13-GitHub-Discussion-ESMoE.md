@@ -8,9 +8,9 @@
 >
 > 关联 Issue：[Tencent/YOLO-Master#54](https://github.com/Tencent/YOLO-Master/issues/54)
 >
-> 代码分支：https://github.com/164321595/YOLO-Master/tree/practise-1-esmoe-adaptive-inference
+> 代码分支：https://gitee.com/Zvioling/YOLO-Master/tree/practise-1-esmoe-adaptive-inference
 >
-> 实验数据：https://github.com/164321595/YOLO-Master/tree/esmoe-experiments-data
+> 实验数据：https://gitee.com/Zvioling/YOLO-Master/tree/esmoe-experiments-data
 
 ---
 
@@ -26,15 +26,15 @@
 
 ## 0.5. 验收对照表（映射项目原文 §1.4 五大验收项）
 
-> 本节是 reviewer 的快速对照表，列项直接对应 [00-实战项目原文 §1.4](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/docs/00-实战项目原文.md) 的验收要求。详细数据见后续章节。
+> 本节是 reviewer 的快速对照表，列项直接对应 [00-实战项目原文 §1.4](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/docs/00-实战项目原文.md) 的验收要求。详细数据见后续章节。
 
 | 验收项 | 原文要求 | 实测结果 | 达标状态 | 原因 / 说明 |
 | ------ | -------- | -------- | -------- | ----------- |
-| **#1 基础功能** | 4 个变体训练无 NaN、模型可加载、推理可复现 | 4 变体（K=1/K=2/K=3/Shared）100 epoch 全完成；28 项 pytest 边界测试通过 | ✅ **优秀** | 详见 [§2](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#2-实验设置)、[§8](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#8-工程贡献清单) |
+| **#1 基础功能** | 4 个变体训练无 NaN、模型可加载、推理可复现 | 4 变体（K=1/K=2/K=3/Shared）100 epoch 全完成；28 项 pytest 边界测试通过 | ✅ **优秀** | 详见 [§2](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#2-实验设置)、[§8](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#8-工程贡献清单) |
 | **#2 专家利用率** | 利用率差异 < 30 个百分点 = 通过；< 15 个百分点 + 无闲置 = 优秀 | K=1: 75.0 / K=2: **12.5** ✅ / K=3: **13.0** ✅ / Shared: 31.7（百分点）| ✅ **K=2/K=3 优秀** | 口径：[YOLO-Master arXiv:2512.23273 §3.5](https://arxiv.org/html/2512.23273v2) `μ_i` max−min。**K=2/K=3 满足"通过+优秀"**；K=1 是 top-1 强稀疏设计代价；Shared 是跨尺度池权重偏向 9×9 的设计权衡 |
-| **#3 性能指标** | mAP ≥ 38%（优秀 40%）| 绝对 mAP50-95 = **17.27%**（K=2）；相对 MoE v084 = **+0.43pp** | ⚠️ **绝对未达 / 相对通过** | **同硬件同 epoch（最公平对比）**：K=2 vs MoE v084 +0.43pp（超 +0.27% 阈值）、vs MoT +0.34pp、vs MoA +0.47pp。**官方 A100 + 300 epoch 也只有 20.3%**（[Issue #98](https://github.com/Tencent/YOLO-Master/issues/98)），我们仅差 3.03pp。详见 [§3](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#3-top-k-消融结果k1k2k3--shared) |
-| **#4 推理效率** | 推理时间 -10% = 通过；-20% = 优秀 | 同权重 Hard vs Dense：K=1 GPU **-23.7%** / K=3 -10.5% / Shared -13.9%；CPU K=1 -18.9% / K=2 -13.3% / K=3 -15.7% / Shared -7.0% | ✅ **优秀** | K=1 GPU -23.7% 已超优秀线 -20%。**关键：同权重 Hard vs Dense 交叉验证**，剥离模型差异，确认稀疏化是真实收益。详见 [§4](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#4-创新点-1同权重稀疏化验证hard-top-k-vs-强制-dense) |
-| **#5 可视化** | 专家热力图 + 路由熵 + 复杂度关联图 | 4 张图全有：`sparse_gain_gpu_cpu.png` / `dynamic_topk_complexity.png` / `routing_entropy_compare.png` / `routing_heatmap_k2.png` | ✅ **优秀** | 热力图、熵对比、复杂度-路由关联三视图齐全。详见 [§7](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#7-路由可解释性k1k2k3shared-) |
+| **#3 性能指标** | mAP ≥ 38%（优秀 40%）| 绝对 mAP50-95 = **17.27%**（K=2）；相对 MoE v084 = **+0.43pp** | ⚠️ **绝对未达 / 相对通过** | **同硬件同 epoch（最公平对比）**：K=2 vs MoE v084 +0.43pp（超 +0.27% 阈值）、vs MoT +0.34pp、vs MoA +0.47pp。**官方 A100 + 300 epoch 也只有 20.3%**（[Issue #98](https://github.com/Tencent/YOLO-Master/issues/98)），我们仅差 3.03pp。详见 [§3](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#3-top-k-消融结果k1k2k3--shared) |
+| **#4 推理效率** | 推理时间 -10% = 通过；-20% = 优秀 | 同权重 Hard vs Dense：K=1 GPU **-23.7%** / K=3 -10.5% / Shared -13.9%；CPU K=1 -18.9% / K=2 -13.3% / K=3 -15.7% / Shared -7.0% | ✅ **优秀** | K=1 GPU -23.7% 已超优秀线 -20%。**关键：同权重 Hard vs Dense 交叉验证**，剥离模型差异，确认稀疏化是真实收益。详见 [§4](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#4-创新点-1同权重稀疏化验证hard-top-k-vs-强制-dense) |
+| **#5 可视化** | 专家热力图 + 路由熵 + 复杂度关联图 | 4 张图全有：`sparse_gain_gpu_cpu.png` / `dynamic_topk_complexity.png` / `routing_entropy_compare.png` / `routing_heatmap_k2.png` | ✅ **优秀** | 热力图、熵对比、复杂度-路由关联三视图齐全。详见 [§7](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/discussion/13-GitHub-Discussion-ESMoE.md#7-路由可解释性k1k2k3shared-) |
 
 **总评**：
 
@@ -143,7 +143,7 @@
 
 | 层级 | 基线模型 | 来源 | VisDrone mAP50-95 | 与 ES-MoE K=2 (17.27%) 的差距 | 提升方向 |
 |------|---------|------|-------------------|---------------------------------|---------|
-| **L0 项目原文期望** | VisDrone mAP ≥ 38% | [实战项目原文 §1.4](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/docs/00-实战项目原文.md#L67-L72) | 38.00% | -20.73pp | ❌ 硬件约束 |
+| **L0 项目原文期望** | VisDrone mAP ≥ 38% | [实战项目原文 §1.4](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/docs/00-实战项目原文.md#L67-L72) | 38.00% | -20.73pp | ❌ 硬件约束 |
 | **L0 项目原文期望** | VisDrone mAP ≥ 40%（优秀）| 实战项目原文 §1.4 | 40.00% | -22.73pp | ❌ 硬件约束 |
 | **L1 官方同硬件** | YOLO-Master + LoRA rank=8 | [SidKC fork](https://github.com/SidKC/YOLO-Master) | 7.81% | **+9.46pp** | ✅ 大幅超越 |
 | **L2 仓库同硬件** | **MoE 基线 v084** | **本项目实测** | **16.84%** | **+0.43pp** | ✅ **超过原文 +0.27% 阈值** |
@@ -163,7 +163,7 @@
 4. ⚠️ **跨硬件（官方 A100 + 300 epoch）对比**：比官方 EsMoE-N (20.3%) 低 3.03pp——硬件代差 10× + epoch 3×，**这是同一量级内的合理差异**
 5. ❌ **项目原文绝对阈值（38%/40%）**：未达，但**官方 A100 + 300 epoch 也只有 19.6%~20.3%**——硬件约束而非架构问题
 
-**结论**：**ES-MoE K=2 在同硬件对比层级（L2）对所有项目仓库基线都有正增益，且在同硬件所有架构对比层级（L4）对所有已发表模型都有正增益——项目原文 §1.4 验收 #3 的"相对增益"标准明确通过。**完整分析见 [06-任务3 §3.5](https://github.com/164321595/YOLO-Master/blob/esmoe-experiments-data/docs/06-任务3-性能指标验证.md)。
+**结论**：**ES-MoE K=2 在同硬件对比层级（L2）对所有项目仓库基线都有正增益，且在同硬件所有架构对比层级（L4）对所有已发表模型都有正增益——项目原文 §1.4 验收 #3 的"相对增益"标准明确通过。**完整分析见 [06-任务3 §3.5](https://gitee.com/Zvioling/YOLO-Master/blob/esmoe-experiments-data/docs/06-任务3-性能指标验证.md)。
 
 ---
 
@@ -338,7 +338,7 @@ P5 (128ch, stride=16) ─┘
 ## 10. 如何使用 / 复现
 
 ```bash
-git clone https://github.com/164321595/YOLO-Master.git
+git clone https://gitee.com/Zvioling/YOLO-Master.git
 cd YOLO-Master
 git checkout practise-1-esmoe-adaptive-inference
 conda activate yolo-master
@@ -375,9 +375,9 @@ python -m pytest tests/test_esmoe.py tests/test_shared_expert_esmoe.py -v --colo
 
 | 资源 | 链接 |
 | ---- | ---- |
-| 实验数据分支 | https://github.com/164321595/YOLO-Master/tree/esmoe-experiments-data |
-| 代码分支 | https://github.com/164321595/YOLO-Master/tree/practise-1-esmoe-adaptive-inference |
-| 任务文档 | [docs/04-08-任务*.md](https://github.com/164321595/YOLO-Master/tree/esmoe-experiments-data/docs)（5 篇实验文档）|
+| 实验数据分支 | https://gitee.com/Zvioling/YOLO-Master/tree/esmoe-experiments-data |
+| 代码分支 | https://gitee.com/Zvioling/YOLO-Master/tree/practise-1-esmoe-adaptive-inference |
+| 任务文档 | [docs/04-08-任务*.md](https://gitee.com/Zvioling/YOLO-Master/tree/esmoe-experiments-data/docs)（5 篇实验文档）|
 | 关联 Issue | https://github.com/Tencent/YOLO-Master/issues/54 |
 
 ---
