@@ -1,0 +1,35 @@
+# Python 编译产物
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# 虚拟环境
+.venv/
+venv/
+env/
+.env
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.bak
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# ============================================
+# 关键:任何 *zviolin* / *Zviolin* / *zvioling* 目录(避免误传)
+# ============================================
+*zviolin*/
+*Zviolin*/
+*zvioling/
+
+# 任何临时 draft 目录
+draft/
+tmp/
