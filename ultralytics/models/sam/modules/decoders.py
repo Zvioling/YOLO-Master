@@ -52,7 +52,11 @@ class MaskDecoder(nn.Module):
             transformer_dim (int): Channel dimension for the transformer module.
             transformer (nn.Module): Transformer module used for mask prediction.
             num_multimask_outputs (int): Number of masks to predict for disambiguating masks.
+<<<<<<< HEAD
             activation (Type[nn.Module]): Type of activation to use when upscaling masks.
+=======
+            activation (type[nn.Module]): Type of activation to use when upscaling masks.
+>>>>>>> origin/main
             iou_head_depth (int): Depth of the MLP used to predict mask quality.
             iou_head_hidden_dim (int): Hidden dimension of the MLP used to predict mask quality.
         """
@@ -233,7 +237,11 @@ class SAM2MaskDecoder(nn.Module):
             transformer_dim (int): Channel dimension of the transformer.
             transformer (nn.Module): Transformer used to predict masks.
             num_multimask_outputs (int): Number of masks to predict when disambiguating masks.
+<<<<<<< HEAD
             activation (Type[nn.Module]): Type of activation to use when upscaling masks.
+=======
+            activation (type[nn.Module]): Type of activation to use when upscaling masks.
+>>>>>>> origin/main
             iou_head_depth (int): Depth of the MLP used to predict mask quality.
             iou_head_hidden_dim (int): Hidden dimension of the MLP used to predict mask quality.
             use_high_res_features (bool): Whether to use high-resolution features.

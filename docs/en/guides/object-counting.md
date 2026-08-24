@@ -1,40 +1,78 @@
 ---
+<<<<<<< HEAD
 comments: true
 description: Learn to accurately identify and count objects in real-time using Ultralytics YOLO11 for applications like crowd analysis and surveillance.
 keywords: object counting, YOLO11, Ultralytics, real-time object detection, AI, deep learning, object tracking, crowd analysis, surveillance, resource optimization
 ---
 
 # Object Counting using Ultralytics YOLO11
+=======
+title: Real-Time Object Counting with YOLO26
+comments: true
+description: Count objects crossing a line or inside a region in real time with Ultralytics YOLO26. Track and tally specific classes for crowd analysis, retail, and traffic.
+keywords: object counting, YOLO26, Ultralytics, real-time object detection, object tracking, line counting, region counting, crowd analysis, surveillance, traffic management
+---
+
+# Object Counting using Ultralytics YOLO26
+>>>>>>> origin/main
 
 ## What is Object Counting?
 
 <a href="https://colab.research.google.com/github/ultralytics/notebooks/blob/main/notebooks/how-to-count-the-objects-using-ultralytics-yolo.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open Object Counting In Colab"></a>
 
+<<<<<<< HEAD
 Object counting with [Ultralytics YOLO11](https://github.com/ultralytics/ultralytics/) involves accurate identification and counting of specific objects in videos and camera streams. YOLO11 excels in real-time applications, providing efficient and precise object counting for various scenarios like crowd analysis and surveillance, thanks to its state-of-the-art algorithms and [deep learning](https://www.ultralytics.com/glossary/deep-learning-dl) capabilities.
 
 <p align="center">
   <br>
   <iframe loading="lazy" width="720" height="405" src="https://www.youtube.com/embed/vKcD44GkSF8"
+=======
+Object counting with [Ultralytics YOLO26](https://github.com/ultralytics/ultralytics/) involves accurate identification and counting of specific objects in videos and camera streams. YOLO26 excels in real-time applications, providing efficient and precise object counting for various scenarios like crowd analysis and surveillance, thanks to its state-of-the-art algorithms and [deep learning](https://www.ultralytics.com/glossary/deep-learning-dl) capabilities.
+
+<p align="center">
+  <br>
+  <iframe loading="lazy" width="720" height="405" src="https://www.youtube.com/embed/pJLXmhyuHzA"
+>>>>>>> origin/main
     title="YouTube video player" frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
   <br>
+<<<<<<< HEAD
   <strong>Watch:</strong> How to Perform Real-Time Object Counting with Ultralytics YOLO11 🍏
+=======
+  <strong>Watch:</strong> How to Perform Real-Time Object Counting with Ultralytics YOLO26 🚀
+>>>>>>> origin/main
 </p>
 
 ## Advantages of Object Counting
 
+<<<<<<< HEAD
 - **Resource Optimization:** Object counting facilitates efficient resource management by providing accurate counts, optimizing resource allocation in applications like [inventory management](https://docs.ultralytics.com/guides/analytics/).
 - **Enhanced Security:** Object counting enhances security and surveillance by accurately tracking and counting entities, aiding in proactive [threat detection](https://docs.ultralytics.com/guides/security-alarm-system/).
+=======
+- **Resource Optimization:** Object counting facilitates efficient resource management by providing accurate counts, optimizing resource allocation in applications like [inventory management](analytics.md).
+- **Enhanced Security:** Object counting enhances security and surveillance by accurately tracking and counting entities, aiding in proactive [threat detection](security-alarm-system.md).
+>>>>>>> origin/main
 - **Informed Decision-Making:** Object counting offers valuable insights for decision-making, optimizing processes in retail, [traffic management](https://www.ultralytics.com/blog/ai-in-traffic-management-from-congestion-to-coordination), and various other domains.
 
 ## Real World Applications
 
+<<<<<<< HEAD
 |                                                                        Logistics                                                                        |                                                                         Aquaculture                                                                          |
 | :-----------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | ![Conveyor Belt Packets Counting Using Ultralytics YOLO11](https://github.com/ultralytics/docs/releases/download/0/conveyor-belt-packets-counting.avif) | ![Fish Counting in Sea using Ultralytics YOLO11](https://github.com/ultralytics/docs/releases/download/0/fish-counting-in-sea-using-ultralytics-yolov8.avif) |
 |                                                 Conveyor Belt Packets Counting Using Ultralytics YOLO11                                                 |                                                        Fish Counting in Sea using Ultralytics YOLO11                                                         |
+=======
+|                                                                        Logistics                                                                         |                                                                          Aquaculture                                                                          |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| ![Conveyor Belt Packets Counting Using Ultralytics YOLO26](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/conveyor-belt-packets-counting.avif) | ![Fish Counting in Sea using Ultralytics YOLO26](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/fish-counting-in-sea-using-ultralytics-yolov8.avif) |
+|                                                 Conveyor Belt Packets Counting Using Ultralytics YOLO26                                                  |                                                         Fish Counting in Sea using Ultralytics YOLO26                                                         |
+
+## Count Objects with YOLO26
+
+Define a counting `region` — two points for a line or three or more for a polygon — and pass it to the `ObjectCounter` solution. The counter tracks each object across frames and tallies IN/OUT counts when tracked centroids cross the line or move inside the region, returning an annotated frame you can write to an output video.
+>>>>>>> origin/main
 
 !!! example "Object Counting using Ultralytics YOLO"
 
@@ -75,7 +113,11 @@ Object counting with [Ultralytics YOLO11](https://github.com/ultralytics/ultraly
         counter = solutions.ObjectCounter(
             show=True,  # display the output
             region=region_points,  # pass region points
+<<<<<<< HEAD
             model="yolo11n.pt",  # model="yolo11n-obb.pt" for object counting with OBB model.
+=======
+            model="yolo26n.pt",  # model="yolo26n-obb.pt" for object counting with OBB model.
+>>>>>>> origin/main
             # classes=[0, 2],  # count specific classes, e.g., person and car with the COCO pretrained model.
             # tracker="botsort.yaml",  # choose trackers, e.g., "bytetrack.yaml"
         )
@@ -118,9 +160,15 @@ Additionally, the visualization arguments listed below are supported:
 
 ## FAQ
 
+<<<<<<< HEAD
 ### How do I count objects in a video using Ultralytics YOLO11?
 
 To count objects in a video using Ultralytics YOLO11, you can follow these steps:
+=======
+### How do I count objects in a video using Ultralytics YOLO26?
+
+To count objects in a video using Ultralytics YOLO26, you can follow these steps:
+>>>>>>> origin/main
 
 1. Import the necessary libraries (`cv2`, `ultralytics`).
 2. Define the counting region (e.g., a polygon, line, etc.).
@@ -158,6 +206,7 @@ def count_objects_in_region(video_path, output_video_path, model_path):
     cv2.destroyAllWindows()
 
 
+<<<<<<< HEAD
 count_objects_in_region("path/to/video.mp4", "output_video.avi", "yolo11n.pt")
 ```
 
@@ -177,6 +226,27 @@ For implementation examples and practical applications, explore the [TrackZone s
 ### How can I count specific classes of objects using Ultralytics YOLO11?
 
 To count specific classes of objects using Ultralytics YOLO11, you need to specify the classes you are interested in during the tracking phase. Below is a Python example:
+=======
+count_objects_in_region("path/to/video.mp4", "output_video.avi", "yolo26n.pt")
+```
+
+For more advanced configurations and options, check out the [RegionCounter solution](region-counting.md) for counting objects in multiple regions simultaneously.
+
+### What are the advantages of using Ultralytics YOLO26 for object counting?
+
+Using Ultralytics YOLO26 for object counting offers several advantages:
+
+1. **Resource Optimization:** It facilitates efficient resource management by providing accurate counts, helping optimize resource allocation in industries like [inventory management](https://www.ultralytics.com/blog/ai-for-smarter-retail-inventory-management).
+2. **Enhanced Security:** It enhances security and surveillance by accurately tracking and counting entities, aiding in proactive threat detection and [security systems](security-alarm-system.md).
+3. **Informed Decision-Making:** It offers valuable insights for decision-making, optimizing processes in domains like retail, traffic management, and more.
+4. **Real-time Processing:** YOLO26's architecture enables [real-time inference](https://www.ultralytics.com/glossary/real-time-inference), making it suitable for live video streams and time-sensitive applications.
+
+For implementation examples and practical applications, explore the [TrackZone solution](trackzone.md) for tracking objects in specific zones.
+
+### How can I count specific classes of objects using Ultralytics YOLO26?
+
+To count specific classes of objects using Ultralytics YOLO26, you need to specify the classes you are interested in during the tracking phase. Below is a Python example:
+>>>>>>> origin/main
 
 ```python
 import cv2
@@ -207,6 +277,7 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
     cv2.destroyAllWindows()
 
 
+<<<<<<< HEAD
 count_specific_classes("path/to/video.mp4", "output_specific_classes.avi", "yolo11n.pt", [0, 2])
 ```
 
@@ -233,3 +304,31 @@ Yes, Ultralytics YOLO11 is perfectly suited for advanced applications like crowd
 - **Industrial Automation:** Count products on conveyor belts and monitor production lines for quality control and efficiency improvements.
 
 For more specialized applications, explore [Ultralytics Solutions](https://docs.ultralytics.com/solutions/) for a comprehensive set of tools designed for real-world computer vision challenges.
+=======
+count_specific_classes("path/to/video.mp4", "output_specific_classes.avi", "yolo26n.pt", [0, 2])
+```
+
+In this example, `classes_to_count=[0, 2]` means it counts objects of class `0` and `2` (e.g., person and car in the COCO dataset). You can find more information about class indices in the [COCO dataset documentation](../datasets/detect/coco.md).
+
+### Why should I use YOLO26 over other [object detection](https://www.ultralytics.com/glossary/object-detection) models for real-time applications?
+
+Ultralytics YOLO26 provides several advantages over other object detection models like Faster R-CNN, SSD, and previous YOLO versions:
+
+1. **Speed and Efficiency:** YOLO26 offers real-time processing capabilities, making it ideal for applications requiring high-speed inference, such as surveillance and [autonomous driving](https://www.ultralytics.com/blog/ai-in-self-driving-cars).
+2. **[Accuracy](https://www.ultralytics.com/glossary/accuracy):** It provides state-of-the-art accuracy for object detection and tracking tasks, reducing the number of false positives and improving overall system reliability.
+3. **Ease of Integration:** YOLO26 offers seamless integration with various platforms and devices, including mobile and [edge devices](nvidia-jetson.md), which is crucial for modern AI applications.
+4. **Flexibility:** Supports various tasks like object detection, [segmentation](../tasks/segment.md), and tracking with configurable models to meet specific use-case requirements.
+
+Check out Ultralytics [YOLO26 Documentation](../models/yolo26.md) for a deeper dive into its features and performance comparisons.
+
+### Can I use YOLO26 for advanced applications like crowd analysis and traffic management?
+
+Yes, Ultralytics YOLO26 is perfectly suited for advanced applications like crowd analysis and traffic management due to its real-time detection capabilities, scalability, and integration flexibility. Its advanced features allow for high-accuracy object tracking, counting, and classification in dynamic environments. Example use cases include:
+
+- **Crowd Analysis:** Monitor and manage large gatherings, ensuring safety and optimizing crowd flow with [region-based counting](region-counting.md).
+- **Traffic Management:** Track and count vehicles, analyze traffic patterns, and manage congestion in real-time with [speed estimation](speed-estimation.md) capabilities.
+- **Retail Analytics:** Analyze customer movement patterns and product interactions to optimize store layouts and improve customer experience.
+- **Industrial Automation:** Count products on conveyor belts and monitor production lines for quality control and efficiency improvements.
+
+For more specialized applications, explore [Ultralytics Solutions](../solutions/index.md) for a comprehensive set of tools designed for real-world computer vision challenges.
+>>>>>>> origin/main

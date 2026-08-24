@@ -43,6 +43,10 @@ class RegionCounter(BaseSolution):
         self.region_template = {
             "name": "Default Region",
             "polygon": None,
+<<<<<<< HEAD
+=======
+            "prepared_polygon": None,
+>>>>>>> origin/main
             "counts": 0,
             "region_color": (255, 255, 255),
             "text_color": (0, 0, 0),
@@ -69,11 +73,25 @@ class RegionCounter(BaseSolution):
         Returns:
             (dict[str, Any]): Region information including name, polygon, and display colors.
         """
+<<<<<<< HEAD
+=======
+        if len(polygon_points) < 3:
+            raise ValueError(
+                f"RegionCounter requires regions with at least 3 points to form a polygon, "
+                f"but got {len(polygon_points)} for '{name}'."
+            )
+        polygon = self.Polygon(polygon_points)
+>>>>>>> origin/main
         region = self.region_template.copy()
         region.update(
             {
                 "name": name,
+<<<<<<< HEAD
                 "polygon": self.Polygon(polygon_points),
+=======
+                "polygon": polygon,
+                "prepared_polygon": self.prep(polygon),
+>>>>>>> origin/main
                 "region_color": region_color,
                 "text_color": text_color,
             }
@@ -88,8 +106,12 @@ class RegionCounter(BaseSolution):
         if not isinstance(self.region, dict):  # Ensure self.region is initialized and structured as a dictionary
             self.region = {"Region#01": self.region}
         for i, (name, pts) in enumerate(self.region.items()):
+<<<<<<< HEAD
             region = self.add_region(name, pts, colors(i, True), (255, 255, 255))
             region["prepared_polygon"] = self.prep(region["polygon"])
+=======
+            self.add_region(name, pts, colors(i, True), (255, 255, 255))
+>>>>>>> origin/main
 
     def process(self, im0: np.ndarray) -> SolutionResults:
         """Process the input frame to detect and count objects within each defined region.
@@ -103,10 +125,19 @@ class RegionCounter(BaseSolution):
         """
         self.extract_tracks(im0)
         annotator = SolutionAnnotator(im0, line_width=self.line_width)
+<<<<<<< HEAD
 
         for box, cls, track_id, conf in zip(self.boxes, self.clss, self.track_ids, self.confs):
             annotator.box_label(box, label=self.adjust_box_label(cls, conf, track_id), color=colors(track_id, True))
             center = self.Point(((box[0] + box[2]) / 2, (box[1] + box[3]) / 2))
+=======
+        self.region_counts = {region["name"]: 0 for region in self.counting_regions}
+
+        for box, cls, track_id, conf in zip(self.boxes, self.clss, self.track_ids, self.confs):
+            annotator.box_label(box, label=self.adjust_box_label(cls, conf, track_id), color=colors(track_id, True))
+            x0, y0, x1, y1 = self.get_enclosing_box(box)
+            center = self.Point(((x0 + x1) / 2, (y0 + y1) / 2))
+>>>>>>> origin/main
             for region in self.counting_regions:
                 if region["prepared_polygon"].contains(center):
                     region["counts"] += 1

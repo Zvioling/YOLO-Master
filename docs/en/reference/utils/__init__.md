@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.__init__ API Reference
+>>>>>>> origin/main
 description: Explore the comprehensive reference for ultralytics.utils in the Ultralytics library. Enhance your ML workflow with these utility functions.
 keywords: Ultralytics, utils, TQDM, Python, ML, Machine Learning utilities, YOLO, threading, logging, yaml, settings
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, utils, TQDM, Python, ML, Machine Learning utilities, YOLO
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/\_\_init\_\_.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/__init__.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/\_\_init\_\_.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/__init__.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -47,6 +55,13 @@ keywords: Ultralytics, utils, TQDM, Python, ML, Machine Learning utilities, YOLO
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.__init__.env_bool
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.__init__.plt_settings
 
 <br><br><hr><br>
@@ -99,6 +114,13 @@ keywords: Ultralytics, utils, TQDM, Python, ML, Machine Learning utilities, YOLO
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.__init__.is_dgx
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.__init__.is_online
 
 <br><br><hr><br>

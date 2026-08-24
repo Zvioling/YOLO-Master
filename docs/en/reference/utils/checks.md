@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.checks API Reference
+>>>>>>> origin/main
 description: Explore utility functions for Ultralytics YOLO such as checking versions, image sizes, and requirements.
 keywords: Ultralytics, YOLO, utility functions, version checks, requirements, image size
 ---
@@ -7,14 +11,32 @@ keywords: Ultralytics, YOLO, utility functions, version checks, requirements, im
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/checks.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/checks.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
 
 <br>
 
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/checks.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/checks.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+
+<br>
+
+## ::: ultralytics.utils.checks.normalize_platform_uri
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.checks.parse_requirements
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.checks.get_distribution_name
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.checks.parse_version
 
 <br><br><hr><br>
@@ -59,6 +81,17 @@ keywords: Ultralytics, YOLO, utility functions, version checks, requirements, im
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.checks.check_executorch_requirements
+
+<br><br><hr><br>
+
+## ::: ultralytics.utils.checks.check_tensorrt
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.checks.check_torchvision
 
 <br><br><hr><br>

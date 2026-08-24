@@ -33,10 +33,19 @@ schema:
           - yolo.solutions.run
           - yolo.ui.launch
           - yolo.pipeline.experiment
+<<<<<<< HEAD
+=======
+          - yolo.release.audit
+>>>>>>> origin/main
       inputs:
         type: object
         additionalProperties: true
         properties:
+<<<<<<< HEAD
+=======
+          profile:
+            type: string
+>>>>>>> origin/main
           model:
             type: string
           task:
@@ -47,6 +56,11 @@ schema:
             type: string
           path:
             type: string
+<<<<<<< HEAD
+=======
+          manifest:
+            type: string
+>>>>>>> origin/main
       params:
         type: object
         additionalProperties: true

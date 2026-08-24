@@ -201,6 +201,7 @@ class SharedInvertedExpertGroup(nn.Module):
         self.num_experts = num_experts
         self.top_k = top_k
         self.weight_threshold = weight_threshold
+<<<<<<< HEAD
         hidden_dim = max(1, int(in_channels * expand_ratio))
         padding = kernel_size // 2
 
@@ -210,12 +211,31 @@ class SharedInvertedExpertGroup(nn.Module):
             nn.SiLU(inplace=True),
             nn.Conv2d(hidden_dim, hidden_dim, kernel_size, padding=padding, groups=hidden_dim, bias=False),
             nn.BatchNorm2d(hidden_dim),
+=======
+        self.ddp_safe_dense = False
+        hidden_dim = max(1, int(in_channels * expand_ratio))
+        padding = kernel_size // 2
+
+        def _gn(channels: int) -> nn.GroupNorm:
+            return nn.GroupNorm(get_safe_groups(channels, 8), channels)
+
+        self.shared_feature = nn.Sequential(
+            nn.Conv2d(in_channels, hidden_dim, 1, bias=False),
+            _gn(hidden_dim),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(hidden_dim, hidden_dim, kernel_size, padding=padding, groups=hidden_dim, bias=False),
+            _gn(hidden_dim),
+>>>>>>> origin/main
             nn.SiLU(inplace=True),
         )
         self.expert_projections = nn.ModuleList(
             nn.Sequential(
                 nn.Conv2d(hidden_dim, out_channels, 1, bias=False),
+<<<<<<< HEAD
                 nn.BatchNorm2d(out_channels),
+=======
+                _gn(out_channels),
+>>>>>>> origin/main
             )
             for _ in range(num_experts)
         )
@@ -233,6 +253,25 @@ class SharedInvertedExpertGroup(nn.Module):
         valid_mask = weights > self.weight_threshold
 
         output = x.new_zeros(B, self.out_channels, H, W)
+<<<<<<< HEAD
+=======
+
+        if getattr(self, "ddp_safe_dense", False) or torch.onnx.is_in_onnx_export() or torch.jit.is_tracing():
+            # DDP needs a stable parameter-use graph; export/tracing also cannot
+            # capture the data-dependent sparse dispatch below. Compute every
+            # expert projection, then gather Top-K and weighted-sum.
+            all_projs = torch.stack(
+                [proj(features) for proj in self.expert_projections], dim=1
+            )  # [B, E, out_C, H, W]
+            for k in range(top_k):
+                idx_k = indices[:, k]                                              # [B]
+                w_k = weights[:, k] * valid_mask[:, k].to(weights.dtype)           # [B]
+                idx_exp = idx_k.view(B, 1, 1, 1, 1).expand(B, 1, self.out_channels, H, W)
+                selected = torch.gather(all_projs, 1, idx_exp).squeeze(1)          # [B, out_C, H, W]
+                output = output + selected * w_k.view(B, 1, 1, 1)
+            return output
+
+>>>>>>> origin/main
         active_experts = torch.unique(indices[valid_mask]).to(torch.long).tolist()
         for expert_idx in active_experts:
             projection = self.expert_projections[expert_idx]
@@ -241,9 +280,14 @@ class SharedInvertedExpertGroup(nn.Module):
             batch_indices, k_indices = torch.where(expert_mask)
             expert_out = projection(features[batch_indices])
             expert_weight = weights[batch_indices, k_indices].view(-1, 1, 1, 1).to(expert_out.dtype)
+<<<<<<< HEAD
             # 修复 AMP 混合精度类型不匹配：将结果转换为 output 的 dtype
             update = (expert_out * expert_weight).to(output.dtype)
             output.index_add_(0, batch_indices, update)
+=======
+            # P0-2 fix: fp16-safe index_add_ — source must match output dtype (output is x.new_zeros, so fp16 in AMP)
+            output.index_add_(0, batch_indices, (expert_out * expert_weight).to(output.dtype))
+>>>>>>> origin/main
 
         return output
 

@@ -25,12 +25,20 @@ __all__ = (
 def login(api_key: str | None = None, save: bool = True) -> bool:
     """Log in to the Ultralytics HUB API using the provided API key.
 
+<<<<<<< HEAD
     The session is not stored; a new session is created when needed using the saved SETTINGS or the HUB_API_KEY
     environment variable if successfully authenticated.
 
     Args:
         api_key (str, optional): API key to use for authentication. If not provided, it will be retrieved from SETTINGS
             or HUB_API_KEY environment variable.
+=======
+    The session is not stored; a new session is created when needed using the saved SETTINGS if successfully
+    authenticated.
+
+    Args:
+        api_key (str, optional): API key to use for authentication. If not provided, it will be retrieved from SETTINGS.
+>>>>>>> origin/main
         save (bool, optional): Whether to save the API key to SETTINGS if authentication is successful.
 
     Returns:
@@ -75,7 +83,16 @@ def reset_model(model_id: str = ""):
     """Reset a trained model to an untrained state."""
     import requests  # scoped as slow import
 
+<<<<<<< HEAD
     r = requests.post(f"{HUB_API_ROOT}/model-reset", json={"modelId": model_id}, headers={"x-api-key": Auth().api_key})
+=======
+    r = requests.post(
+        f"{HUB_API_ROOT}/model-reset",
+        json={"modelId": model_id},
+        headers={"x-api-key": Auth().api_key},
+        timeout=30,
+    )
+>>>>>>> origin/main
     if r.status_code == 200:
         LOGGER.info(f"{PREFIX}Model reset successfully")
         return
@@ -108,7 +125,14 @@ def export_model(model_id: str = "", format: str = "torchscript"):
 
     assert format in export_fmts_hub(), f"Unsupported export format '{format}', valid formats are {export_fmts_hub()}"
     r = requests.post(
+<<<<<<< HEAD
         f"{HUB_API_ROOT}/v1/models/{model_id}/export", json={"format": format}, headers={"x-api-key": Auth().api_key}
+=======
+        f"{HUB_API_ROOT}/v1/models/{model_id}/export",
+        json={"format": format},
+        headers={"x-api-key": Auth().api_key},
+        timeout=30,
+>>>>>>> origin/main
     )
     assert r.status_code == 200, f"{PREFIX}{format} export failure {r.status_code} {r.reason}"
     LOGGER.info(f"{PREFIX}{format} export started ✅")
@@ -138,6 +162,10 @@ def get_export(model_id: str = "", format: str = "torchscript"):
         f"{HUB_API_ROOT}/get-export",
         json={"apiKey": Auth().api_key, "modelId": model_id, "format": format},
         headers={"x-api-key": Auth().api_key},
+<<<<<<< HEAD
+=======
+        timeout=30,
+>>>>>>> origin/main
     )
     assert r.status_code == 200, f"{PREFIX}{format} get_export failure {r.status_code} {r.reason}"
     return r.json()

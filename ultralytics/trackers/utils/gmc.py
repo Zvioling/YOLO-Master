@@ -17,11 +17,19 @@ class GMC:
     SIFT, ECC, and Sparse Optical Flow. It also supports downscaling of frames for computational efficiency.
 
     Attributes:
+<<<<<<< HEAD
         method (str): The tracking method to use. Options include 'orb', 'sift', 'ecc', 'sparseOptFlow', 'none'.
         downscale (int): Factor by which to downscale the frames for processing.
         prevFrame (np.ndarray): Previous frame for tracking.
         prevKeyPoints (list): Keypoints from the previous frame.
         prevDescriptors (np.ndarray): Descriptors from the previous frame.
+=======
+        method (str | None): The tracking method to use. Options include 'orb', 'sift', 'ecc', 'sparseOptFlow', None.
+        downscale (int): Factor by which to downscale the frames for processing.
+        prevFrame (np.ndarray | None): Previous frame for tracking.
+        prevKeyPoints (tuple | np.ndarray | None): Keypoints from the previous frame.
+        prevDescriptors (np.ndarray | None): Descriptors from the previous frame.
+>>>>>>> origin/main
         initializedFirstFrame (bool): Flag indicating if the first frame has been processed.
 
     Methods:
@@ -143,6 +151,10 @@ class GMC:
         # Run the ECC algorithm to find transformation matrix
         try:
             (_, H) = cv2.findTransformECC(self.prevFrame, frame, H, self.warp_mode, self.criteria, None, 1)
+<<<<<<< HEAD
+=======
+            H[:, 2] *= (width / frame.shape[1], height / frame.shape[0])
+>>>>>>> origin/main
         except Exception as e:
             LOGGER.warning(f"findTransformECC failed; using identity warp. {e}")
 

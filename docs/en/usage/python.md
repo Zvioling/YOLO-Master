@@ -1,12 +1,23 @@
 ---
+<<<<<<< HEAD
 comments: true
 description: Learn to integrate Ultralytics YOLO in Python for object detection, segmentation, and classification. Load and train models, and make predictions easily with our comprehensive guide.
 keywords: YOLO, Python, object detection, segmentation, classification, machine learning, AI, pretrained models, train models, make predictions
+=======
+title: YOLO Python Usage
+comments: true
+description: Learn to integrate Ultralytics YOLO in Python for object detection, segmentation, semantic segmentation, and classification. Load and train models, and make predictions easily with our comprehensive guide.
+keywords: YOLO, Python, object detection, segmentation, semantic segmentation, classification, machine learning, AI, pretrained models, train models, make predictions
+>>>>>>> origin/main
 ---
 
 # Python Usage
 
+<<<<<<< HEAD
 Welcome to the Ultralytics YOLO Python Usage documentation! This guide is designed to help you seamlessly integrate Ultralytics YOLO into your Python projects for [object detection](https://www.ultralytics.com/glossary/object-detection), [segmentation](https://docs.ultralytics.com/tasks/segment/), and [classification](https://docs.ultralytics.com/tasks/classify/). Here, you'll learn how to load and use pretrained models, train new models, and perform predictions on images. The easy-to-use Python interface is a valuable resource for anyone looking to incorporate YOLO into their Python projects, allowing you to quickly implement advanced object detection capabilities. Let's get started!
+=======
+Welcome to the Ultralytics YOLO Python Usage documentation! This guide is designed to help you seamlessly integrate Ultralytics YOLO into your Python projects for [object detection](https://www.ultralytics.com/glossary/object-detection), [instance segmentation](../tasks/segment.md), [semantic segmentation](../tasks/semantic.md), and [classification](../tasks/classify.md). Here, you'll learn how to load and use pretrained models, train new models, and perform predictions on images. The easy-to-use Python interface is a valuable resource for anyone looking to incorporate YOLO into their Python projects, allowing you to quickly implement advanced object detection capabilities. Let's get started!
+>>>>>>> origin/main
 
 <p align="center">
   <br>
@@ -27,10 +38,17 @@ For example, users can load a model, train it, evaluate its performance on a val
     from ultralytics import YOLO
 
     # Create a new YOLO model from scratch
+<<<<<<< HEAD
     model = YOLO("yolo11n.yaml")
 
     # Load a pretrained YOLO model (recommended for training)
     model = YOLO("yolo11n.pt")
+=======
+    model = YOLO("yolo26n.yaml")
+
+    # Load a pretrained YOLO model (recommended for training)
+    model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
 
     # Train the model using the 'coco8.yaml' dataset for 3 epochs
     results = model.train(data="coco8.yaml", epochs=3)
@@ -56,7 +74,11 @@ For example, users can load a model, train it, evaluate its performance on a val
         ```python
         from ultralytics import YOLO
 
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")  # pass any model type
+=======
+        model = YOLO("yolo26n.pt")  # pass any model type
+>>>>>>> origin/main
         results = model.train(epochs=5)
         ```
 
@@ -65,7 +87,11 @@ For example, users can load a model, train it, evaluate its performance on a val
         ```python
         from ultralytics import YOLO
 
+<<<<<<< HEAD
         model = YOLO("yolo11n.yaml")
+=======
+        model = YOLO("yolo26n.yaml")
+>>>>>>> origin/main
         results = model.train(data="coco8.yaml", epochs=5)
         ```
 
@@ -90,7 +116,11 @@ For example, users can load a model, train it, evaluate its performance on a val
         from ultralytics import YOLO
 
         # Load a YOLO model
+<<<<<<< HEAD
         model = YOLO("yolo11n.yaml")
+=======
+        model = YOLO("yolo26n.yaml")
+>>>>>>> origin/main
 
         # Train the model
         model.train(data="coco8.yaml", epochs=5)
@@ -105,7 +135,11 @@ For example, users can load a model, train it, evaluate its performance on a val
         from ultralytics import YOLO
 
         # Load a YOLO model
+<<<<<<< HEAD
         model = YOLO("yolo11n.yaml")
+=======
+        model = YOLO("yolo26n.yaml")
+>>>>>>> origin/main
 
         # Train the model
         model.train(data="coco8.yaml", epochs=5)
@@ -199,7 +233,11 @@ For example, users can load a model, train it, evaluate its performance on a val
         ```python
         from ultralytics import YOLO
 
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")
+=======
+        model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
         model.export(format="onnx", dynamic=True)
         ```
 
@@ -209,7 +247,11 @@ For example, users can load a model, train it, evaluate its performance on a val
         ```python
         from ultralytics import YOLO
 
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")
+=======
+        model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
         model.export(format="engine", device=0)
         ```
 
@@ -217,7 +259,11 @@ For example, users can load a model, train it, evaluate its performance on a val
 
 ## Track
 
+<<<<<<< HEAD
 [Track mode](../modes/track.md) is used for tracking objects in real-time using a YOLO model. In this mode, the model is loaded from a checkpoint file, and the user can provide a live video stream to perform real-time object tracking. This mode is useful for applications such as surveillance systems or [self-driving cars](https://www.ultralytics.com/solutions/ai-in-automotive).
+=======
+[Track mode](../modes/track.md) is used for tracking objects in real-time using a YOLO model. In this mode, the model is loaded from a checkpoint file, and the user can provide a live video stream to perform real-time object tracking. This mode is useful for applications such as surveillance systems or [self-driving cars](https://www.ultralytics.com/solutions/computer-vision-in-automotive).
+>>>>>>> origin/main
 
 !!! example "Track"
 
@@ -227,8 +273,13 @@ For example, users can load a model, train it, evaluate its performance on a val
         from ultralytics import YOLO
 
         # Load a model
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")  # load an official detection model
         model = YOLO("yolo11n-seg.pt")  # load an official segmentation model
+=======
+        model = YOLO("yolo26n.pt")  # load an official detection model
+        model = YOLO("yolo26n-seg.pt")  # load an official segmentation model
+>>>>>>> origin/main
         model = YOLO("path/to/best.pt")  # load a custom model
 
         # Track with the model
@@ -240,7 +291,11 @@ For example, users can load a model, train it, evaluate its performance on a val
 
 ## Benchmark
 
+<<<<<<< HEAD
 [Benchmark mode](../modes/benchmark.md) is used to profile the speed and accuracy of various export formats for YOLO. The benchmarks provide information on the size of the exported format, its `mAP50-95` metrics (for object detection and segmentation) or `accuracy_top5` metrics (for classification), and the inference time in milliseconds per image across various export formats like ONNX, [OpenVINO](https://docs.ultralytics.com/integrations/openvino/), TensorRT and others. This information can help users choose the optimal export format for their specific use case based on their requirements for speed and accuracy.
+=======
+[Benchmark mode](../modes/benchmark.md) is used to profile the speed and accuracy of various export formats for YOLO. The benchmarks provide information on the size of the exported format, its `mAP50-95` metrics (for object detection and segmentation) or `accuracy_top1` metrics (for classification), and the inference time in milliseconds per image across various export formats like ONNX, [OpenVINO](../integrations/openvino.md), TensorRT and others. This information can help users choose the optimal export format for their specific use case based on their requirements for speed and accuracy.
+>>>>>>> origin/main
 
 !!! example "Benchmark"
 
@@ -251,14 +306,22 @@ For example, users can load a model, train it, evaluate its performance on a val
         from ultralytics.utils.benchmarks import benchmark
 
         # Benchmark
+<<<<<<< HEAD
         benchmark(model="yolo11n.pt", data="coco8.yaml", imgsz=640, half=False, device=0)
+=======
+        benchmark(model="yolo26n.pt", data="coco8.yaml", imgsz=640, device=0)
+>>>>>>> origin/main
         ```
 
 [Benchmark Examples](../modes/benchmark.md){ .md-button }
 
 ## Using Trainers
 
+<<<<<<< HEAD
 The `YOLO` model class serves as a high-level wrapper for the Trainer classes. Each YOLO task has its own trainer, which inherits from `BaseTrainer`. This architecture allows for greater flexibility and customization in your [machine learning workflows](https://docs.ultralytics.com/guides/model-training-tips/).
+=======
+The `YOLO` model class serves as a high-level wrapper for Trainer classes. Each YOLO task has its own trainer, which inherits from `BaseTrainer`. This architecture allows for greater flexibility and customization in your [machine learning workflows](../guides/model-training-tips.md).
+>>>>>>> origin/main
 
 !!! tip "Detection Trainer Example"
 
@@ -297,7 +360,11 @@ Integrating Ultralytics YOLO into your Python projects is simple. You can load a
 from ultralytics import YOLO
 
 # Load a pretrained YOLO model
+<<<<<<< HEAD
 model = YOLO("yolo11n.pt")
+=======
+model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
 
 # Perform object detection on an image
 results = model("https://ultralytics.com/images/bus.jpg")
@@ -320,7 +387,11 @@ Ultralytics YOLO provides various modes to cater to different [machine learning]
 - **[Track](../modes/track.md)**: Real-time object tracking in video streams.
 - **[Benchmark](../modes/benchmark.md)**: Benchmark model performance across different configurations.
 
+<<<<<<< HEAD
 Each mode is designed to provide comprehensive functionalities for different stages of [model development and deployment](https://docs.ultralytics.com/guides/model-deployment-options/).
+=======
+Each mode is designed to provide comprehensive functionalities for different stages of [model development and deployment](../guides/model-deployment-options.md).
+>>>>>>> origin/main
 
 ### How do I train a custom YOLO model using my dataset?
 
@@ -330,7 +401,11 @@ To train a custom YOLO model, you need to specify your dataset and other [hyperp
 from ultralytics import YOLO
 
 # Load the YOLO model
+<<<<<<< HEAD
 model = YOLO("yolo11n.yaml")
+=======
+model = YOLO("yolo26n.yaml")
+>>>>>>> origin/main
 
 # Train the model with custom dataset
 model.train(data="path/to/your/dataset.yaml", epochs=10)
@@ -346,7 +421,11 @@ Exporting YOLO models in a format suitable for deployment is straightforward wit
 from ultralytics import YOLO
 
 # Load the YOLO model
+<<<<<<< HEAD
 model = YOLO("yolo11n.pt")
+=======
+model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
 
 # Export the model to ONNX format
 model.export(format="onnx")
@@ -362,7 +441,11 @@ Yes, validating YOLO models on different datasets is possible. After training, y
 from ultralytics import YOLO
 
 # Load a YOLO model
+<<<<<<< HEAD
 model = YOLO("yolo11n.yaml")
+=======
+model = YOLO("yolo26n.yaml")
+>>>>>>> origin/main
 
 # Train the model
 model.train(data="coco8.yaml", epochs=5)

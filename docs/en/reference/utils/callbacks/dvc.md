@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.callbacks.dvc API Reference
+>>>>>>> origin/main
 description: Learn to integrate DVCLive with Ultralytics for enhanced logging during training. Step-by-step methods for setting up and optimizing DVC callbacks.
 keywords: Ultralytics, DVC, DVCLive, machine learning, logging, training, callbacks, integration
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, DVC, DVCLive, machine learning, logging, training, callba
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/dvc.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/dvc.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/dvc.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/dvc.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

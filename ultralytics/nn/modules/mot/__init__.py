@@ -9,6 +9,12 @@ Provides three Transformer expert variants and their C2f-style wrapper:
   - anneal_mot_temperature: temperature annealing utility
 """
 
+<<<<<<< HEAD
 from .mot import MoTBlock, C2fMoT, collect_mot_aux_loss, anneal_mot_temperature
+=======
+from .block import MoTBlock
+from .router import anneal_mot_temperature
+from .wrappers import C2fMoT, collect_mot_aux_loss
+>>>>>>> origin/main
 
 __all__ = ("MoTBlock", "C2fMoT", "collect_mot_aux_loss", "anneal_mot_temperature")

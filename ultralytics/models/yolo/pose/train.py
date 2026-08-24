@@ -8,7 +8,12 @@ from typing import Any
 
 from ultralytics.models import yolo
 from ultralytics.nn.tasks import PoseModel
+<<<<<<< HEAD
 from ultralytics.utils import DEFAULT_CFG
+=======
+from ultralytics.utils import DEFAULT_CFG, RANK
+from ultralytics.utils.torch_utils import unwrap_model
+>>>>>>> origin/main
 
 
 class PoseTrainer(yolo.detect.DetectionTrainer):
@@ -32,18 +37,30 @@ class PoseTrainer(yolo.detect.DetectionTrainer):
 
     Examples:
         >>> from ultralytics.models.yolo.pose import PoseTrainer
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n-pose.pt", data="coco8-pose.yaml", epochs=3)
+=======
+        >>> args = dict(model="yolo26n-pose.pt", data="coco8-pose.yaml", epochs=3)
+>>>>>>> origin/main
         >>> trainer = PoseTrainer(overrides=args)
         >>> trainer.train()
     """
 
+<<<<<<< HEAD
     def __init__(self, cfg=DEFAULT_CFG, overrides: dict[str, Any] | None = None, _callbacks=None):
+=======
+    def __init__(self, cfg=DEFAULT_CFG, overrides: dict[str, Any] | None = None, _callbacks: dict | None = None):
+>>>>>>> origin/main
         """Initialize a PoseTrainer object for training YOLO pose estimation models.
 
         Args:
             cfg (dict, optional): Default configuration dictionary containing training parameters.
             overrides (dict, optional): Dictionary of parameter overrides for the default configuration.
+<<<<<<< HEAD
             _callbacks (list, optional): List of callback functions to be executed during training.
+=======
+            _callbacks (dict, optional): Dictionary of callback functions to be executed during training.
+>>>>>>> origin/main
 
         Notes:
             This trainer will automatically set the task to 'pose' regardless of what is provided in overrides.
@@ -70,8 +87,19 @@ class PoseTrainer(yolo.detect.DetectionTrainer):
         Returns:
             (PoseModel): Initialized pose estimation model.
         """
+<<<<<<< HEAD
         model = PoseModel(
             cfg, nc=self.data["nc"], ch=self.data["channels"], data_kpt_shape=self.data["kpt_shape"], verbose=verbose
+=======
+        model = self.set_model_names_for_load(
+            PoseModel(
+                cfg,
+                nc=self.data["nc"],
+                ch=self.data["channels"],
+                data_kpt_shape=self.data["kpt_shape"],
+                verbose=verbose and RANK == -1,
+            )
+>>>>>>> origin/main
         )
         if weights:
             model.load(weights)
@@ -91,6 +119,14 @@ class PoseTrainer(yolo.detect.DetectionTrainer):
     def get_validator(self):
         """Return an instance of the PoseValidator class for validation."""
         self.loss_names = "box_loss", "pose_loss", "kobj_loss", "cls_loss", "dfl_loss"
+<<<<<<< HEAD
+=======
+        model = unwrap_model(self.model)
+        if hasattr(model, "student_model"):
+            model = model.student_model  # copy_attr does not copy nn.Module attributes like .model
+        if getattr(model.model[-1], "flow_model", None) is not None:
+            self.loss_names += ("rle_loss",)
+>>>>>>> origin/main
         return yolo.pose.PoseValidator(
             self.test_loader, save_dir=self.save_dir, args=copy(self.args), _callbacks=self.callbacks
         )

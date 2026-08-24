@@ -23,6 +23,7 @@ from .block import (
     C2PSA,
     C3,
     C3TR,
+<<<<<<< HEAD
     C3k2_Dynamic,
     C3k2UltraPro,
     C3k2MA,
@@ -34,6 +35,13 @@ from .block import (
     WaveC2f,
     DyC2f,
     A3C2f,
+=======
+    CIB,
+    DFL,
+    DyC2f,
+    DyMoEBlock,
+    ELAN1,
+>>>>>>> origin/main
     PSA,
     SPP,
     SPPELAN,
@@ -86,15 +94,31 @@ from .conv import (
 )
 from .head import (
     OBB,
+<<<<<<< HEAD
+=======
+    OBB26,
+>>>>>>> origin/main
     Classify,
     Detect,
     LRPCHead,
     Pose,
+<<<<<<< HEAD
     RTDETRDecoder,
     Segment,
     WorldDetect,
     YOLOEDetect,
     YOLOESegment,
+=======
+    Pose26,
+    RTDETRDecoder,
+    Segment,
+    Segment26,
+    SemanticSegment,
+    WorldDetect,
+    YOLOEDetect,
+    YOLOESegment,
+    YOLOESegment26,
+>>>>>>> origin/main
     v10Detect,
 )
 from .transformer import (
@@ -109,6 +133,7 @@ from .transformer import (
     TransformerEncoderLayer,
     TransformerLayer,
 )
+<<<<<<< HEAD
 from .moa import MoABlock, C2fMoA, NeckMoAFusion, anneal_moa_temperature
 from .mot import MoTBlock, C2fMoT, collect_mot_aux_loss, anneal_mot_temperature
 from .moe import (
@@ -139,6 +164,31 @@ from .moe import (
     ABlockMoE,
     SharedExpertMoE,
 )
+=======
+from .moa import C2fMoA, MoABlock, NeckMoAFusion, anneal_moa_temperature, collect_moa_aux_loss
+from .moe import (
+    A2C2fMoE,
+    ABlockMoE,
+    AdaptiveGateMoE,
+    DetailAwareLowRankHybridAdaptiveGateMoE,
+    DiversifiedExpertMoE,
+    ES_MOE,
+    FusedAdaptiveGateMoE,
+    GatedFusionMoE,
+    HybridAdaptiveGateMoE,
+    HybridAdaptiveGateMoEv2,
+    LowRankHybridAdaptiveGateMoE,
+    ModularRouterExpertMoE,
+    MultiHeadRouterMoE,
+    OptimalHybridGateMoE,
+    RefinedLowRankHybridAdaptiveGateMoE,
+    UltimateOptimizedMoE,
+    UltraOptimizedMoE,
+    VisualEnhancedAdaptiveGateMoE,
+)
+from .mot import C2fMoT, MoTBlock, anneal_mot_temperature, collect_mot_aux_loss
+from .latent_mixture import DenseChannelExpert, LatentMixture, LatentRouter, LatentRoutingContext, MultiScaleLatentMixture
+>>>>>>> origin/main
 
 __all__ = (
     "AIFI",
@@ -147,6 +197,7 @@ __all__ = (
     "C2PSA",
     "C3",
     "C3TR",
+<<<<<<< HEAD
     "C3k2_Dynamic",
     "C3k2UltraPro",
     "C3k2MA",
@@ -157,6 +208,17 @@ __all__ = (
     "ELAN1",
     "MLP",
     "OBB",
+=======
+    "CBAM",
+    "CIB",
+    "DFL",
+    "DyC2f",
+    "DyMoEBlock",
+    "ELAN1",
+    "MLP",
+    "OBB",
+    "OBB26",
+>>>>>>> origin/main
     "PSA",
     "SPP",
     "SPPELAN",
@@ -172,10 +234,13 @@ __all__ = (
     "C2fAttn",
     "C2fCIB",
     "C2fPSA",
+<<<<<<< HEAD
     "C2f_LSKA",
     "WaveC2f",
     "DyC2f",
     "A3C2f",
+=======
+>>>>>>> origin/main
     "C3Ghost",
     "C3k2",
     "C3x",
@@ -207,6 +272,10 @@ __all__ = (
     "MSDeformAttn",
     "MaxSigmoidAttnBlock",
     "Pose",
+<<<<<<< HEAD
+=======
+    "Pose26",
+>>>>>>> origin/main
     "Proto",
     "RTDETRDecoder",
     "RepC3",
@@ -216,6 +285,11 @@ __all__ = (
     "ResNetLayer",
     "SCDown",
     "Segment",
+<<<<<<< HEAD
+=======
+    "Segment26",
+    "SemanticSegment",
+>>>>>>> origin/main
     "SpatialAttention",
     "TorchVision",
     "TransformerBlock",
@@ -224,6 +298,7 @@ __all__ = (
     "WorldDetect",
     "YOLOEDetect",
     "YOLOESegment",
+<<<<<<< HEAD
     "v10Detect",
     "OptimizedMOE",
     "OptimizedMOEImproved",
@@ -259,4 +334,40 @@ __all__ = (
     "C2fMoT",
     "collect_mot_aux_loss",
     "anneal_mot_temperature",
+=======
+    "YOLOESegment26",
+    "v10Detect",
+    "A2C2fMoE",
+    "ABlockMoE",
+    "AdaptiveGateMoE",
+    "C2fMoA",
+    "C2fMoT",
+    "DetailAwareLowRankHybridAdaptiveGateMoE",
+    "DiversifiedExpertMoE",
+    "ES_MOE",
+    "FusedAdaptiveGateMoE",
+    "GatedFusionMoE",
+    "HybridAdaptiveGateMoE",
+    "HybridAdaptiveGateMoEv2",
+    "LowRankHybridAdaptiveGateMoE",
+    "MoABlock",
+    "MoTBlock",
+    "ModularRouterExpertMoE",
+    "MultiHeadRouterMoE",
+    "NeckMoAFusion",
+    "OptimalHybridGateMoE",
+    "RefinedLowRankHybridAdaptiveGateMoE",
+    "UltimateOptimizedMoE",
+    "UltraOptimizedMoE",
+    "VisualEnhancedAdaptiveGateMoE",
+    "anneal_moa_temperature",
+    "anneal_mot_temperature",
+    "collect_moa_aux_loss",
+    "collect_mot_aux_loss",
+    "DenseChannelExpert",
+    "LatentMixture",
+    "LatentRouter",
+    "LatentRoutingContext",
+    "MultiScaleLatentMixture",
+>>>>>>> origin/main
 )

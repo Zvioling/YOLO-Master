@@ -8,7 +8,10 @@ from typing import Any
 import torch
 
 from ultralytics.data import YOLODataset
+<<<<<<< HEAD
 from ultralytics.data.augment import Compose, Format, v8_transforms
+=======
+>>>>>>> origin/main
 from ultralytics.models.yolo.detect import DetectionValidator
 from ultralytics.utils import colorstr, ops
 
@@ -16,7 +19,11 @@ __all__ = ("RTDETRValidator",)  # tuple or list
 
 
 class RTDETRDataset(YOLODataset):
+<<<<<<< HEAD
     """Real-Time DEtection and TRacking (RT-DETR) dataset class extending the base YOLODataset class.
+=======
+    """Real-Time DEtection TRansformer (RT-DETR) dataset class extending the base YOLODataset class.
+>>>>>>> origin/main
 
     This specialized dataset class is designed for use with the RT-DETR object detection model and is optimized for
     real-time detection and tracking tasks.
@@ -41,7 +48,11 @@ class RTDETRDataset(YOLODataset):
     def __init__(self, *args, data=None, **kwargs):
         """Initialize the RTDETRDataset class by inheriting from the YOLODataset class.
 
+<<<<<<< HEAD
         This constructor sets up a dataset specifically optimized for the RT-DETR (Real-Time DEtection and TRacking)
+=======
+        This constructor sets up a dataset specifically optimized for the RT-DETR (Real-Time DEtection TRansformer)
+>>>>>>> origin/main
         model, building upon the base YOLODataset functionality.
 
         Args:
@@ -70,6 +81,7 @@ class RTDETRDataset(YOLODataset):
         """
         return super().load_image(i=i, rect_mode=rect_mode)
 
+<<<<<<< HEAD
     def build_transforms(self, hyp=None):
         """Build transformation pipeline for the dataset.
 
@@ -100,12 +112,18 @@ class RTDETRDataset(YOLODataset):
         )
         return transforms
 
+=======
+>>>>>>> origin/main
 
 class RTDETRValidator(DetectionValidator):
     """RTDETRValidator extends the DetectionValidator class to provide validation capabilities specifically tailored for
     the RT-DETR (Real-Time DETR) object detection model.
 
+<<<<<<< HEAD
     The class allows building of an RTDETR-specific dataset for validation, applies Non-maximum suppression for
+=======
+    The class allows building of an RTDETR-specific dataset for validation, applies confidence thresholding for
+>>>>>>> origin/main
     post-processing, and updates evaluation metrics accordingly.
 
     Attributes:
@@ -114,7 +132,11 @@ class RTDETRValidator(DetectionValidator):
 
     Methods:
         build_dataset: Build an RTDETR Dataset for validation.
+<<<<<<< HEAD
         postprocess: Apply Non-maximum suppression to prediction outputs.
+=======
+        postprocess: Apply confidence thresholding to prediction outputs.
+>>>>>>> origin/main
 
     Examples:
         Initialize and run RT-DETR validation
@@ -147,17 +169,28 @@ class RTDETRValidator(DetectionValidator):
             hyp=self.args,
             rect=False,  # no rect
             cache=self.args.cache or None,
+<<<<<<< HEAD
             prefix=colorstr(f"{mode}: "),
+=======
+            single_cls=self.args.single_cls or False,
+            prefix=colorstr(f"{mode}: "),
+            classes=self.args.classes,
+>>>>>>> origin/main
             data=self.data,
         )
 
     def scale_preds(self, predn: dict[str, torch.Tensor], pbatch: dict[str, Any]) -> dict[str, torch.Tensor]:
+<<<<<<< HEAD
         """Scales predictions to the original image size."""
+=======
+        """Return predictions unchanged as RT-DETR handles scaling in postprocessing."""
+>>>>>>> origin/main
         return predn
 
     def postprocess(
         self, preds: torch.Tensor | list[torch.Tensor] | tuple[torch.Tensor]
     ) -> list[dict[str, torch.Tensor]]:
+<<<<<<< HEAD
         """Apply Non-maximum suppression to prediction outputs.
 
         Args:
@@ -187,6 +220,35 @@ class RTDETRValidator(DetectionValidator):
             outputs[i] = pred[score > self.args.conf]
 
         return [{"bboxes": x[:, :4], "conf": x[:, 4], "cls": x[:, 5]} for x in outputs]
+=======
+        """Apply post-processing to prediction outputs.
+
+        Top-k selection is already performed inside the decoder head. This method converts normalized xywh
+        coordinates to pixel xyxy format.
+
+        Args:
+            preds (torch.Tensor | list | tuple): Predictions from the model with shape (batch_size, num_queries, 6),
+                where the last dimension is [cx, cy, w, h, score, class].
+
+        Returns:
+            (list[dict[str, torch.Tensor]]): List of dictionaries for each image, each containing:
+                - 'bboxes': Tensor of shape (N, 4) with bounding box coordinates in xyxy pixel format
+                - 'conf': Tensor of shape (N,) with confidence scores
+                - 'cls': Tensor of shape (N,) with class indices
+        """
+        if isinstance(preds, (list, tuple)):
+            preds = preds[0]
+
+        bboxes, scores, labels = preds.split((4, 1, 1), dim=-1)
+        bboxes = ops.xywh2xyxy(bboxes) * self.args.imgsz
+        scores, labels = scores.squeeze(-1), labels.squeeze(-1)
+        masks = [(score > self.args.conf).nonzero().squeeze(1)[: self.args.max_det] for score in scores]
+
+        return [
+            {"bboxes": bbox[m], "conf": score[m], "cls": label[m]}
+            for bbox, score, label, m in zip(bboxes, scores, labels, masks)
+        ]
+>>>>>>> origin/main
 
     def pred_to_json(self, predn: dict[str, torch.Tensor], pbatch: dict[str, Any]) -> None:
         """Serialize YOLO predictions to COCO json format.

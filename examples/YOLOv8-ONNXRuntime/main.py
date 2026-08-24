@@ -9,8 +9,13 @@ import numpy as np
 import onnxruntime as ort
 import torch
 
+<<<<<<< HEAD
 from ultralytics.utils import ASSETS, YAML
 from ultralytics.utils.checks import check_requirements, check_yaml
+=======
+from ultralytics.utils import ASSETS, ROOT, YAML
+from ultralytics.utils.checks import check_requirements
+>>>>>>> origin/main
 
 
 class YOLOv8:
@@ -60,7 +65,11 @@ class YOLOv8:
         self.iou_thres = iou_thres
 
         # Load the class names from the COCO dataset
+<<<<<<< HEAD
         self.classes = YAML.load(check_yaml("coco8.yaml"))["names"]
+=======
+        self.classes = YAML.load(ROOT / "cfg/datasets/coco8.yaml")["names"]
+>>>>>>> origin/main
 
         # Generate a color palette for the classes
         self.color_palette = np.random.uniform(0, 255, size=(len(self.classes), 3))
@@ -150,7 +159,11 @@ class YOLOv8:
         image_data = np.transpose(image_data, (2, 0, 1))  # Channel first
 
         # Expand the dimensions of the image data to match the expected input shape
+<<<<<<< HEAD
         image_data = np.expand_dims(image_data, axis=0).astype(np.float32)
+=======
+        image_data = image_data[None].astype(np.float32)
+>>>>>>> origin/main
 
         # Return the preprocessed image data
         return image_data, pad
@@ -243,8 +256,13 @@ class YOLOv8:
 
         # Store the shape of the input for later use
         input_shape = model_inputs[0].shape
+<<<<<<< HEAD
         self.input_width = input_shape[2]
         self.input_height = input_shape[3]
+=======
+        self.input_height = input_shape[2]
+        self.input_width = input_shape[3]
+>>>>>>> origin/main
 
         # Preprocess the image data
         img_data, pad = self.preprocess()

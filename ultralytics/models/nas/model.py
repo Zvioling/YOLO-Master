@@ -75,12 +75,20 @@ class NAS(Model):
         self.model.names = dict(enumerate(self.model._class_names))
         self.model.is_fused = lambda: False  # for info()
         self.model.yaml = {}  # for info()
+<<<<<<< HEAD
         self.model.pt_path = weights  # for export()
+=======
+        self.model.pt_path = str(weights)  # for export()
+>>>>>>> origin/main
         self.model.task = "detect"  # for export()
         self.model.args = {**DEFAULT_CFG_DICT, **self.overrides}  # for export()
         self.model.eval()
 
+<<<<<<< HEAD
     def info(self, detailed: bool = False, verbose: bool = True) -> dict[str, Any]:
+=======
+    def info(self, detailed: bool = False, verbose: bool = True) -> tuple:
+>>>>>>> origin/main
         """Log model information.
 
         Args:
@@ -88,7 +96,11 @@ class NAS(Model):
             verbose (bool): Controls verbosity.
 
         Returns:
+<<<<<<< HEAD
             (dict[str, Any]): Model information dictionary.
+=======
+            (tuple): Model information as a tuple of (layers, parameters, gradients, GFLOPs).
+>>>>>>> origin/main
         """
         return model_info(self.model, detailed=detailed, verbose=verbose, imgsz=640)
 

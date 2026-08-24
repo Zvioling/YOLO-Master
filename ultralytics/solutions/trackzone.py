@@ -18,7 +18,11 @@ class TrackZone(BaseSolution):
     Attributes:
         region (np.ndarray): The polygonal region for tracking, represented as a convex hull of points.
         line_width (int): Width of the lines used for drawing bounding boxes and region boundaries.
+<<<<<<< HEAD
         names (list[str]): List of class names that the model can detect.
+=======
+        names (dict[int, str]): Dictionary mapping class indices to class names.
+>>>>>>> origin/main
         boxes (list[np.ndarray]): Bounding boxes of tracked objects.
         track_ids (list[int]): Unique identifiers for each tracked object.
         clss (list[int]): Class indices of tracked objects.

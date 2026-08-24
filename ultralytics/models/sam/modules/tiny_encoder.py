@@ -19,6 +19,12 @@ import torch.nn.functional as F
 
 from ultralytics.nn.modules import LayerNorm2d
 from ultralytics.utils.instance import to_2tuple
+<<<<<<< HEAD
+=======
+from ultralytics.utils.torch_utils import TORCH_1_11
+
+CKPT_KWARGS = {"use_reentrant": False} if TORCH_1_11 else {}  # use_reentrant added in torch 1.11, required in 2.9
+>>>>>>> origin/main
 
 
 class Conv2d_BN(torch.nn.Sequential):
@@ -139,7 +145,11 @@ class MBConv(nn.Module):
         drop_path (nn.Module): Drop path layer (Identity for inference).
 
     Examples:
+<<<<<<< HEAD
         >>> in_chans, out_chans = 32, 64
+=======
+        >>> in_chans, out_chans = 64, 64
+>>>>>>> origin/main
         >>> mbconv = MBConv(in_chans, out_chans, expand_ratio=4, activation=nn.ReLU, drop_path=0.1)
         >>> x = torch.randn(1, in_chans, 56, 56)
         >>> output = mbconv(x)
@@ -210,7 +220,11 @@ class PatchMerging(nn.Module):
         >>> x = torch.randn(4, 64, 56, 56)
         >>> output = patch_merging(x)
         >>> print(output.shape)
+<<<<<<< HEAD
         torch.Size([4, 3136, 128])
+=======
+        torch.Size([4, 784, 128])
+>>>>>>> origin/main
     """
 
     def __init__(self, input_resolution: tuple[int, int], dim: int, out_dim: int, activation):
@@ -262,14 +276,22 @@ class ConvLayer(nn.Module):
         depth (int): Number of MBConv layers in the block.
         use_checkpoint (bool): Whether to use gradient checkpointing to save memory.
         blocks (nn.ModuleList): List of MBConv layers.
+<<<<<<< HEAD
         downsample (Optional[nn.Module]): Function for downsampling the output.
+=======
+        downsample (nn.Module | None): Function for downsampling the output.
+>>>>>>> origin/main
 
     Examples:
         >>> input_tensor = torch.randn(1, 64, 56, 56)
         >>> conv_layer = ConvLayer(64, (56, 56), depth=3, activation=nn.ReLU)
         >>> output = conv_layer(input_tensor)
         >>> print(output.shape)
+<<<<<<< HEAD
         torch.Size([1, 3136, 128])
+=======
+        torch.Size([1, 64, 56, 56])
+>>>>>>> origin/main
     """
 
     def __init__(
@@ -295,9 +317,15 @@ class ConvLayer(nn.Module):
             depth (int): The number of MBConv layers in the block.
             activation (nn.Module): Activation function applied after each convolution.
             drop_path (float | list[float], optional): Drop path rate. Single float or a list of floats for each MBConv.
+<<<<<<< HEAD
             downsample (Optional[nn.Module], optional): Function for downsampling the output. None to skip downsampling.
             use_checkpoint (bool, optional): Whether to use gradient checkpointing to save memory.
             out_dim (Optional[int], optional): Output dimensions. None means it will be the same as `dim`.
+=======
+            downsample (nn.Module | None, optional): Function for downsampling the output. None to skip downsampling.
+            use_checkpoint (bool, optional): Whether to use gradient checkpointing to save memory.
+            out_dim (int | None, optional): Output dimensions. None means it will be the same as `dim`.
+>>>>>>> origin/main
             conv_expand_ratio (float, optional): Expansion ratio for the MBConv layers.
         """
         super().__init__()
@@ -330,7 +358,11 @@ class ConvLayer(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Process input through convolutional layers, applying MBConv blocks and optional downsampling."""
         for blk in self.blocks:
+<<<<<<< HEAD
             x = torch.utils.checkpoint(blk, x) if self.use_checkpoint else blk(x)  # warn: checkpoint is slow import
+=======
+            x = torch.utils.checkpoint.checkpoint(blk, x, **CKPT_KWARGS) if self.use_checkpoint else blk(x)
+>>>>>>> origin/main
         return x if self.downsample is None else self.downsample(x)
 
 
@@ -369,8 +401,13 @@ class MLP(nn.Module):
 
         Args:
             in_features (int): Number of input features.
+<<<<<<< HEAD
             hidden_features (Optional[int], optional): Number of hidden features.
             out_features (Optional[int], optional): Number of output features.
+=======
+            hidden_features (int | None, optional): Number of hidden features.
+            out_features (int | None, optional): Number of output features.
+>>>>>>> origin/main
             activation (nn.Module): Activation function applied after the first fully-connected layer.
             drop (float, optional): Dropout probability.
         """
@@ -481,6 +518,10 @@ class Attention(torch.nn.Module):
             del self.ab
         else:
             self.ab = self.attention_biases[:, self.attention_bias_idxs]
+<<<<<<< HEAD
+=======
+        return self
+>>>>>>> origin/main
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Apply multi-head attention with spatial awareness and trainable attention biases."""
@@ -496,7 +537,12 @@ class Attention(torch.nn.Module):
         q = q.permute(0, 2, 1, 3)
         k = k.permute(0, 2, 1, 3)
         v = v.permute(0, 2, 1, 3)
+<<<<<<< HEAD
         self.ab = self.ab.to(self.attention_biases.device)
+=======
+        if not self.training:
+            self.ab = self.ab.to(self.attention_biases.device)
+>>>>>>> origin/main
 
         attn = (q @ k.transpose(-2, -1)) * self.scale + (
             self.attention_biases[:, self.attention_bias_idxs] if self.training else self.ab
@@ -667,7 +713,11 @@ class BasicLayer(nn.Module):
         >>> layer = BasicLayer(dim=192, input_resolution=(56, 56), depth=2, num_heads=3, window_size=7)
         >>> output = layer(input_tensor)
         >>> print(output.shape)
+<<<<<<< HEAD
         torch.Size([1, 784, 384])
+=======
+        torch.Size([1, 3136, 192])
+>>>>>>> origin/main
     """
 
     def __init__(
@@ -742,7 +792,11 @@ class BasicLayer(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Process input through TinyViT blocks and optional downsampling."""
         for blk in self.blocks:
+<<<<<<< HEAD
             x = torch.utils.checkpoint(blk, x) if self.use_checkpoint else blk(x)  # warn: checkpoint is slow import
+=======
+            x = torch.utils.checkpoint.checkpoint(blk, x, **CKPT_KWARGS) if self.use_checkpoint else blk(x)
+>>>>>>> origin/main
         return x if self.downsample is None else self.downsample(x)
 
     def extra_repr(self) -> str:
@@ -771,11 +825,19 @@ class TinyViT(nn.Module):
         neck (nn.Sequential): Neck module for feature refinement.
 
     Examples:
+<<<<<<< HEAD
         >>> model = TinyViT(img_size=224, num_classes=1000)
         >>> x = torch.randn(1, 3, 224, 224)
         >>> features = model.forward_features(x)
         >>> print(features.shape)
         torch.Size([1, 256, 56, 56])
+=======
+        >>> model = TinyViT(img_size=224, embed_dims=(64, 128, 160, 320), num_heads=(2, 4, 5, 10))
+        >>> x = torch.randn(1, 3, 224, 224)
+        >>> features = model.forward_features(x)
+        >>> print(features.shape)
+        torch.Size([1, 256, 14, 14])
+>>>>>>> origin/main
     """
 
     def __init__(
@@ -962,8 +1024,14 @@ class TinyViT(nn.Module):
         """Perform the forward pass through the TinyViT model, extracting features from the input image."""
         return self.forward_features(x)
 
+<<<<<<< HEAD
     def set_imgsz(self, imgsz: list[int] = [1024, 1024]):
         """Set image size to make model compatible with different image sizes."""
+=======
+    def set_imgsz(self, imgsz: list[int] | None = None):
+        """Set image size to make model compatible with different image sizes."""
+        imgsz = imgsz if imgsz is not None else [1024, 1024]
+>>>>>>> origin/main
         imgsz = [s // 4 for s in imgsz]
         self.patches_resolution = imgsz
         for i, layer in enumerate(self.layers):

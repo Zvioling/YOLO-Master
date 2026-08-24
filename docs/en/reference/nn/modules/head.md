@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: nn.modules.head API Reference
+>>>>>>> origin/main
 description: Explore docs covering Ultralytics YOLO detection, pose & RTDETRDecoder. Comprehensive guides to help you understand Ultralytics nn modules.
 keywords: Ultralytics, YOLO, Detection, Pose, RTDETRDecoder, nn modules, guides
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, YOLO, Detection, Pose, RTDETRDecoder, nn modules, guides
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/head.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/head.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/head.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/head.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -19,14 +27,35 @@ keywords: Ultralytics, YOLO, Detection, Pose, RTDETRDecoder, nn modules, guides
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.nn.modules.head.Segment26
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.nn.modules.head.OBB
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.nn.modules.head.OBB26
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.nn.modules.head.Pose
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.nn.modules.head.Pose26
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.nn.modules.head.Classify
 
 <br><br><hr><br>
@@ -47,10 +76,24 @@ keywords: Ultralytics, YOLO, Detection, Pose, RTDETRDecoder, nn modules, guides
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.nn.modules.head.YOLOESegment26
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.nn.modules.head.RTDETRDecoder
 
 <br><br><hr><br>
 
 ## ::: ultralytics.nn.modules.head.v10Detect
 
+<<<<<<< HEAD
+=======
+<br><br><hr><br>
+
+## ::: ultralytics.nn.modules.head.SemanticSegment
+
+>>>>>>> origin/main
 <br><br>

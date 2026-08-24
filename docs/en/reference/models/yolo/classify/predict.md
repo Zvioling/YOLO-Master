@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.yolo.classify.predict API Reference
+>>>>>>> origin/main
 description: Learn about the ClassificationPredictor class for YOLO models at Ultralytics. Get details on initialization, preprocessing, and postprocessing for classification tasks.
 keywords: YOLO, ClassificationPredictor, Ultralytics, model prediction, preprocess, postprocess, deep learning, machine learning
 ---
@@ -7,7 +11,11 @@ keywords: YOLO, ClassificationPredictor, Ultralytics, model prediction, preproce
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/yolo/classify/predict.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/yolo/classify/predict.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/yolo/classify/predict.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/yolo/classify/predict.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

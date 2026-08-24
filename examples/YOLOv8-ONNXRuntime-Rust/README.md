@@ -1,6 +1,10 @@
 # YOLOv8-ONNXRuntime-Rust for All Key YOLO Tasks
 
+<<<<<<< HEAD
 This repository provides a Rust demonstration for performing Ultralytics YOLOv8 tasks like [Classification](https://docs.ultralytics.com/tasks/classify/), [Segmentation](https://docs.ultralytics.com/tasks/segment/), [Detection](https://docs.ultralytics.com/tasks/detect/), [Pose Estimation](https://docs.ultralytics.com/tasks/pose/), and [Oriented Bounding Box (OBB)](https://docs.ultralytics.com/tasks/obb/) detection using the [ONNXRuntime](https://onnxruntime.ai/).
+=======
+This repository provides a Rust demonstration for performing Ultralytics YOLOv8 tasks like [Classification](https://docs.ultralytics.com/tasks/classify), [Segmentation](https://docs.ultralytics.com/tasks/segment), [Detection](https://docs.ultralytics.com/tasks/detect), [Pose Estimation](https://docs.ultralytics.com/tasks/pose), and [Oriented Bounding Box (OBB)](https://docs.ultralytics.com/tasks/obb) detection using the [ONNXRuntime](https://onnxruntime.ai/).
+>>>>>>> origin/main
 
 ## ✨ Recently Updated
 
@@ -35,7 +39,11 @@ Please follow the official Rust installation guide: [https://www.rust-lang.org/t
 
 ### 3. [Optional] Install CUDA & CuDNN & TensorRT
 
+<<<<<<< HEAD
 - The CUDA execution provider requires [CUDA](https://developer.nvidia.com/cuda-toolkit) v11.6+.
+=======
+- The CUDA execution provider requires [CUDA](https://developer.nvidia.com/cuda/toolkit) v11.6+.
+>>>>>>> origin/main
 - The TensorRT execution provider requires CUDA v11.4+ and [TensorRT](https://developer.nvidia.com/tensorrt) v8.4+. You may also need [cuDNN](https://developer.nvidia.com/cudnn).
 
 ## ▶️ Get Started
@@ -48,7 +56,11 @@ First, install the Ultralytics package:
 pip install -U ultralytics
 ```
 
+<<<<<<< HEAD
 Then, export the desired [Ultralytics YOLOv8](https://docs.ultralytics.com/models/yolov8/) models to the ONNX format. See the [Export documentation](https://docs.ultralytics.com/modes/export/) for more details.
+=======
+Then, export the desired [Ultralytics YOLOv8](https://docs.ultralytics.com/models/yolov8) models to the ONNX format. See the [Export documentation](https://docs.ultralytics.com/modes/export) for more details.
+>>>>>>> origin/main
 
 ```bash
 # Export ONNX model with dynamic shapes (recommended for flexibility)

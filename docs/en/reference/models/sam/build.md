@@ -1,13 +1,23 @@
 ---
+<<<<<<< HEAD
 description: Discover detailed instructions for building various Segment Anything Model (SAM) and Segment Anything Model 2 (SAM 2) architectures with Ultralytics, including SAM ViT and Mobile-SAM.
 keywords: Ultralytics, SAM model, Segment Anything Model, SAM 2 model, Segment Anything Model 2,  SAM ViT, Mobile-SAM, model building, deep learning, AI
+=======
+title: models.sam.build API Reference
+description: Discover detailed instructions for building various Segment Anything Model (SAM) and Segment Anything Model 2 (SAM 2) architectures with Ultralytics, including SAM ViT and Mobile-SAM.
+keywords: Ultralytics, SAM model, Segment Anything Model, SAM 2 model, Segment Anything Model 2, SAM ViT, Mobile-SAM, model building, deep learning, AI
+>>>>>>> origin/main
 ---
 
 # Reference for `ultralytics/models/sam/build.py`
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

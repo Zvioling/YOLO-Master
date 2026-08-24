@@ -1,7 +1,14 @@
 ---
+<<<<<<< HEAD
 comments: true
 description: Learn essential tips, insights, and best practices for deploying computer vision models with a focus on efficiency, optimization, troubleshooting, and maintaining security.
 keywords: Model Deployment, Machine Learning Model Deployment, ML Model Deployment, AI Model Deployment, How to Deploy a Machine Learning Model, How to Deploy ML Models
+=======
+title: YOLO26 Model Deployment Best Practices
+comments: true
+description: Best practices for deploying YOLO26: choose cloud, edge, or local environments, optimize with pruning and quantization, and secure your deployed models.
+keywords: YOLO26, model deployment, best practices, edge deployment, cloud deployment, quantization, pruning, Docker, model security
+>>>>>>> origin/main
 ---
 
 # Best Practices for [Model Deployment](https://www.ultralytics.com/glossary/model-deployment)
@@ -27,7 +34,11 @@ It's also important to follow best practices when deploying a model because depl
 
 Oftentimes, once a model is [trained](./model-training-tips.md), [evaluated](./model-evaluation-insights.md), and [tested](./model-testing.md), it needs to be converted into specific formats to be deployed effectively in various environments, such as cloud, edge, or local devices.
 
+<<<<<<< HEAD
 With YOLO11, you can [export your model to various formats](../modes/export.md) depending on your deployment needs. For instance, [exporting YOLO11 to ONNX](../integrations/onnx.md) is straightforward and ideal for transferring models between frameworks. To explore more integration options and ensure a smooth deployment across different environments, visit our [model integration hub](../integrations/index.md).
+=======
+With YOLO26, you can [export your model to various formats](../modes/export.md) depending on your deployment needs. For instance, [exporting YOLO26 to ONNX](../integrations/onnx.md) is straightforward and ideal for transferring models between frameworks. To explore more integration options and ensure a smooth deployment across different environments, visit our [model integration hub](../integrations/index.md).
+>>>>>>> origin/main
 
 ### Choosing a Deployment Environment
 
@@ -35,7 +46,11 @@ Choosing where to deploy your [computer vision](https://www.ultralytics.com/glos
 
 #### Cloud Deployment
 
+<<<<<<< HEAD
 Cloud deployment is great for applications that need to scale up quickly and handle large amounts of data. Platforms like AWS, [Google Cloud](../yolov5/environments/google_cloud_quickstart_tutorial.md), and Azure make it easy to manage your models from training to deployment. They offer services like [AWS SageMaker](../integrations/amazon-sagemaker.md), Google AI Platform, and [Azure Machine Learning](./azureml-quickstart.md) to help you throughout the process.
+=======
+Cloud deployment is great for applications that need to scale up quickly and handle large amounts of data. Platforms like AWS, [Google Cloud](../yolov5/environments/google-cloud-quickstart-tutorial.md), and Azure make it easy to manage your models from training to deployment. They offer services like [AWS SageMaker](../integrations/amazon-sagemaker.md), Google AI Platform, and [Azure Machine Learning](./azureml-quickstart.md) to help you throughout the process.
+>>>>>>> origin/main
 
 However, using the cloud can be expensive, especially with high data usage, and you might face latency issues if your users are far from the data centers. To manage costs and performance, it's important to optimize resource use and ensure compliance with [data privacy](https://www.ultralytics.com/glossary/data-privacy) rules.
 
@@ -43,7 +58,11 @@ However, using the cloud can be expensive, especially with high data usage, and 
 
 Edge deployment works well for applications needing real-time responses and low latency, particularly in places with limited or no internet access. Deploying models on edge devices like smartphones or IoT gadgets ensures fast processing and keeps data local, which enhances privacy. Deploying on edge also saves bandwidth due to reduced data sent to the cloud.
 
+<<<<<<< HEAD
 However, edge devices often have limited processing power, so you'll need to optimize your models. Tools like [TensorFlow Lite](../integrations/tflite.md) and [NVIDIA Jetson](./nvidia-jetson.md) can help. Despite the benefits, maintaining and updating many devices can be challenging.
+=======
+However, edge devices often have limited processing power, so you'll need to optimize your models. Tools like [LiteRT](../integrations/litert.md) and [NVIDIA Jetson](./nvidia-jetson.md) can help. Despite the benefits, maintaining and updating many devices can be challenging.
+>>>>>>> origin/main
 
 #### Local Deployment
 
@@ -65,9 +84,15 @@ Containerization is a powerful approach that packages your model and all its dep
 - **Scalability**: Containers can be easily scaled up or down based on demand, and orchestration tools like Kubernetes can automate this process.
 - **Version Control**: Docker images can be versioned, allowing you to track changes and roll back to previous versions if needed.
 
+<<<<<<< HEAD
 ### Implementing Docker for YOLO11 Deployment
 
 To containerize your YOLO11 model, you can create a Dockerfile that specifies all the necessary dependencies and configurations. Here's a basic example:
+=======
+### Implementing Docker for YOLO26 Deployment
+
+To containerize your YOLO26 model, you can create a Dockerfile that specifies all the necessary dependencies and configurations. Here's a basic example:
+>>>>>>> origin/main
 
 ```dockerfile
 FROM ultralytics/ultralytics:latest
@@ -75,28 +100,48 @@ FROM ultralytics/ultralytics:latest
 WORKDIR /app
 
 # Copy your model and any additional files
+<<<<<<< HEAD
 COPY ./models/yolo11.pt /app/models/
 COPY ./scripts /app/scripts/
 
 # Set up any environment variables
 ENV MODEL_PATH=/app/models/yolo11.pt
+=======
+COPY ./models/yolo26n.pt /app/models/
+COPY ./scripts /app/scripts/
+
+# Set up any environment variables
+ENV MODEL_PATH=/app/models/yolo26n.pt
+>>>>>>> origin/main
 
 # Command to run when the container starts
 CMD ["python", "/app/scripts/predict.py"]
 ```
 
+<<<<<<< HEAD
 This approach ensures that your model deployment is reproducible and consistent across different environments, significantly reducing the "works on my machine" problem that often plagues deployment processes.
 
 ## Model Optimization Techniques
 
 Optimizing your computer vision model helps it runs efficiently, especially when deploying in environments with limited resources like edge devices. Here are some key techniques for optimizing your model.
+=======
+This approach ensures that your model deployment is reproducible and consistent across development, testing, and production.
+
+## Model Optimization Techniques
+
+Optimizing your computer vision model helps it run efficiently, especially when deploying in environments with limited resources like edge devices. Here are some key techniques for optimizing your model.
+>>>>>>> origin/main
 
 ### Model Pruning
 
 Pruning reduces the size of the model by removing weights that contribute little to the final output. It makes the model smaller and faster without significantly affecting accuracy. Pruning involves identifying and eliminating unnecessary parameters, resulting in a lighter model that requires less computational power. It is particularly useful for deploying models on devices with limited resources.
 
 <p align="center">
+<<<<<<< HEAD
   <img width="100%" src="https://github.com/ultralytics/docs/releases/download/0/model-pruning-overview.avif" alt="Model Pruning Overview">
+=======
+  <img width="100%" src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/model-pruning-overview.avif" alt="Neural network pruning workflow">
+>>>>>>> origin/main
 </p>
 
 ### Model Quantization
@@ -104,7 +149,11 @@ Pruning reduces the size of the model by removing weights that contribute little
 Quantization converts the model's weights and activations from high [precision](https://www.ultralytics.com/glossary/precision) (like 32-bit floats) to lower precision (like 8-bit integers). By reducing the model size, it speeds up inference. Quantization-aware training (QAT) is a method where the model is trained with quantization in mind, preserving accuracy better than post-training quantization. By handling quantization during the training phase, the model learns to adjust to lower precision, maintaining performance while reducing computational demands.
 
 <p align="center">
+<<<<<<< HEAD
   <img width="100%" src="https://miro.medium.com/v2/resize:fit:1032/format:webp/1*Jlq_cyLvRdmp_K5jCd3LkA.png" alt="Model Quantization Overview">
+=======
+  <img width="100%" src="https://raw.githubusercontent.com/ultralytics/assets/main/docs/optimized-model-efficiency.avif" alt="Optimized model efficiency for deployment">
+>>>>>>> origin/main
 </p>
 
 ### Knowledge Distillation
@@ -112,7 +161,11 @@ Quantization converts the model's weights and activations from high [precision](
 Knowledge distillation involves training a smaller, simpler model (the student) to mimic the outputs of a larger, more complex model (the teacher). The student model learns to approximate the teacher's predictions, resulting in a compact model that retains much of the teacher's [accuracy](https://www.ultralytics.com/glossary/accuracy). This technique is beneficial for creating efficient models suitable for deployment on edge devices with constrained resources.
 
 <p align="center">
+<<<<<<< HEAD
   <img width="100%" src="https://github.com/ultralytics/docs/releases/download/0/knowledge-distillation-overview.avif" alt="Knowledge Distillation Overview">
+=======
+  <img width="100%" src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/knowledge-distillation-overview.avif" alt="Knowledge distillation training process">
+>>>>>>> origin/main
 </p>
 
 ## Troubleshooting Deployment Issues
@@ -130,7 +183,11 @@ Experiencing a drop in your model's accuracy after deployment can be frustrating
 - **Review Model Export and Conversion:** Re-export the model and make sure that the conversion process maintains the integrity of the model weights and architecture.
 - **Test with a Controlled Dataset:** Deploy the model in a test environment with a dataset you control and compare the results with the training phase. You can identify if the issue is with the deployment environment or the data.
 
+<<<<<<< HEAD
 When deploying YOLO11, several factors can affect model accuracy. Converting models to formats like [TensorRT](../integrations/tensorrt.md) involves optimizations such as weight quantization and layer fusion, which can cause minor precision losses. Using FP16 (half-precision) instead of FP32 (full-precision) can speed up inference but may introduce numerical precision errors. Also, hardware constraints, like those on the [Jetson Nano](./nvidia-jetson.md), with lower CUDA core counts and reduced memory bandwidth, can impact performance.
+=======
+When deploying YOLO26, several factors can affect model accuracy. Converting models to formats like [TensorRT](../integrations/tensorrt.md) involves optimizations such as weight quantization and layer fusion, which can cause minor precision losses. Using FP16 (half-precision) instead of FP32 (full-precision) can speed up inference but may introduce numerical precision errors. Also, hardware constraints, like those on the [Jetson Nano](./nvidia-jetson.md), with lower CUDA core counts and reduced memory bandwidth, can impact performance.
+>>>>>>> origin/main
 
 ### Inferences Are Taking Longer Than You Expected
 
@@ -142,7 +199,11 @@ When deploying [machine learning](https://www.ultralytics.com/glossary/machine-l
 - **Profile the Inference Pipeline:** Identifying bottlenecks in the inference pipeline can help pinpoint the source of delays. Use profiling tools to analyze each step of the inference process, identifying and addressing any stages that cause significant delays, such as inefficient layers or data transfer issues.
 - **Use Appropriate Precision:** Using higher precision than necessary can slow down inference times. Experiment with using lower precision, such as FP16 (half-precision), instead of FP32 (full-precision). While FP16 can reduce inference time, also keep in mind that it can impact model accuracy.
 
+<<<<<<< HEAD
 If you are facing this issue while deploying YOLO11, consider that YOLO11 offers [various model sizes](../models/yolo11.md), such as YOLO11n (nano) for devices with lower memory capacity and YOLO11x (extra-large) for more powerful GPUs. Choosing the right model variant for your hardware can help balance memory usage and processing time.
+=======
+If you are facing this issue while deploying YOLO26, consider that YOLO26 offers [various model sizes](../models/yolo26.md), such as YOLO26n (nano) for devices with lower memory capacity and YOLO26x (extra-large) for more powerful GPUs. Choosing the right model variant for your hardware can help balance memory usage and processing time.
+>>>>>>> origin/main
 
 Also keep in mind that the size of the input images directly impacts memory usage and processing time. Lower resolutions reduce memory usage and speed up inference, while higher resolutions improve accuracy but require more memory and processing power.
 
@@ -162,6 +223,7 @@ It's essential to control who can access your model and its data to prevent unau
 
 Protecting your model from being reverse-engineered or misuse can be done through model obfuscation. It involves encrypting model parameters, such as weights and biases in [neural networks](https://www.ultralytics.com/glossary/neural-network-nn), to make it difficult for unauthorized individuals to understand or alter the model. You can also obfuscate the model's architecture by renaming layers and parameters or adding dummy layers, making it harder for attackers to reverse-engineer it. You can also serve the model in a secure environment, like a secure enclave or using a trusted execution environment (TEE), can provide an extra layer of protection during inference.
 
+<<<<<<< HEAD
 ## Share Ideas With Your Peers
 
 Being part of a community of computer vision enthusiasts can help you solve problems and learn faster. Here are some ways to connect, get help, and share ideas.
@@ -177,10 +239,13 @@ Being part of a community of computer vision enthusiasts can help you solve prob
 
 Using these resources will help you solve challenges and stay up-to-date with the latest trends and practices in the computer vision community.
 
+=======
+>>>>>>> origin/main
 ## Conclusion and Next Steps
 
 We walked through some best practices to follow when deploying computer vision models. By securing data, controlling access, and obfuscating model details, you can protect sensitive information while keeping your models running smoothly. We also discussed how to address common issues like reduced accuracy and slow inferences using strategies such as warm-up runs, optimizing engines, asynchronous processing, profiling pipelines, and choosing the right precision.
 
+<<<<<<< HEAD
 After deploying your model, the next step would be monitoring, maintaining, and documenting your application. Regular monitoring helps catch and fix issues quickly, maintenance keeps your models up-to-date and functional, and good documentation tracks all changes and updates. These steps will help you achieve the [goals of your computer vision project](./defining-project-goals.md).
 
 ## FAQ
@@ -204,3 +269,28 @@ Security is paramount when deploying machine learning models. Ensure secure data
 ### How do I choose the right deployment environment for my Ultralytics YOLO11 model?
 
 Selecting the optimal deployment environment for your Ultralytics YOLO11 model depends on your application's specific needs. Cloud deployment offers scalability and ease of access, making it ideal for applications with high data volumes. Edge deployment is best for low-latency applications requiring real-time responses, using tools like [TensorFlow Lite](../integrations/tflite.md). Local deployment suits scenarios needing stringent data privacy and control. For a comprehensive overview of each environment, check out our section on [choosing a deployment environment](#choosing-a-deployment-environment).
+=======
+After deploying your model, the next step is [monitoring, maintaining, and documenting](./model-monitoring-and-maintenance.md) your application. Regular monitoring helps catch and fix issues quickly, maintenance keeps your models up-to-date and functional, and good documentation tracks all changes and updates. These steps will help you achieve the [goals of your computer vision project](./defining-project-goals.md).
+
+## FAQ
+
+### What are the best practices for deploying a machine learning model using Ultralytics YOLO26?
+
+Deploying a machine learning model, particularly with Ultralytics YOLO26, involves several best practices to ensure efficiency and reliability. First, choose the deployment environment that suits your needs—cloud, edge, or local. Optimize your model through techniques like [pruning, quantization, and knowledge distillation](#model-optimization-techniques) for efficient deployment in resource-constrained environments. Consider using [containerization with Docker](#containerization-for-streamlined-deployment) to ensure consistency across different environments. Lastly, ensure data consistency and preprocessing steps align with the training phase to maintain performance. You can also refer to [model deployment options](./model-deployment-options.md) for more detailed guidelines.
+
+### How can I troubleshoot common deployment issues with Ultralytics YOLO26 models?
+
+Troubleshooting deployment issues can be broken down into a few key steps. If your model's accuracy drops after deployment, check for data consistency, validate preprocessing steps, and ensure the hardware/software environment matches what you used during training. For slow inference times, perform warm-up runs, optimize your inference engine, use asynchronous processing, and profile your inference pipeline. Refer to [troubleshooting deployment issues](#troubleshooting-deployment-issues) for a detailed guide on these best practices.
+
+### How does Ultralytics YOLO26 optimization enhance model performance on edge devices?
+
+Optimizing Ultralytics YOLO26 models for edge devices involves using techniques like pruning to reduce the model size, quantization to convert weights to lower precision, and knowledge distillation to train smaller models that mimic larger ones. These techniques ensure the model runs efficiently on devices with limited computational power. Tools like [LiteRT](../integrations/litert.md) and [NVIDIA Jetson](./nvidia-jetson.md) are particularly useful for these optimizations. Learn more about these techniques in our section on [model optimization](#model-optimization-techniques).
+
+### What are the security considerations for deploying machine learning models with Ultralytics YOLO26?
+
+Security is paramount when deploying machine learning models. Ensure secure data transmission using encryption protocols like TLS. Implement robust access controls, including strong authentication and role-based access control (RBAC). Model obfuscation techniques, such as encrypting model parameters and serving models in a secure environment like a trusted execution environment (TEE), offer additional protection. For detailed practices, refer to [security considerations](#security-considerations-in-model-deployment).
+
+### How do I choose the right deployment environment for my Ultralytics YOLO26 model?
+
+Selecting the optimal deployment environment for your Ultralytics YOLO26 model depends on your application's specific needs. Cloud deployment offers scalability and ease of access, making it ideal for applications with high data volumes. Edge deployment is best for low-latency applications requiring real-time responses, using tools like [LiteRT](../integrations/litert.md). Local deployment suits scenarios needing stringent data privacy and control. For a comprehensive overview of each environment, check out our section on [choosing a deployment environment](#choosing-a-deployment-environment).
+>>>>>>> origin/main

@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.nms API Reference
+>>>>>>> origin/main
 description: Custom NMS implementation for Ultralytics YOLO with TorchNMS class for torchvision-free inference and fast-nms for oriented bounding boxes. Optimized for speed and accuracy.
 keywords: NMS, non-maximum suppression, TorchNMS, YOLO, torchvision-free, rotated NMS, object detection, bounding boxes, IoU threshold, custom implementation
 ---
@@ -7,7 +11,11 @@ keywords: NMS, non-maximum suppression, TorchNMS, YOLO, torchvision-free, rotate
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/nms.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/nms.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/nms.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/nms.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

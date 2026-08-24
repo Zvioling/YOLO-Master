@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.plotting API Reference
+>>>>>>> origin/main
 description: Explore detailed functionalities of Ultralytics plotting utilities for data visualizations and custom annotations in ML projects.
 keywords: ultralytics, plotting, utilities, documentation, data visualization, annotations, python, ML tools
 ---
@@ -7,7 +11,11 @@ keywords: ultralytics, plotting, utilities, documentation, data visualization, a
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/plotting.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/plotting.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/plotting.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/plotting.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -19,6 +27,13 @@ keywords: ultralytics, plotting, utilities, documentation, data visualization, a
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.plotting._gaussian_filter1d
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.plotting.plot_labels
 
 <br><br><hr><br>
@@ -35,6 +50,13 @@ keywords: ultralytics, plotting, utilities, documentation, data visualization, a
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.plotting.plot_multitrain_results
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.plotting.plt_color_scatter
 
 <br><br><hr><br>

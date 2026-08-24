@@ -30,6 +30,7 @@ from .api import (
     supports_peft_request,
 )
 from .io import _find_original_model_class, load_lora_adapters, merge_lora_weights, save_lora_adapters
+<<<<<<< HEAD
 try:
     from .sensitivity import GradientSensitivitySelector, LayerSensitivity, SensitivityReport, select_targets_by_sensitivity
 except ImportError:
@@ -44,15 +45,49 @@ __all__ = [
     "PEFT_AVAILABLE",
     "PeftModel",
     "PeftProxy",
+=======
+from .backend import AdapterBackend, adapter_metadata, discover_adapter_backend, load_adapters, merge_adapters, save_adapters
+from .planner import (
+    ArchitectureFingerprint,
+    LOVODataCollector,
+    LOVODataPoint,
+    LOVOValidationResult,
+    LOVOValidator,
+    PEFTPlanner,
+    PEFTVariantProfile,
+    PlacementDecision,
+    RefusalError,
+    is_planner_enabled,
+)
+from .training import LoraTrainingStrategy, get_lora_training_stats, suggest_lora_config_for_dataset
+
+__all__ = [
+    "ArchitectureFingerprint",
+    "LOVODataCollector",
+    "LOVODataPoint",
+    "LOVOValidationResult",
+    "LOVOValidator",
+    "PEFT_AVAILABLE",
+    "PeftModel",
+    "PeftProxy",
+    "PEFTPlanner",
+    "PEFTVariantProfile",
+    "PlacementDecision",
+    "RefusalError",
+    "is_planner_enabled",
+>>>>>>> origin/main
     "LoRAConfig",
     "LoRAConfigBuilder",
     "LoRADetectionModel",
     "FewShotLoRAConv",
     "ManualLoRAConv",
+<<<<<<< HEAD
     "GradientSensitivitySelector",
     "LayerSensitivity",
     "SensitivityReport",
     "select_targets_by_sensitivity",
+=======
+>>>>>>> origin/main
     "apply_lora",
     "build_lora_target_audit",
     "get_lora_param_groups",
@@ -63,6 +98,15 @@ __all__ = [
     "save_lora_adapters",
     "load_lora_adapters",
     "merge_lora_weights",
+<<<<<<< HEAD
+=======
+    "AdapterBackend",
+    "adapter_metadata",
+    "discover_adapter_backend",
+    "save_adapters",
+    "load_adapters",
+    "merge_adapters",
+>>>>>>> origin/main
     "LoraTrainingStrategy",
     "get_lora_training_stats",
     "suggest_lora_config_for_dataset",

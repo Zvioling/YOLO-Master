@@ -1,7 +1,11 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
 # Objects365 dataset https://www.objects365.org/ by Megvii
+<<<<<<< HEAD
 # Documentation: https://docs.ultralytics.com/datasets/detect/objects365/
+=======
+# Documentation: https://docs.ultralytics.com/datasets/detect/objects365
+>>>>>>> origin/main
 # Example usage: yolo train data=Objects365.yaml
 # parent
 # ├── ultralytics

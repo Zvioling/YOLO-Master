@@ -1,5 +1,6 @@
 // Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
+<<<<<<< HEAD
 // Block sitemap.xml fetches triggered by Weglot's hreflang tags detected by MkDocs Material
 (() => {
   const EMPTY_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`;
@@ -38,6 +39,8 @@
   };
 })();
 
+=======
+>>>>>>> origin/main
 // Apply theme colors based on dark/light mode
 const applyTheme = (isDark) => {
   document.body.setAttribute("data-md-color-scheme", isDark ? "slate" : "default");
@@ -59,10 +62,26 @@ const checkTheme = () => {
   }
 };
 
+<<<<<<< HEAD
+=======
+function syncEmbedTheme() {
+  const isDark = document.body.getAttribute("data-md-color-scheme") === "slate";
+  document.querySelectorAll("iframe").forEach((iframe) => {
+    const targetOrigin = iframe.src ? new URL(iframe.src, window.location.href).origin : window.location.origin;
+    iframe.contentWindow?.postMessage({ type: "ul-theme", theme: isDark ? "dark" : "light" }, targetOrigin);
+    iframe.addEventListener("load", syncEmbedTheme, { once: true });
+  });
+}
+
+>>>>>>> origin/main
 // Initialize theme handling on page load
 document.addEventListener("DOMContentLoaded", () => {
   checkTheme();
   syncWidgetTheme();
+<<<<<<< HEAD
+=======
+  syncEmbedTheme();
+>>>>>>> origin/main
 
   // Watch for system theme changes
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", checkTheme);
@@ -77,6 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
     attributes: true,
     attributeFilter: ["data-md-color-scheme"],
   });
+<<<<<<< HEAD
+=======
+
+  // Sync embed
+  new MutationObserver(syncEmbedTheme).observe(document.body, { attributeFilter: ["data-md-color-scheme"] });
+>>>>>>> origin/main
 });
 
 // Ultralytics Chat Widget ---------------------------------------------------------------------------------------------
@@ -85,9 +110,19 @@ document.addEventListener("DOMContentLoaded", () => {
     welcome: {
       title: "Hello 👋",
       message: "Ask about YOLO, tutorials, training, export, deployment, or troubleshooting.",
+<<<<<<< HEAD
       chatExamples: ["What's new in SAM 3?", "How can I get started with YOLO?", "How does Enterprise Licensing work?"],
       searchExamples: [
         "YOLO11 quickstart",
+=======
+      chatExamples: [
+        "What's new in SAM 3?",
+        "How can I get started with YOLO26?",
+        "How does Enterprise Licensing work?",
+      ],
+      searchExamples: [
+        "YOLO26 quickstart",
+>>>>>>> origin/main
         "custom dataset training",
         "model export formats",
         "object detection tutorial",

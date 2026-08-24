@@ -21,18 +21,30 @@ class SegmentationTrainer(yolo.detect.DetectionTrainer):
 
     Examples:
         >>> from ultralytics.models.yolo.segment import SegmentationTrainer
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n-seg.pt", data="coco8-seg.yaml", epochs=3)
+=======
+        >>> args = dict(model="yolo26n-seg.pt", data="coco8-seg.yaml", epochs=3)
+>>>>>>> origin/main
         >>> trainer = SegmentationTrainer(overrides=args)
         >>> trainer.train()
     """
 
+<<<<<<< HEAD
     def __init__(self, cfg=DEFAULT_CFG, overrides: dict | None = None, _callbacks=None):
+=======
+    def __init__(self, cfg=DEFAULT_CFG, overrides: dict | None = None, _callbacks: dict | None = None):
+>>>>>>> origin/main
         """Initialize a SegmentationTrainer object.
 
         Args:
             cfg (dict): Configuration dictionary with default training settings.
             overrides (dict, optional): Dictionary of parameter overrides for the default configuration.
+<<<<<<< HEAD
             _callbacks (list, optional): List of callback functions to be executed during training.
+=======
+            _callbacks (dict, optional): Dictionary of callback functions to be executed during training.
+>>>>>>> origin/main
         """
         if overrides is None:
             overrides = {}
@@ -52,10 +64,19 @@ class SegmentationTrainer(yolo.detect.DetectionTrainer):
 
         Examples:
             >>> trainer = SegmentationTrainer()
+<<<<<<< HEAD
             >>> model = trainer.get_model(cfg="yolo11n-seg.yaml")
             >>> model = trainer.get_model(weights="yolo11n-seg.pt", verbose=False)
         """
         model = SegmentationModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
+=======
+            >>> model = trainer.get_model(cfg="yolo26n-seg.yaml")
+            >>> model = trainer.get_model(weights="yolo26n-seg.pt", verbose=False)
+        """
+        model = self.set_model_names_for_load(
+            SegmentationModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
+        )
+>>>>>>> origin/main
         if weights:
             model.load(weights)
 
@@ -63,7 +84,11 @@ class SegmentationTrainer(yolo.detect.DetectionTrainer):
 
     def get_validator(self):
         """Return an instance of SegmentationValidator for validation of YOLO model."""
+<<<<<<< HEAD
         self.loss_names = "box_loss", "seg_loss", "cls_loss", "dfl_loss"
+=======
+        self.loss_names = "box_loss", "seg_loss", "cls_loss", "dfl_loss", "sem_loss"
+>>>>>>> origin/main
         return yolo.segment.SegmentationValidator(
             self.test_loader, save_dir=self.save_dir, args=copy(self.args), _callbacks=self.callbacks
         )

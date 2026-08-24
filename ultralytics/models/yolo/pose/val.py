@@ -29,6 +29,7 @@ class PoseValidator(DetectionValidator):
         preprocess: Preprocess batch by converting keypoints data to float and moving it to the device.
         get_desc: Return description of evaluation metrics in string format.
         init_metrics: Initialize pose estimation metrics for YOLO model.
+<<<<<<< HEAD
         _prepare_batch: Prepare a batch for processing by converting keypoints to float and scaling to original
             dimensions.
         _prepare_pred: Prepare and scale keypoints in predictions for pose processing.
@@ -36,13 +37,26 @@ class PoseValidator(DetectionValidator):
             and ground truth.
         plot_val_samples: Plot and save validation set samples with ground truth bounding boxes and keypoints.
         plot_predictions: Plot and save model predictions with bounding boxes and keypoints.
+=======
+        postprocess: Postprocess YOLO predictions to extract and reshape keypoints for pose estimation.
+        _prepare_batch: Prepare a batch for processing by converting keypoints to float and scaling to original
+            dimensions.
+        _process_batch: Return correct prediction matrix by computing Intersection over Union (IoU) between detections
+            and ground truth.
+        gather_stats: Gather stats from all GPUs.
+        scale_preds: Scale predictions to the original image size.
+>>>>>>> origin/main
         save_one_txt: Save YOLO pose detections to a text file in normalized coordinates.
         pred_to_json: Convert YOLO predictions to COCO JSON format.
         eval_json: Evaluate object detection model using COCO JSON format.
 
     Examples:
         >>> from ultralytics.models.yolo.pose import PoseValidator
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n-pose.pt", data="coco8-pose.yaml")
+=======
+        >>> args = dict(model="yolo26n-pose.pt", data="coco8-pose.yaml")
+>>>>>>> origin/main
         >>> validator = PoseValidator(args=args)
         >>> validator()
 
@@ -52,7 +66,11 @@ class PoseValidator(DetectionValidator):
         due to a known bug with pose models.
     """
 
+<<<<<<< HEAD
     def __init__(self, dataloader=None, save_dir=None, args=None, _callbacks=None) -> None:
+=======
+    def __init__(self, dataloader=None, save_dir=None, args=None, _callbacks: dict | None = None) -> None:
+>>>>>>> origin/main
         """Initialize a PoseValidator object for pose estimation validation.
 
         This validator is specifically designed for pose estimation tasks, handling keypoints and implementing
@@ -62,7 +80,11 @@ class PoseValidator(DetectionValidator):
             dataloader (torch.utils.data.DataLoader, optional): DataLoader to be used for validation.
             save_dir (Path | str, optional): Directory to save results.
             args (dict, optional): Arguments for the validator including task set to "pose".
+<<<<<<< HEAD
             _callbacks (list, optional): List of callback functions to be executed during validation.
+=======
+            _callbacks (dict, optional): Dictionary of callback functions to be executed during validation.
+>>>>>>> origin/main
         """
         super().__init__(dataloader, save_dir, args, _callbacks)
         self.sigma = None
@@ -102,9 +124,20 @@ class PoseValidator(DetectionValidator):
         self.kpt_shape = self.data["kpt_shape"]
         is_pose = self.kpt_shape == [17, 3]
         nkpt = self.kpt_shape[0]
+<<<<<<< HEAD
         self.sigma = OKS_SIGMA if is_pose else np.ones(nkpt) / nkpt
 
     def postprocess(self, preds: torch.Tensor) -> dict[str, torch.Tensor]:
+=======
+        if sigmas := self.data.get("kpt_oks_sigmas"):  # optional custom OKS sigmas from the dataset YAML
+            self.sigma = np.array(sigmas, dtype=np.float32).flatten()
+            if len(self.sigma) != nkpt or not np.all(self.sigma > 0):
+                raise ValueError(f"'kpt_oks_sigmas' must be {nkpt} positive values, got {sigmas}")
+        else:
+            self.sigma = OKS_SIGMA if is_pose else np.ones(nkpt) / nkpt
+
+    def postprocess(self, preds: torch.Tensor) -> list[dict[str, torch.Tensor]]:
+>>>>>>> origin/main
         """Postprocess YOLO predictions to extract and reshape keypoints for pose estimation.
 
         This method extends the parent class postprocessing by extracting keypoints from the 'extra' field of
@@ -116,16 +149,25 @@ class PoseValidator(DetectionValidator):
                 scores, class predictions, and keypoint data.
 
         Returns:
+<<<<<<< HEAD
             (dict[torch.Tensor]): Dict of processed prediction dictionaries, each containing:
+=======
+            (list[dict[str, torch.Tensor]]): List of processed prediction dictionaries, each containing:
+>>>>>>> origin/main
                 - 'bboxes': Bounding box coordinates
                 - 'conf': Confidence scores
                 - 'cls': Class predictions
                 - 'keypoints': Reshaped keypoint coordinates with shape (-1, *self.kpt_shape)
 
         Notes:
+<<<<<<< HEAD
             If no keypoints are present in a prediction (empty keypoints), that prediction is skipped and continues
             to the next one. The keypoints are extracted from the 'extra' field which contains additional
             task-specific data beyond basic detection.
+=======
+            The keypoints are extracted from the 'extra' field which contains additional task-specific data beyond
+            basic detection.
+>>>>>>> origin/main
         """
         preds = super().postprocess(preds)
         for pred in preds:
@@ -136,6 +178,7 @@ class PoseValidator(DetectionValidator):
         """Prepare a batch for processing by converting keypoints to float and scaling to original dimensions.
 
         Args:
+<<<<<<< HEAD
             si (int): Batch index.
             batch (dict[str, Any]): Dictionary containing batch data with keys like 'keypoints', 'batch_idx', etc.
 
@@ -145,6 +188,17 @@ class PoseValidator(DetectionValidator):
         Notes:
             This method extends the parent class's _prepare_batch method by adding keypoint processing.
             Keypoints are scaled from normalized coordinates to original image dimensions.
+=======
+            si (int): Sample index within the batch.
+            batch (dict[str, Any]): Dictionary containing batch data with keys like 'keypoints', 'batch_idx', etc.
+
+        Returns:
+            (dict[str, Any]): Prepared batch with keypoints scaled to model input (letterboxed) image dimensions.
+
+        Notes:
+            This method extends the parent class's _prepare_batch method by adding keypoint processing.
+            Keypoints are scaled from normalized coordinates to the model input (letterboxed) image dimensions.
+>>>>>>> origin/main
         """
         pbatch = super()._prepare_batch(si, batch)
         kpts = batch["keypoints"][batch["batch_idx"] == si]
@@ -185,11 +239,23 @@ class PoseValidator(DetectionValidator):
         tp.update({"tp_p": tp_p})  # update tp with kpts IoU
         return tp
 
+<<<<<<< HEAD
+=======
+    def gather_stats(self) -> None:
+        """Gather stats from all GPUs."""
+        super().gather_stats()  # gather stats from DetectionValidator
+        self._gather_image_metrics(self.metrics.pose)
+
+>>>>>>> origin/main
     def save_one_txt(self, predn: dict[str, torch.Tensor], save_conf: bool, shape: tuple[int, int], file: Path) -> None:
         """Save YOLO pose detections to a text file in normalized coordinates.
 
         Args:
+<<<<<<< HEAD
             predn (dict[str, torch.Tensor]): Prediction dict with keys 'bboxes', 'conf', 'cls' and 'keypoints.
+=======
+            predn (dict[str, torch.Tensor]): Prediction dict with keys 'bboxes', 'conf', 'cls', and 'keypoints'.
+>>>>>>> origin/main
             save_conf (bool): Whether to save confidence scores.
             shape (tuple[int, int]): Shape of the original image (height, width).
             file (Path): Output file path to save detections.
@@ -211,8 +277,13 @@ class PoseValidator(DetectionValidator):
     def pred_to_json(self, predn: dict[str, torch.Tensor], pbatch: dict[str, Any]) -> None:
         """Convert YOLO predictions to COCO JSON format.
 
+<<<<<<< HEAD
         This method takes prediction tensors and a filename, converts the bounding boxes from YOLO format to COCO
         format, and appends the results to the internal JSON dictionary (self.jdict).
+=======
+        This method takes prediction tensors and batch data, converts the bounding boxes from YOLO format to COCO
+        format, and appends the results with keypoints to the internal JSON dictionary (self.jdict).
+>>>>>>> origin/main
 
         Args:
             predn (dict[str, torch.Tensor]): Prediction dictionary containing 'bboxes', 'conf', 'cls', and 'keypoints'
@@ -225,7 +296,11 @@ class PoseValidator(DetectionValidator):
             before saving to the JSON dictionary.
         """
         super().pred_to_json(predn, pbatch)
+<<<<<<< HEAD
         kpts = predn["kpts"]
+=======
+        kpts = predn["keypoints"]
+>>>>>>> origin/main
         for i, k in enumerate(kpts.flatten(1, 2).tolist()):
             self.jdict[-len(kpts) + i]["keypoints"] = k  # keypoints
 
@@ -233,7 +308,11 @@ class PoseValidator(DetectionValidator):
         """Scales predictions to the original image size."""
         return {
             **super().scale_preds(predn, pbatch),
+<<<<<<< HEAD
             "kpts": ops.scale_coords(
+=======
+            "keypoints": ops.scale_coords(
+>>>>>>> origin/main
                 pbatch["imgsz"],
                 predn["keypoints"].clone(),
                 pbatch["ori_shape"],

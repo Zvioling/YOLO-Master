@@ -1,7 +1,11 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
 # HomeObjects-3K dataset by Ultralytics
+<<<<<<< HEAD
 # Documentation: https://docs.ultralytics.com/datasets/detect/homeobjects-3k/
+=======
+# Documentation: https://docs.ultralytics.com/datasets/detect/homeobjects-3k
+>>>>>>> origin/main
 # Example usage: yolo train data=HomeObjects-3K.yaml
 # parent
 # ├── ultralytics

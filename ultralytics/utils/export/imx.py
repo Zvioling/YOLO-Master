@@ -2,15 +2,29 @@
 
 from __future__ import annotations
 
+<<<<<<< HEAD
 import subprocess
 import types
 from pathlib import Path
+=======
+import re
+import subprocess
+import sys
+import types
+from pathlib import Path
+from shutil import which
+>>>>>>> origin/main
 
 import numpy as np
 import torch
 
 from ultralytics.nn.modules import Detect, Pose, Segment
+<<<<<<< HEAD
 from ultralytics.utils import LOGGER
+=======
+from ultralytics.utils import IS_DEBIAN_BOOKWORM, IS_DEBIAN_TRIXIE, IS_RASPBERRYPI, IS_UBUNTU, LOGGER, WINDOWS
+from ultralytics.utils.checks import check_apt_requirements, check_requirements
+>>>>>>> origin/main
 from ultralytics.utils.patches import onnx_export_patch
 from ultralytics.utils.tal import make_anchors
 from ultralytics.utils.torch_utils import copy_attr
@@ -19,6 +33,7 @@ from ultralytics.utils.torch_utils import copy_attr
 MCT_CONFIG = {
     "YOLO11": {
         "detect": {
+<<<<<<< HEAD
             "layer_names": ["sub", "mul_2", "add_14", "cat_21"],
             "weights_memory": 2585350.2439,
             "n_layers": 238,
@@ -40,6 +55,41 @@ MCT_CONFIG = {
         },
         "classify": {"layer_names": [], "weights_memory": np.inf, "n_layers": 73},
         "segment": {"layer_names": ["sub", "mul", "add_6", "cat_18"], "weights_memory": 2580060.0, "n_layers": 195},
+=======
+            "layer_names": ["sub", "mul_2", "add_14", "cat_19"],
+            "weights_memory": 2585350.2439,
+            "n_layers": {238, 239},
+        },
+        "pose": {
+            "layer_names": ["sub", "mul_2", "add_14", "cat_21", "cat_22", "mul_4", "add_15"],
+            "weights_memory": 2437771.67,
+            "n_layers": {257, 258},
+        },
+        "classify": {"layer_names": [], "weights_memory": np.inf, "n_layers": {112}},
+        "segment": {
+            "layer_names": ["sub", "mul_2", "add_14", "cat_21"],
+            "weights_memory": 2466604.8,
+            "n_layers": {265, 266},
+        },
+    },
+    "YOLOv8": {
+        "detect": {
+            "layer_names": ["sub", "mul", "add_6", "cat_15"],
+            "weights_memory": 2550540.8,
+            "n_layers": {168, 169},
+        },
+        "pose": {
+            "layer_names": ["add_7", "mul_2", "cat_17", "mul", "sub", "add_6", "cat_18"],
+            "weights_memory": 2482451.85,
+            "n_layers": {187, 188},
+        },
+        "classify": {"layer_names": [], "weights_memory": np.inf, "n_layers": {73}},
+        "segment": {
+            "layer_names": ["sub", "mul", "add_6", "cat_17"],
+            "weights_memory": 2580060.0,
+            "n_layers": {195, 196},
+        },
+>>>>>>> origin/main
     },
 }
 
@@ -53,6 +103,10 @@ class FXModel(torch.nn.Module):
 
     Attributes:
         model (nn.Module): The original model's layers.
+<<<<<<< HEAD
+=======
+        imgsz (tuple[int, int]): The input image size (height, width).
+>>>>>>> origin/main
     """
 
     def __init__(self, model, imgsz=(640, 640)):
@@ -94,29 +148,57 @@ class FXModel(torch.nn.Module):
                     )
                 )
             if type(m) is Pose:
+<<<<<<< HEAD
                 m.forward = types.MethodType(pose_forward, m)  # bind method to Detect
             if type(m) is Segment:
                 m.forward = types.MethodType(segment_forward, m)  # bind method to Detect
+=======
+                m.forward = types.MethodType(pose_forward, m)  # bind method to Pose
+            if type(m) is Segment:
+                m.forward = types.MethodType(segment_forward, m)  # bind method to Segment
+>>>>>>> origin/main
             x = m(x)  # run
             y.append(x)  # save output
         return x
 
 
+<<<<<<< HEAD
 def _inference(self, x: list[torch.Tensor]) -> tuple[torch.Tensor]:
     """Decode boxes and cls scores for imx object detection."""
     x_cat = torch.cat([xi.view(x[0].shape[0], self.no, -1) for xi in x], 2)
     box, cls = x_cat.split((self.reg_max * 4, self.nc), 1)
     dbox = self.decode_bboxes(self.dfl(box), self.anchors.unsqueeze(0)) * self.strides
     return dbox.transpose(1, 2), cls.sigmoid().permute(0, 2, 1)
+=======
+def _inference(self, x: dict[str, torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor]:
+    """Decode boxes and cls scores for imx object detection."""
+    dbox = self.decode_bboxes(self.dfl(x["boxes"]), self.anchors.unsqueeze(0)) * self.strides
+    return dbox.transpose(1, 2), x["scores"].sigmoid().permute(0, 2, 1)
+>>>>>>> origin/main
 
 
 def pose_forward(self, x: list[torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """Forward pass for imx pose estimation, including keypoint decoding."""
     bs = x[0].shape[0]  # batch size
+<<<<<<< HEAD
     kpt = torch.cat([self.cv4[i](x[i]).view(bs, self.nk, -1) for i in range(self.nl)], -1)  # (bs, 17*3, h*w)
     x = Detect.forward(self, x)
     pred_kpt = self.kpts_decode(bs, kpt)
     return (*x, pred_kpt.permute(0, 2, 1))
+=======
+    nk_out = getattr(self, "nk_output", self.nk)
+    kpt = torch.cat([self.cv4[i](x[i]).view(bs, nk_out, -1) for i in range(self.nl)], -1)
+
+    # If using Pose26 with 5 dims, convert to 3 dims for export
+    if hasattr(self, "nk_output") and self.nk_output != self.nk:
+        spatial = kpt.shape[-1]
+        kpt = kpt.view(bs, self.kpt_shape[0], self.kpt_shape[1] + 2, spatial)
+        kpt = kpt[:, :, :-2, :]  # Remove sigma_x, sigma_y
+        kpt = kpt.view(bs, self.nk, spatial)
+    x = Detect.forward(self, x)
+    pred_kpt = self.kpts_decode(kpt)
+    return *x, pred_kpt.permute(0, 2, 1)
+>>>>>>> origin/main
 
 
 def segment_forward(self, x: list[torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -125,7 +207,11 @@ def segment_forward(self, x: list[torch.Tensor]) -> tuple[torch.Tensor, torch.Te
     bs = p.shape[0]  # batch size
     mc = torch.cat([self.cv4[i](x[i]).view(bs, self.nm, -1) for i in range(self.nl)], 2)  # mask coefficients
     x = Detect.forward(self, x)
+<<<<<<< HEAD
     return (*x, mc.transpose(1, 2), p)
+=======
+    return *x, mc.transpose(1, 2), p
+>>>>>>> origin/main
 
 
 class NMSWrapper(torch.nn.Module):
@@ -146,7 +232,11 @@ class NMSWrapper(torch.nn.Module):
             score_threshold (float): Score threshold for non-maximum suppression.
             iou_threshold (float): Intersection over union threshold for non-maximum suppression.
             max_detections (int): The number of detections to return.
+<<<<<<< HEAD
             task (str): Task type, either 'detect' or 'pose'.
+=======
+            task (str): Task type, one of 'detect', 'pose', or 'segment'.
+>>>>>>> origin/main
         """
         super().__init__()
         self.model = model
@@ -182,7 +272,11 @@ class NMSWrapper(torch.nn.Module):
 
 def torch2imx(
     model: torch.nn.Module,
+<<<<<<< HEAD
     file: Path | str,
+=======
+    output_dir: Path | str,
+>>>>>>> origin/main
     conf: float,
     iou: float,
     max_det: int,
@@ -190,6 +284,7 @@ def torch2imx(
     gptq: bool = False,
     dataset=None,
     prefix: str = "",
+<<<<<<< HEAD
 ):
     """Export YOLO model to IMX format for deployment on Sony IMX500 devices.
 
@@ -199,6 +294,18 @@ def torch2imx(
     Args:
         model (torch.nn.Module): The YOLO model to export. Must be YOLOv8n or YOLO11n.
         file (Path | str): Output file path for the exported model.
+=======
+) -> str:
+    """Export YOLO model to IMX format for deployment on Sony IMX500 devices.
+
+    This function quantizes a YOLO model using Model Compression Toolkit (MCT) and exports it to IMX format compatible
+    with Sony IMX500 edge devices. It supports both YOLOv8n and YOLO11n models for detection, segmentation, pose
+    estimation, and classification tasks.
+
+    Args:
+        model (torch.nn.Module): The YOLO model to export. Must be YOLOv8n or YOLO11n.
+        output_dir (Path | str): Directory to save the exported IMX model.
+>>>>>>> origin/main
         conf (float): Confidence threshold for NMS post-processing.
         iou (float): IoU threshold for NMS post-processing.
         max_det (int): Maximum number of detections to return.
@@ -209,7 +316,11 @@ def torch2imx(
         prefix (str, optional): Logging prefix string. Defaults to "".
 
     Returns:
+<<<<<<< HEAD
         f (Path): Path to the exported IMX model directory
+=======
+        (str): Path to the exported IMX model directory.
+>>>>>>> origin/main
 
     Raises:
         ValueError: If the model is not a supported YOLOv8n or YOLO11n variant.
@@ -217,6 +328,7 @@ def torch2imx(
     Examples:
         >>> from ultralytics import YOLO
         >>> model = YOLO("yolo11n.pt")
+<<<<<<< HEAD
         >>> path, _ = export_imx(model, "model.imx", conf=0.25, iou=0.45, max_det=300)
 
     Notes:
@@ -224,6 +336,40 @@ def torch2imx(
         - Only supports YOLOv8n and YOLO11n models (detection and pose tasks)
         - Output includes quantized ONNX model, IMX binary, and labels.txt file
     """
+=======
+        >>> path = torch2imx(model, "output_dir/", conf=0.25, iou=0.7, max_det=300)
+
+    Notes:
+        - Auto-installs Java>=17, model-compression-toolkit, imx500-converter, and related packages if not present
+        - Only supports YOLOv8n and YOLO11n models (detection, segmentation, pose, and classification tasks)
+        - Output includes quantized ONNX model, IMX binary, and labels.txt file
+    """
+    # Install Java>=17
+    try:
+        java_output = subprocess.run(["java", "--version"], check=True, capture_output=True).stdout.decode()
+        version_match = re.search(r"(?:openjdk|java) (\d+)", java_output)
+        java_version = int(version_match.group(1)) if version_match else 0
+        assert java_version >= 17, "Java version too old"
+    except (FileNotFoundError, subprocess.CalledProcessError, AssertionError):
+        if IS_UBUNTU or IS_DEBIAN_TRIXIE:
+            LOGGER.info(f"\n{prefix} installing Java 21 for Ubuntu...")
+            check_apt_requirements(["openjdk-21-jre"])
+        elif IS_RASPBERRYPI or IS_DEBIAN_BOOKWORM:
+            LOGGER.info(f"\n{prefix} installing Java 17 for Raspberry Pi or Debian ...")
+            check_apt_requirements(["openjdk-17-jre"])
+
+    check_requirements(
+        (
+            "model-compression-toolkit>=2.4.1",
+            "edge-mdt-cl<1.1.0",
+            "edge-mdt-tpc>=1.2.0",
+            "pydantic<2.12",
+        )
+    )
+    check_requirements("imx500-converter[pt]>=3.17.3")
+    dataset = dataset() if callable(dataset) else dataset  # resolve lazy dataloader
+
+>>>>>>> origin/main
     import model_compression_toolkit as mct
     import onnx
     from edgemdt_tpc import get_target_platform_capabilities
@@ -243,7 +389,11 @@ def torch2imx(
     mct_config = MCT_CONFIG["YOLO11" if "C2PSA" in model.__str__() else "YOLOv8"][model.task]
 
     # Check if the model has the expected number of layers
+<<<<<<< HEAD
     if len(list(model.modules())) != mct_config["n_layers"]:
+=======
+    if len(list(model.modules())) not in mct_config["n_layers"]:
+>>>>>>> origin/main
         raise ValueError("IMX export only supported for YOLOv8n and YOLO11n models.")
 
     for layer_name in mct_config["layer_names"]:
@@ -287,9 +437,15 @@ def torch2imx(
             task=model.task,
         )
 
+<<<<<<< HEAD
     f = Path(str(file).replace(file.suffix, "_imx_model"))
     f.mkdir(exist_ok=True)
     onnx_model = f / Path(str(file.name).replace(file.suffix, "_imx.onnx"))  # js dir
+=======
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    onnx_model = output_dir / "model_imx.onnx"
+>>>>>>> origin/main
 
     with onnx_export_patch():
         mct.exporter.pytorch_export_model(
@@ -297,19 +453,43 @@ def torch2imx(
         )
 
     model_onnx = onnx.load(onnx_model)  # load onnx model
+<<<<<<< HEAD
     for k, v in metadata.items():
+=======
+    for k, v in (metadata or {}).items():
+>>>>>>> origin/main
         meta = model_onnx.metadata_props.add()
         meta.key, meta.value = k, str(v)
 
     onnx.save(model_onnx, onnx_model)
 
+<<<<<<< HEAD
     subprocess.run(
         ["imxconv-pt", "-i", str(onnx_model), "-o", str(f), "--no-input-persistency", "--overwrite-output"],
+=======
+    # Find imxconv-pt binary - check venv bin directory first, then PATH
+    bin_dir = Path(sys.executable).parent
+    imxconv = bin_dir / ("imxconv-pt.exe" if WINDOWS else "imxconv-pt")
+    if not imxconv.exists():
+        imxconv = which("imxconv-pt")  # fallback to PATH
+    if not imxconv:
+        raise FileNotFoundError("imxconv-pt not found. Install with: pip install imx500-converter[pt]")
+
+    subprocess.run(
+        [str(imxconv), "-i", str(onnx_model), "-o", str(output_dir), "--no-input-persistency", "--overwrite-output"],
+>>>>>>> origin/main
         check=True,
     )
 
     # Needed for imx models.
+<<<<<<< HEAD
     with open(f / "labels.txt", "w", encoding="utf-8") as file:
         file.writelines([f"{name}\n" for _, name in model.names.items()])
 
     return f
+=======
+    with open(output_dir / "labels.txt", "w", encoding="utf-8") as labels_file:
+        labels_file.writelines([f"{name}\n" for _, name in model.names.items()])
+
+    return str(output_dir)
+>>>>>>> origin/main

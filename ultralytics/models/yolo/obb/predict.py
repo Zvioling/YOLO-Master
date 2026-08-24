@@ -1,5 +1,10 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
+<<<<<<< HEAD
+=======
+from __future__ import annotations
+
+>>>>>>> origin/main
 import torch
 
 from ultralytics.engine.results import Results
@@ -20,18 +25,30 @@ class OBBPredictor(DetectionPredictor):
     Examples:
         >>> from ultralytics.utils import ASSETS
         >>> from ultralytics.models.yolo.obb import OBBPredictor
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n-obb.pt", source=ASSETS)
+=======
+        >>> args = dict(model="yolo26n-obb.pt", source=ASSETS)
+>>>>>>> origin/main
         >>> predictor = OBBPredictor(overrides=args)
         >>> predictor.predict_cli()
     """
 
+<<<<<<< HEAD
     def __init__(self, cfg=DEFAULT_CFG, overrides=None, _callbacks=None):
+=======
+    def __init__(self, cfg=DEFAULT_CFG, overrides=None, _callbacks: dict | None = None):
+>>>>>>> origin/main
         """Initialize OBBPredictor with optional model and data configuration overrides.
 
         Args:
             cfg (dict, optional): Default configuration for the predictor.
             overrides (dict, optional): Configuration overrides that take precedence over the default config.
+<<<<<<< HEAD
             _callbacks (list, optional): List of callback functions to be invoked during prediction.
+=======
+            _callbacks (dict, optional): Dictionary of callback functions to be invoked during prediction.
+>>>>>>> origin/main
         """
         super().__init__(cfg, overrides, _callbacks)
         self.args.task = "obb"
@@ -50,7 +67,11 @@ class OBBPredictor(DetectionPredictor):
             (Results): The result object containing the original image, image path, class names, and oriented bounding
                 boxes.
         """
+<<<<<<< HEAD
         rboxes = ops.regularize_rboxes(torch.cat([pred[:, :4], pred[:, -1:]], dim=-1))
+=======
+        rboxes = torch.cat([pred[:, :4], pred[:, -1:]], dim=-1)
+>>>>>>> origin/main
         rboxes[:, :4] = ops.scale_boxes(img.shape[2:], rboxes[:, :4], orig_img.shape, xywh=True)
         obb = torch.cat([rboxes, pred[:, 4:6]], dim=-1)
         return Results(orig_img, path=img_path, names=self.model.names, obb=obb)

@@ -2,11 +2,18 @@
 
 # 📚 Ultralytics Docs
 
+<<<<<<< HEAD
 Welcome to Ultralytics Docs, your comprehensive resource for understanding and utilizing our state-of-the-art [machine learning](https://www.ultralytics.com/glossary/machine-learning-ml) tools and models, including [Ultralytics YOLO](https://docs.ultralytics.com/models/yolo11/). These documents are actively maintained and deployed to [https://docs.ultralytics.com](https://docs.ultralytics.com/) for easy access.
 
 [![pages-build-deployment](https://github.com/ultralytics/docs/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/ultralytics/docs/actions/workflows/pages/pages-build-deployment)
 [![Check Broken links](https://github.com/ultralytics/docs/actions/workflows/links.yml/badge.svg)](https://github.com/ultralytics/docs/actions/workflows/links.yml)
 [![Check Domains](https://github.com/ultralytics/docs/actions/workflows/check_domains.yml/badge.svg)](https://github.com/ultralytics/docs/actions/workflows/check_domains.yml)
+=======
+Welcome to Ultralytics Docs, your comprehensive resource for understanding and utilizing our state-of-the-art [machine learning](https://www.ultralytics.com/glossary/machine-learning-ml) tools and models, including [Ultralytics YOLO](https://docs.ultralytics.com/models/yolo26). These documents are actively maintained and deployed to [https://docs.ultralytics.com](https://docs.ultralytics.com/) for easy access.
+
+[![pages-build-deployment](https://github.com/ultralytics/docs/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/ultralytics/docs/actions/workflows/pages/pages-build-deployment)
+[![Check Broken links](https://github.com/ultralytics/docs/actions/workflows/links.yml/badge.svg)](https://github.com/ultralytics/docs/actions/workflows/links.yml)
+>>>>>>> origin/main
 [![Ultralytics Actions](https://github.com/ultralytics/docs/actions/workflows/format.yml/badge.svg)](https://github.com/ultralytics/docs/actions/workflows/format.yml)
 
 <a href="https://discord.com/invite/ultralytics"><img alt="Discord" src="https://img.shields.io/discord/1089800235347353640?logo=discord&logoColor=white&label=Discord&color=blue"></a> <a href="https://community.ultralytics.com/"><img alt="Ultralytics Forums" src="https://img.shields.io/discourse/users?server=https%3A%2F%2Fcommunity.ultralytics.com&logo=discourse&label=Forums&color=blue"></a> <a href="https://www.reddit.com/r/ultralytics/"><img alt="Ultralytics Reddit" src="https://img.shields.io/reddit/subreddit-subscribers/ultralytics?style=flat&logo=reddit&logoColor=white&label=Reddit&color=blue"></a>
@@ -41,6 +48,7 @@ To install the `ultralytics` package in developer mode, which allows you to modi
 
 ## 🚀 Building and Serving Locally
 
+<<<<<<< HEAD
 The `mkdocs serve` command builds and serves a local version of your [MkDocs](https://www.mkdocs.org/) documentation. This is highly useful during development and testing to preview changes.
 
 ```bash
@@ -111,6 +119,39 @@ To deploy your MkDocs documentation site, choose a hosting provider and configur
 ## 💡 Contribute
 
 We deeply value contributions from the open-source community to enhance Ultralytics projects. Your input helps drive innovation! Please review our [Contributing Guide](https://docs.ultralytics.com/help/contributing/) for detailed information on how to get involved. You can also share your feedback and ideas through our [Survey](https://www.ultralytics.com/survey?utm_source=github&utm_medium=social&utm_campaign=Survey). A heartfelt thank you 🙏 to all our contributors for their dedication and support!
+=======
+### Full Build (Recommended)
+
+The `build_docs.py` script runs the full documentation build pipeline — the same process used for production deployments. It renders Jinja macros, generates API reference pages, pulls in model comparison pages, and applies HTML postprocessing.
+
+```bash
+# Requires Python >= 3.10
+pip install -e '.[dev]'
+
+cd docs
+python build_docs.py
+```
+
+The script builds the site into the `site/` directory and automatically serves it at `http://localhost:8000`. Press `CTRL+C` to stop.
+
+### Quick Preview
+
+For quick edits to pages that don't use `{% include %}` macros, you can use `zensical serve` for faster iteration with live reloading:
+
+```bash
+zensical serve
+```
+
+Note that `zensical serve` does **not** render Jinja macros or include compare pages, so some pages (train, predict, val, export, tasks, and others) will display raw `{% include %}` tags instead of their actual content. Use the full build above to verify these pages.
+
+## 📤 Deploying Your Documentation Site
+
+Documentation is automatically built and deployed to [docs.ultralytics.com](https://docs.ultralytics.com) via the CI pipeline in `.github/workflows/docs.yml` on every push to `main`.
+
+## 💡 Contribute
+
+We deeply value contributions from the open-source community to enhance Ultralytics projects. Your input helps drive innovation! Please review our [Contributing Guide](https://docs.ultralytics.com/help/contributing) for detailed information on how to get involved. You can also share your feedback and ideas through our [Survey](https://www.ultralytics.com/survey?utm_source=github&utm_medium=social&utm_campaign=Survey). A heartfelt thank you 🙏 to all our contributors for their dedication and support!
+>>>>>>> origin/main
 
 ![Ultralytics open-source contributors](https://raw.githubusercontent.com/ultralytics/assets/main/im/image-contributors.png)
 
@@ -121,7 +162,11 @@ We look forward to your contributions!
 Ultralytics Docs are available under two licensing options to accommodate different usage scenarios:
 
 - **AGPL-3.0 License**: Ideal for students, researchers, and enthusiasts involved in academic pursuits and open collaboration. See the [LICENSE](https://github.com/ultralytics/docs/blob/main/LICENSE) file for full details. This license promotes sharing improvements back with the community.
+<<<<<<< HEAD
 - **Enterprise License**: Designed for commercial applications, this license allows seamless integration of Ultralytics software and [AI models](https://docs.ultralytics.com/models/) into commercial products and services. Visit [Ultralytics Licensing](https://www.ultralytics.com/license) for more information on obtaining an Enterprise License.
+=======
+- **Enterprise License**: For development and production use, this license enables seamless integration of Ultralytics software and [AI models](https://docs.ultralytics.com/models) into business products and services, including internal tools, automated workflows, and production deployments, bypassing the open-source requirements of AGPL-3.0. To get started, please contact us via [Ultralytics Licensing](https://www.ultralytics.com/license).
+>>>>>>> origin/main
 
 ## ✉️ Contact
 

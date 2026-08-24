@@ -131,7 +131,11 @@
         type="text"
         name="query"
         placeholder="Describe the scene (e.g., man walking)"
+<<<<<<< HEAD
         value="{{ request.form['query'] }}"
+=======
+        value="{{ request.form.get('query', '') | e }}"
+>>>>>>> origin/main
         required
       />
       <button type="submit">Search</button>

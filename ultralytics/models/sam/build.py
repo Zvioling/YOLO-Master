@@ -355,7 +355,11 @@ def build_sam(ckpt="sam_b.pt"):
     """
     model_builder = None
     ckpt = str(ckpt)  # to allow Path ckpt types
+<<<<<<< HEAD
     for k in sam_model_map.keys():
+=======
+    for k in sam_model_map:
+>>>>>>> origin/main
         if ckpt.endswith(k):
             model_builder = sam_model_map.get(k)
 

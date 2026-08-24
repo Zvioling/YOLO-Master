@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: data.split_dota API Reference
+>>>>>>> origin/main
 description: Learn how to utilize the ultralytics.data.split_dota module to process and split DOTA datasets efficiently. Explore detailed functions and examples.
 keywords: Ultralytics, DOTA dataset, data splitting, YOLO, Python, bbox_iof, load_yolo_dota, get_windows, crop_and_save
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, DOTA dataset, data splitting, YOLO, Python, bbox_iof, loa
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/split_dota.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/split_dota.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/split_dota.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/split_dota.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

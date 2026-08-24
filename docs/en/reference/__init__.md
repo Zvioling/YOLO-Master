@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: __init__ API Reference
+>>>>>>> origin/main
 description: Learn how Ultralytics uses lazy imports with __getattr__ to speed up package startup and load model classes like YOLO, NAS, RTDETR, and SAM only when needed.
 keywords: Ultralytics, YOLO, lazy import, __getattr__, NAS, RTDETR, SAM, FastSAM, YOLOWorld, performance, startup time, optimization
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, YOLO, lazy import, __getattr__, NAS, RTDETR, SAM, FastSAM
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/\_\_init\_\_.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/__init__.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/\_\_init\_\_.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/__init__.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: data.augment API Reference
+>>>>>>> origin/main
 description: Explore Ultralytics image augmentation techniques like MixUp, Mosaic, and Random Perspective for enhancing model training. Improve your deep learning models now.
 keywords: Ultralytics, image augmentation, MixUp, Mosaic, Random Perspective, deep learning, model training, YOLO
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, image augmentation, MixUp, Mosaic, Random Perspective, de
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/augment.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/augment.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/augment.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/augment.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -63,6 +71,13 @@ keywords: Ultralytics, image augmentation, MixUp, Mosaic, Random Perspective, de
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.data.augment.SemanticFormat
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.data.augment.LoadVisualPrompt
 
 <br><br><hr><br>

@@ -232,6 +232,15 @@ impl Bbox {
     }
 
     pub fn iou(&self, another: &Bbox) -> f32 {
+<<<<<<< HEAD
         self.intersection_area(another) / self.union(another)
+=======
+        let union = self.union(another);
+        if union <= 0.0 {
+            0.0
+        } else {
+            self.intersection_area(another) / union
+        }
+>>>>>>> origin/main
     }
 }

@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.sam.sam3.encoder API Reference
+>>>>>>> origin/main
 description: Explore the ultralytics.models.sam.sam3.encoder module, including transformer encoder layers and fusion blocks for SAM3.
 keywords: Ultralytics, SAM3, SAM, transformer encoder, fusion, attention, deep learning, Python
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, SAM3, SAM, transformer encoder, fusion, attention, deep l
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/sam3/encoder.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/sam3/encoder.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/sam3/encoder.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/sam3/encoder.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

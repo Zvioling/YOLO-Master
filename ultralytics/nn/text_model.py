@@ -9,7 +9,11 @@ import torch
 import torch.nn as nn
 from PIL import Image
 
+<<<<<<< HEAD
 from ultralytics.utils import checks
+=======
+from ultralytics.utils import WEIGHTS_DIR, checks
+>>>>>>> origin/main
 from ultralytics.utils.torch_utils import smart_inference_mode
 
 try:
@@ -53,6 +57,10 @@ class CLIP(TextModel):
 
     Attributes:
         model (clip.model.CLIP): The loaded CLIP model.
+<<<<<<< HEAD
+=======
+        image_preprocess (callable): Preprocessing transform for images.
+>>>>>>> origin/main
         device (torch.device): Device where the model is loaded.
 
     Methods:
@@ -79,7 +87,11 @@ class CLIP(TextModel):
             device (torch.device): Device to load the model on.
         """
         super().__init__()
+<<<<<<< HEAD
         self.model, self.image_preprocess = clip.load(size, device=device)
+=======
+        self.model, self.image_preprocess = clip.load(size, device=device, download_root=str(WEIGHTS_DIR / "clip"))
+>>>>>>> origin/main
         self.to(device)
         self.device = device
         self.eval()
@@ -131,6 +143,7 @@ class CLIP(TextModel):
 
     @smart_inference_mode()
     def encode_image(self, image: Image.Image | torch.Tensor, dtype: torch.dtype = torch.float32) -> torch.Tensor:
+<<<<<<< HEAD
         """Encode preprocessed images into normalized feature vectors.
 
         This method processes preprocessed image inputs through the CLIP model to generate feature vectors, which are
@@ -139,6 +152,16 @@ class CLIP(TextModel):
         Args:
             image (PIL.Image | torch.Tensor): Preprocessed image input. If a PIL Image is provided, it will be converted
                 to a tensor using the model's image preprocessing function.
+=======
+        """Encode images into normalized feature vectors.
+
+        This method processes image inputs through the CLIP model to generate feature vectors, which are then
+        normalized to unit length. These normalized vectors can be used for text-image similarity comparisons.
+
+        Args:
+            image (PIL.Image | torch.Tensor): Image input as a PIL Image or preprocessed tensor. If a PIL Image is
+                provided, it will be converted to a tensor using the model's image preprocessing function.
+>>>>>>> origin/main
             dtype (torch.dtype, optional): Data type for output features.
 
         Returns:
@@ -275,7 +298,11 @@ class MobileCLIPTS(TextModel):
         >>> features = text_encoder.encode_text(tokens)
     """
 
+<<<<<<< HEAD
     def __init__(self, device: torch.device):
+=======
+    def __init__(self, device: torch.device, weight: str = "mobileclip_blt.ts"):
+>>>>>>> origin/main
         """Initialize the MobileCLIP TorchScript text encoder.
 
         This class implements the TextModel interface using Apple's MobileCLIP model in TorchScript format for efficient
@@ -283,11 +310,19 @@ class MobileCLIPTS(TextModel):
 
         Args:
             device (torch.device): Device to load the model on.
+<<<<<<< HEAD
+=======
+            weight (str): Path to the TorchScript model weights.
+>>>>>>> origin/main
         """
         super().__init__()
         from ultralytics.utils.downloads import attempt_download_asset
 
+<<<<<<< HEAD
         self.encoder = torch.jit.load(attempt_download_asset("mobileclip_blt.ts"), map_location=device)
+=======
+        self.encoder = torch.jit.load(attempt_download_asset(weight), map_location=device)
+>>>>>>> origin/main
         self.tokenizer = clip.clip.tokenize
         self.device = device
 
@@ -352,5 +387,12 @@ def build_text_model(variant: str, device: torch.device = None) -> TextModel:
         return CLIP(size, device)
     elif base == "mobileclip":
         return MobileCLIPTS(device)
+<<<<<<< HEAD
     else:
         raise ValueError(f"Unrecognized base model: '{base}'. Supported base models: 'clip', 'mobileclip'.")
+=======
+    elif base == "mobileclip2":
+        return MobileCLIPTS(device, weight="mobileclip2_b.ts")
+    else:
+        raise ValueError(f"Unrecognized base model '{base}'. Supported models are 'clip', 'mobileclip', 'mobileclip2'.")
+>>>>>>> origin/main

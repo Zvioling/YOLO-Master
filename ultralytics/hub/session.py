@@ -12,7 +12,11 @@ from urllib.parse import parse_qs, urlparse
 
 from ultralytics import __version__
 from ultralytics.hub.utils import HELP_MSG, HUB_WEB_ROOT, PREFIX
+<<<<<<< HEAD
 from ultralytics.utils import IS_COLAB, LOGGER, SETTINGS, TQDM, checks, emojis
+=======
+from ultralytics.utils import IS_COLAB, LOGGER, SETTINGS, TQDM, checks
+>>>>>>> origin/main
 from ultralytics.utils.errors import HUBModelError
 
 AGENT_NAME = f"python-{__version__}-colab" if IS_COLAB else f"python-{__version__}-local"
@@ -121,7 +125,11 @@ class HUBTrainingSession:
         """
         self.model = self.client.model(model_id)
         if not self.model.data:  # then model does not exist
+<<<<<<< HEAD
             raise ValueError(emojis("❌ The specified HUB model does not exist"))  # TODO: improve error handling
+=======
+            raise HUBModelError(f"❌ Model not found: '{model_id}'. Verify the model ID is correct.")
+>>>>>>> origin/main
 
         self.model_url = f"{HUB_WEB_ROOT}/models/{self.model.id}"
         if self.model.is_trained():
@@ -167,10 +175,15 @@ class HUBTrainingSession:
 
         self.model.create_model(payload)
 
+<<<<<<< HEAD
         # Model could not be created
         # TODO: improve error handling
         if not self.model.id:
             return None
+=======
+        if not self.model.id:
+            raise HUBModelError(f"❌ Failed to create model '{self.filename}' on Ultralytics HUB. Please try again.")
+>>>>>>> origin/main
 
         self.model_url = f"{HUB_WEB_ROOT}/models/{self.model.id}"
 
@@ -305,7 +318,11 @@ class HUBTrainingSession:
                         LOGGER.warning(f"{PREFIX}{message} {HELP_MSG} ({response.status_code})")
 
                 if not self._should_retry(response.status_code):
+<<<<<<< HEAD
                     LOGGER.warning(f"{PREFIX}Request failed. {HELP_MSG} ({response.status_code}")
+=======
+                    LOGGER.warning(f"{PREFIX}Request failed. {HELP_MSG} ({response.status_code})")
+>>>>>>> origin/main
                     break  # Not an error that should be retried, exit loop
 
                 time.sleep(2**i)  # Exponential backoff for retries
@@ -387,7 +404,11 @@ class HUBTrainingSession:
                     f"{PREFIX} Model 'best.pt' not found, copying 'last.pt' to 'best.pt' and uploading. "
                     "This often happens when resuming training in transient environments like Google Colab. "
                     "For more reliable training, consider using Ultralytics HUB Cloud. "
+<<<<<<< HEAD
                     "Learn more at https://docs.ultralytics.com/hub/cloud-training."
+=======
+                    "Learn more at https://docs.ultralytics.com/platform."
+>>>>>>> origin/main
                 )
                 shutil.copy(last, weights)  # copy last.pt to best.pt
             else:

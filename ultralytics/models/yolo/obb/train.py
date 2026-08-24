@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from copy import copy
 from pathlib import Path
+<<<<<<< HEAD
 from typing import Any
+=======
+>>>>>>> origin/main
 
 from ultralytics.models import yolo
 from ultralytics.nn.tasks import OBBModel
@@ -18,8 +21,13 @@ class OBBTrainer(yolo.detect.DetectionTrainer):
     objects at arbitrary angles rather than just axis-aligned rectangles.
 
     Attributes:
+<<<<<<< HEAD
         loss_names (tuple): Names of the loss components used during training including box_loss, cls_loss, and
             dfl_loss.
+=======
+        loss_names (tuple): Names of the loss components used during training including box_loss, cls_loss, dfl_loss,
+            and angle_loss.
+>>>>>>> origin/main
 
     Methods:
         get_model: Return OBBModel initialized with specified config and weights.
@@ -27,12 +35,20 @@ class OBBTrainer(yolo.detect.DetectionTrainer):
 
     Examples:
         >>> from ultralytics.models.yolo.obb import OBBTrainer
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n-obb.pt", data="dota8.yaml", epochs=3)
+=======
+        >>> args = dict(model="yolo26n-obb.pt", data="dota8.yaml", epochs=3)
+>>>>>>> origin/main
         >>> trainer = OBBTrainer(overrides=args)
         >>> trainer.train()
     """
 
+<<<<<<< HEAD
     def __init__(self, cfg=DEFAULT_CFG, overrides: dict | None = None, _callbacks: list[Any] | None = None):
+=======
+    def __init__(self, cfg=DEFAULT_CFG, overrides: dict | None = None, _callbacks: dict | None = None):
+>>>>>>> origin/main
         """Initialize an OBBTrainer object for training Oriented Bounding Box (OBB) models.
 
         Args:
@@ -40,7 +56,11 @@ class OBBTrainer(yolo.detect.DetectionTrainer):
                 configuration.
             overrides (dict, optional): Dictionary of parameter overrides for the configuration. Any values here will
                 take precedence over those in cfg.
+<<<<<<< HEAD
             _callbacks (list[Any], optional): List of callback functions to be invoked during training.
+=======
+            _callbacks (dict, optional): Dictionary of callback functions to be invoked during training.
+>>>>>>> origin/main
         """
         if overrides is None:
             overrides = {}
@@ -63,9 +83,17 @@ class OBBTrainer(yolo.detect.DetectionTrainer):
 
         Examples:
             >>> trainer = OBBTrainer()
+<<<<<<< HEAD
             >>> model = trainer.get_model(cfg="yolo11n-obb.yaml", weights="yolo11n-obb.pt")
         """
         model = OBBModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
+=======
+            >>> model = trainer.get_model(cfg="yolo26n-obb.yaml", weights="yolo26n-obb.pt")
+        """
+        model = self.set_model_names_for_load(
+            OBBModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
+        )
+>>>>>>> origin/main
         if weights:
             model.load(weights)
 
@@ -73,7 +101,11 @@ class OBBTrainer(yolo.detect.DetectionTrainer):
 
     def get_validator(self):
         """Return an instance of OBBValidator for validation of YOLO model."""
+<<<<<<< HEAD
         self.loss_names = "box_loss", "cls_loss", "dfl_loss"
+=======
+        self.loss_names = "box_loss", "cls_loss", "dfl_loss", "angle_loss"
+>>>>>>> origin/main
         return yolo.obb.OBBValidator(
             self.test_loader, save_dir=self.save_dir, args=copy(self.args), _callbacks=self.callbacks
         )

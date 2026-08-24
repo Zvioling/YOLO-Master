@@ -53,7 +53,11 @@ class TwoWayTransformer(nn.Module):
             embedding_dim (int): Channel dimension for input embeddings.
             num_heads (int): Number of heads for multihead attention. Must divide embedding_dim.
             mlp_dim (int): Internal channel dimension for the MLP block.
+<<<<<<< HEAD
             activation (Type[nn.Module], optional): Activation function to use in the MLP block.
+=======
+            activation (type[nn.Module], optional): Activation function to use in the MLP block.
+>>>>>>> origin/main
             attention_downsample_rate (int, optional): Downsampling rate for attention mechanism.
         """
         super().__init__()
@@ -172,7 +176,11 @@ class TwoWayAttentionBlock(nn.Module):
             embedding_dim (int): Channel dimension of the embeddings.
             num_heads (int): Number of attention heads in the attention layers.
             mlp_dim (int, optional): Hidden dimension of the MLP block.
+<<<<<<< HEAD
             activation (Type[nn.Module], optional): Activation function for the MLP block.
+=======
+            activation (type[nn.Module], optional): Activation function for the MLP block.
+>>>>>>> origin/main
             attention_downsample_rate (int, optional): Downsampling rate for the attention mechanism.
             skip_first_layer_pe (bool, optional): Whether to skip positional encoding in the first layer.
         """
@@ -316,8 +324,13 @@ class Attention(nn.Module):
 
         Args:
             q (torch.Tensor): Query tensor with shape (B, N_q, embedding_dim).
+<<<<<<< HEAD
             k (torch.Tensor): Key tensor with shape (B, N_k, embedding_dim).
             v (torch.Tensor): Value tensor with shape (B, N_k, embedding_dim).
+=======
+            k (torch.Tensor): Key tensor with shape (B, N_k, kv_in_dim).
+            v (torch.Tensor): Value tensor with shape (B, N_k, kv_in_dim).
+>>>>>>> origin/main
 
         Returns:
             (torch.Tensor): Output tensor after attention with shape (B, N_q, embedding_dim).

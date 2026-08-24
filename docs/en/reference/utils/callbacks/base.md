@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.callbacks.base API Reference
+>>>>>>> origin/main
 description: Discover the essential base callbacks in Ultralytics for training, validation, prediction, and exporting models efficiently.
 keywords: Ultralytics, base callbacks, training, validation, prediction, model export, ML, machine learning, deep learning
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, base callbacks, training, validation, prediction, model e
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/base.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/base.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/base.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/base.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

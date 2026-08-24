@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.sam.modules.tiny_encoder API Reference
+>>>>>>> origin/main
 description: Explore the detailed implementation of TinyViT architecture including Conv2d_BN, PatchEmbed, MBConv, and more in Ultralytics.
 keywords: Ultralytics, TinyViT, Conv2d_BN, PatchEmbed, MBConv, Attention, PyTorch, YOLO, Deep Learning
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, TinyViT, Conv2d_BN, PatchEmbed, MBConv, Attention, PyTorc
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/tiny_encoder.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/tiny_encoder.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/tiny_encoder.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/tiny_encoder.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

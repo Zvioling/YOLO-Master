@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: data.converter API Reference
+>>>>>>> origin/main
 description: Explore comprehensive data conversion tools for YOLO models including COCO, DOTA, and YOLO bbox2segment converters.
 keywords: Ultralytics, data conversion, YOLO models, COCO, DOTA, YOLO bbox2segment, machine learning, annotations
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, data conversion, YOLO models, COCO, DOTA, YOLO bbox2segme
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/converter.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/converter.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/converter.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/converter.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -51,6 +59,19 @@ keywords: Ultralytics, data conversion, YOLO models, COCO, DOTA, YOLO bbox2segme
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
 ## ::: ultralytics.data.converter.convert_ndjson_to_yolo
 
+=======
+## ::: ultralytics.data.converter._infer_ndjson_kpt_shape
+
+<br><br><hr><br>
+
+## ::: ultralytics.data.converter.convert_ndjson_to_yolo
+
+<br><br><hr><br>
+
+## ::: ultralytics.data.converter._convert_ndjson_to_yolo
+
+>>>>>>> origin/main
 <br><br>

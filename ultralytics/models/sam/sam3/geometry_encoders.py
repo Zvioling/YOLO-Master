@@ -4,7 +4,10 @@
 
 import torch
 import torch.nn as nn
+<<<<<<< HEAD
 import torchvision
+=======
+>>>>>>> origin/main
 
 from ultralytics.nn.modules.utils import _get_clones
 from ultralytics.utils.ops import xywh2xyxy
@@ -18,6 +21,7 @@ def is_right_padded(mask: torch.Tensor):
 
 
 def concat_padded_sequences(seq1, mask1, seq2, mask2, return_index: bool = False):
+<<<<<<< HEAD
     """
     Concatenates two right-padded sequences, such that the resulting sequence
     is contiguous and also right-padded.
@@ -33,6 +37,23 @@ def concat_padded_sequences(seq1, mask1, seq2, mask2, return_index: bool = False
         in the concatenated sequence. This can be used to retrieve the elements of seq2
     :return: A tuple (concatenated_sequence, concatenated_mask) if return_index is False,
         otherwise (concatenated_sequence, concatenated_mask, index).
+=======
+    """Concatenate two right-padded sequences into a contiguous, right-padded sequence.
+
+    Following PyTorch convention, tensors are sequence-first and masks are batch-first, with 1s for padded values.
+
+    Args:
+        seq1 (torch.Tensor): A tensor of shape (seq1_length, batch_size, hidden_size).
+        mask1 (torch.Tensor): A tensor of shape (batch_size, seq1_length).
+        seq2 (torch.Tensor): A tensor of shape (seq2_length, batch_size, hidden_size).
+        mask2 (torch.Tensor): A tensor of shape (batch_size, seq2_length).
+        return_index (bool): If True, also return the index of the ids of the elements of seq2 in the concatenated
+            sequence, which can be used to retrieve the elements of seq2.
+
+    Returns:
+        (tuple): (concatenated_sequence, concatenated_mask) if return_index is False, otherwise (concatenated_sequence,
+            concatenated_mask, index).
+>>>>>>> origin/main
     """
     seq1_length, batch_size, hidden_size = seq1.shape
     seq2_length, batch_size, hidden_size = seq2.shape
@@ -136,9 +157,15 @@ class Prompt:
         """Append box prompts to existing prompts.
 
         Args:
+<<<<<<< HEAD
             boxes: Tensor of shape (N_new_boxes, B, 4) with normalized box coordinates
             labels: Optional tensor of shape (N_new_boxes, B) with positive/negative labels
             mask: Optional tensor of shape (B, N_new_boxes) for attention mask
+=======
+            boxes (torch.Tensor): Tensor of shape (N_new_boxes, B, 4) with normalized box coordinates.
+            labels (torch.Tensor | None): Optional tensor of shape (N_new_boxes, B) with positive/negative labels.
+            mask (torch.Tensor | None): Optional tensor of shape (B, N_new_boxes) for attention mask.
+>>>>>>> origin/main
         """
         if self.box_embeddings is None:
             # First boxes - initialize
@@ -293,7 +320,14 @@ class SequenceGeometryEncoder(nn.Module):
             boxes_xyxy = boxes_xyxy * scale
 
             # RoI align
+<<<<<<< HEAD
             sampled = torchvision.ops.roi_align(img_feats, boxes_xyxy.transpose(0, 1).unbind(0), self.roi_size)
+=======
+            # Scoped for import ultralytics speed: ROI align requires optional torchvision ops.
+            from torchvision.ops import roi_align
+
+            sampled = roi_align(img_feats, boxes_xyxy.transpose(0, 1).unbind(0), self.roi_size)
+>>>>>>> origin/main
             assert list(sampled.shape) == [
                 bs * n_boxes,
                 self.d_model,
@@ -327,10 +361,17 @@ class SequenceGeometryEncoder(nn.Module):
         """Encode geometric box prompts.
 
         Args:
+<<<<<<< HEAD
             geo_prompt: Prompt object containing box embeddings, masks, and labels
             img_feats: List of image features from backbone
             img_sizes: List of (H, W) tuples for each feature level
             img_pos_embeds: Optional position embeddings for image features
+=======
+            geo_prompt (Prompt): Prompt object containing box embeddings, masks, and labels.
+            img_feats (list[torch.Tensor]): List of image features from backbone.
+            img_sizes (list[tuple[int, int]]): List of (H, W) tuples for each feature level.
+            img_pos_embeds (list[torch.Tensor] | None): Optional position embeddings for image features.
+>>>>>>> origin/main
 
         Returns:
             Tuple of (encoded_embeddings, attention_mask)

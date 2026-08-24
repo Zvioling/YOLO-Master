@@ -94,8 +94,13 @@ class DETRLoss(nn.Module):
 
         Notes:
             The function supports different classification loss types:
+<<<<<<< HEAD
             - Varifocal Loss (if self.vfl is True and num_gts > 0)
             - Focal Loss (if self.fl is True)
+=======
+            - Varifocal Loss (if self.vfl is not None and num_gts > 0)
+            - Focal Loss (if self.fl is not None)
+>>>>>>> origin/main
             - BCE Loss (default fallback)
         """
         # Logits: [b, query, num_classes], gt_class: list[[n, 1]]
@@ -391,7 +396,11 @@ class DETRLoss(nn.Module):
 
 
 class RTDETRDetectionLoss(DETRLoss):
+<<<<<<< HEAD
     """Real-Time DeepTracker (RT-DETR) Detection Loss class that extends the DETRLoss.
+=======
+    """Real-Time DEtection TRansformer (RT-DETR) Detection Loss class that extends the DETRLoss.
+>>>>>>> origin/main
 
     This class computes the detection loss for the RT-DETR model, which includes the standard detection loss as well as
     an additional denoising training loss when provided with denoising metadata.
@@ -433,7 +442,11 @@ class RTDETRDetectionLoss(DETRLoss):
             total_loss.update(dn_loss)
         else:
             # If no denoising metadata is provided, set denoising loss to zero
+<<<<<<< HEAD
             total_loss.update({f"{k}_dn": torch.tensor(0.0, device=self.device) for k in total_loss.keys()})
+=======
+            total_loss.update({f"{k}_dn": torch.tensor(0.0, device=self.device) for k in total_loss})
+>>>>>>> origin/main
 
         return total_loss
 

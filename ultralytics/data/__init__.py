@@ -5,6 +5,10 @@ from .build import build_dataloader, build_grounding, build_yolo_dataset, load_i
 from .dataset import (
     ClassificationDataset,
     GroundingDataset,
+<<<<<<< HEAD
+=======
+    PolygonSemanticDataset,
+>>>>>>> origin/main
     SemanticDataset,
     YOLOConcatDataset,
     YOLODataset,
@@ -15,6 +19,10 @@ __all__ = (
     "BaseDataset",
     "ClassificationDataset",
     "GroundingDataset",
+<<<<<<< HEAD
+=======
+    "PolygonSemanticDataset",
+>>>>>>> origin/main
     "SemanticDataset",
     "YOLOConcatDataset",
     "YOLODataset",

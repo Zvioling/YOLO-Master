@@ -25,7 +25,11 @@ class DetectionPredictor(BasePredictor):
     Examples:
         >>> from ultralytics.utils import ASSETS
         >>> from ultralytics.models.yolo.detect import DetectionPredictor
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n.pt", source=ASSETS)
+=======
+        >>> args = dict(model="yolo26n.pt", source=ASSETS)
+>>>>>>> origin/main
         >>> predictor = DetectionPredictor(overrides=args)
         >>> predictor.predict_cli()
     """
@@ -46,7 +50,11 @@ class DetectionPredictor(BasePredictor):
             (list): List of Results objects containing the post-processed predictions.
 
         Examples:
+<<<<<<< HEAD
             >>> predictor = DetectionPredictor(overrides=dict(model="yolo11n.pt"))
+=======
+            >>> predictor = DetectionPredictor(overrides=dict(model="yolo26n.pt"))
+>>>>>>> origin/main
             >>> results = predictor.predict("path/to/image.jpg")
             >>> processed_results = predictor.postprocess(preds, img, orig_imgs)
         """
@@ -54,7 +62,11 @@ class DetectionPredictor(BasePredictor):
         preds = nms.non_max_suppression(
             preds,
             self.args.conf,
+<<<<<<< HEAD
             self.args.iou,
+=======
+            kwargs.pop("iou", self.args.iou),  # allow callers (e.g. TrackTrack loose-NMS recovery) to override IoU
+>>>>>>> origin/main
             self.args.classes,
             self.args.agnostic_nms,
             max_det=self.args.max_det,
@@ -79,7 +91,12 @@ class DetectionPredictor(BasePredictor):
 
         return results
 
+<<<<<<< HEAD
     def get_obj_feats(self, feat_maps, idxs):
+=======
+    @staticmethod
+    def get_obj_feats(feat_maps, idxs):
+>>>>>>> origin/main
         """Extract object features from the feature maps."""
         import torch
 

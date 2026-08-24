@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.sam.modules.sam API Reference
+>>>>>>> origin/main
 description: Discover the Ultralytics SAM and SAM 2 module for object segmentation. Learn about its components, such as image encoders and mask decoders, in this comprehensive guide.
 keywords: Ultralytics, SAM Module, SAM 2 Module, object segmentation, image encoder, mask decoder, prompt encoder, AI, machine learning
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, SAM Module, SAM 2 Module, object segmentation, image enco
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/sam.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/sam.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/sam.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/modules/sam.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

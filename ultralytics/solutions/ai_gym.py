@@ -22,7 +22,11 @@ class AIGym(BaseSolution):
         process: Process a frame to detect poses, calculate angles, and count repetitions.
 
     Examples:
+<<<<<<< HEAD
         >>> gym = AIGym(model="yolo11n-pose.pt")
+=======
+        >>> gym = AIGym(model="yolo26n-pose.pt")
+>>>>>>> origin/main
         >>> image = cv2.imread("gym_scene.jpg")
         >>> results = gym.process(image)
         >>> processed_image = results.plot_im
@@ -35,9 +39,15 @@ class AIGym(BaseSolution):
 
         Args:
             **kwargs (Any): Keyword arguments passed to the parent class constructor including:
+<<<<<<< HEAD
                 - model (str): Model name or path, defaults to "yolo11n-pose.pt".
         """
         kwargs["model"] = kwargs.get("model", "yolo11n-pose.pt")
+=======
+                - model (str): Model name or path, defaults to "yolo26n-pose.pt".
+        """
+        kwargs["model"] = kwargs.get("model", "yolo26n-pose.pt")
+>>>>>>> origin/main
         super().__init__(**kwargs)
         self.states = defaultdict(lambda: {"angle": 0, "count": 0, "stage": "-"})  # Dict for count, angle and stage
 
@@ -56,9 +66,17 @@ class AIGym(BaseSolution):
             im0 (np.ndarray): Input image for processing.
 
         Returns:
+<<<<<<< HEAD
             (SolutionResults): Contains processed image `plot_im`, 'workout_count' (list of completed reps),
                 'workout_stage' (list of current stages), 'workout_angle' (list of angles), and 'total_tracks' (total
                 number of tracked individuals).
+=======
+            (SolutionResults): Contains processed image `plot_im`, 'workout_count' (list[int] of completed reps, one
+                entry per currently tracked individual), 'workout_stage' (list[str] of current stages), 'workout_angle'
+                (list[float] of current angles), and 'total_tracks' (int, total number of tracked individuals). All
+                per-track lists are aligned with the currently visible tracks so that ``len(results.workout_count)
+                == results.total_tracks``.
+>>>>>>> origin/main
 
         Examples:
             >>> gym = AIGym()
@@ -71,7 +89,11 @@ class AIGym(BaseSolution):
         self.extract_tracks(im0)  # Extract tracks (bounding boxes, classes, and masks)
 
         if len(self.boxes):
+<<<<<<< HEAD
             kpt_data = self.tracks.keypoints.data
+=======
+            kpt_data = self.tracks.keypoints.data.cpu().numpy()  # one host transfer, avoids per-keypoint GPU sync
+>>>>>>> origin/main
 
             for i, k in enumerate(kpt_data):
                 state = self.states[self.track_ids[i]]  # get state details
@@ -98,11 +120,23 @@ class AIGym(BaseSolution):
         plot_im = annotator.result()
         self.display_output(plot_im)  # Display output image, if environment support display
 
+<<<<<<< HEAD
         # Return SolutionResults
         return SolutionResults(
             plot_im=plot_im,
             workout_count=[v["count"] for v in self.states.values()],
             workout_stage=[v["stage"] for v in self.states.values()],
             workout_angle=[v["angle"] for v in self.states.values()],
+=======
+        # Return SolutionResults aligned with currently tracked individuals only.
+        # self.states is keyed by track_id and may contain entries for people who have
+        # already left the frame; iterating self.track_ids keeps the per-track lists in
+        # sync with total_tracks so len(workout_count) == total_tracks at all times.
+        return SolutionResults(
+            plot_im=plot_im,
+            workout_count=[self.states[tid]["count"] for tid in self.track_ids],
+            workout_stage=[self.states[tid]["stage"] for tid in self.track_ids],
+            workout_angle=[self.states[tid]["angle"] for tid in self.track_ids],
+>>>>>>> origin/main
             total_tracks=len(self.track_ids),
         )

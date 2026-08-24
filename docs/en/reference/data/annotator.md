@@ -1,5 +1,10 @@
 ---
+<<<<<<< HEAD
 description: Explore Ultralytics' annotator script for automatic image annotation using YOLO and SAM models. Contribute to improve it on GitHub!.
+=======
+title: data.annotator API Reference
+description: Explore Ultralytics' annotator script for automatic image annotation using YOLO and SAM models. Contribute to improve it on GitHub.
+>>>>>>> origin/main
 keywords: Ultralytics, image annotation, YOLO, SAM, Python script, GitHub, object detection, segmentation
 ---
 
@@ -7,7 +12,11 @@ keywords: Ultralytics, image annotation, YOLO, SAM, Python script, GitHub, objec
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/annotator.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/annotator.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/annotator.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/annotator.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

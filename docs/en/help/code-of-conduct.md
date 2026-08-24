@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: Contributor Code of Conduct
+>>>>>>> origin/main
 comments: true
 description: Join our welcoming community! Learn about the Ultralytics Code of Conduct to ensure a harassment-free experience for all participants.
 keywords: Ultralytics, Contributor Covenant, Code of Conduct, community guidelines, harassment-free, inclusive community, diversity, enforcement policy
@@ -76,11 +80,19 @@ Community leaders will follow these Community Impact Guidelines in determining t
 
 ## Attribution
 
+<<<<<<< HEAD
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.0, available at https://www.contributor-covenant.org/version/2/0/code_of_conduct/.
 
 Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/inclusion).
 
 For answers to common questions about this code of conduct, see the FAQ at https://www.contributor-covenant.org/faq/. Translations are available at https://www.contributor-covenant.org/translations/.
+=======
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.0, available in the [Contributor Covenant code of conduct](https://www.contributor-covenant.org/version/2/0/code_of_conduct/).
+
+Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/inclusion).
+
+For answers to common questions about this code of conduct, see the [Contributor Covenant FAQ](https://www.contributor-covenant.org/faq/). Translations are available in the [Contributor Covenant translations](https://www.contributor-covenant.org/translations/).
+>>>>>>> origin/main
 
 ## FAQ
 

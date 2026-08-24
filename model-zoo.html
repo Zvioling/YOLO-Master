@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Search and compare YOLO-Master pretrained models, benchmarks, weights, and configs.">
+  <title>Model Zoo — YOLO-Master</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./assets/css/style.css"><link rel="stylesheet" href="./assets/css/model-zoo.css">
+</head>
+<body class="zoo-page">
+<header class="app-bar" role="banner"><div class="app-bar-inner">
+  <a href="./index.html" class="app-bar-brand"><span class="app-bar-brand-icon"><i class="fas fa-bolt" aria-hidden="true"></i></span>YOLO-Master</a>
+  <nav class="app-bar-links" aria-label="Main navigation"><a href="./index.html"><i class="fas fa-home" aria-hidden="true"></i> Home</a><a href="https://github.com/Tencent/YOLO-Master/wiki"><i class="fas fa-book" aria-hidden="true"></i> Wiki</a><a href="./docs.html"><i class="fas fa-file-lines" aria-hidden="true"></i> Docs</a><a href="./model-zoo.html" class="active" aria-current="page"><i class="fas fa-cubes" aria-hidden="true"></i> Model Zoo</a><a href="./demo.html"><i class="fas fa-play" aria-hidden="true"></i> Demo</a></nav>
+  <div class="app-bar-meta"><a href="https://github.com/Tencent/YOLO-Master" target="_blank" rel="noopener noreferrer" aria-label="YOLO-Master on GitHub"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a><span><i class="fas fa-tag" aria-hidden="true"></i> v26.02</span></div>
+</div></header>
+<div class="container"><main class="doc-content" id="main-content">
+  <div class="hero-intro zoo-hero"><h1>Model Zoo</h1><p>Search, compare, and download YOLO-Master checkpoints and configurations.</p><div class="hero-actions"><a class="btn btn-primary" href="#models"><i class="fas fa-cubes" aria-hidden="true"></i> Browse models</a><a class="btn btn-secondary" href="https://github.com/Tencent/YOLO-Master/issues/new?template=model-submission.md" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Submit a model</a></div></div>
+  <noscript><div class="zoo-noscript"><strong>JavaScript is disabled.</strong> The interactive catalog requires JavaScript. You can still browse configs in the <a href="https://github.com/Tencent/YOLO-Master/tree/main/ultralytics/cfg/models/master">GitHub model directory</a> or download assets from <a href="https://github.com/Tencent/YOLO-Master/releases">Releases</a>.</div></noscript>
+  <section id="models" data-model-zoo aria-busy="true" aria-labelledby="models-title"><h2 id="models-title">Available models</h2>
+    <div class="zoo-controls" role="search">
+      <div class="zoo-field"><label for="model-search">Search models</label><input id="model-search" type="search" placeholder="Name, family, or dataset…" autocomplete="off"></div>
+      <div class="zoo-field"><label for="task-filter">Task</label><select id="task-filter"><option value="">All tasks</option><option value="detection">Detection</option><option value="segmentation">Segmentation</option><option value="classification">Classification</option><option value="pose">Pose</option></select></div>
+      <div class="zoo-field"><label for="scale-filter">Scale</label><select id="scale-filter"><option value="">All scales</option><option>N</option><option>S</option><option>M</option><option>L</option><option>X</option></select></div>
+      <div class="zoo-field"><label for="status-filter">Evaluation</label><select id="status-filter"><option value="">All statuses</option><option value="evaluated">Evaluated</option><option value="evaluating">Evaluating</option><option value="pending">Pending</option></select></div>
+      <div class="zoo-field"><label for="model-sort">Sort by</label><select id="model-sort"><option value="map">mAP50–95 (high first)</option><option value="speed">Speed (high first)</option><option value="params">Parameters (low first)</option><option value="name">Name</option></select></div>
+    </div>
+    <div class="zoo-toolbar"><span id="result-count" class="zoo-result-count" aria-live="polite">Loading models…</span><button id="clear-filters" class="btn btn-ghost btn-sm" type="button">Clear filters</button></div>
+    <div id="model-error" class="zoo-message" role="alert" hidden>Model data could not be loaded. Please browse <a href="https://github.com/Tencent/YOLO-Master/releases">GitHub Releases</a>.</div>
+    <div id="model-empty" class="zoo-message" hidden>No models match these filters.</div><div id="model-grid" class="zoo-grid"></div>
+  </section>
+  <section class="zoo-submit" aria-labelledby="submit-title"><h2 id="submit-title">Contribute a model</h2><p>Share reproducible weights, configs, dataset details, and benchmark evidence. Submissions are reviewed before receiving an evaluated status.</p><a class="btn btn-primary" href="https://github.com/Tencent/YOLO-Master/issues/new?template=model-submission.md" target="_blank" rel="noopener noreferrer">Open submission form</a></section>
+</main></div>
+<footer class="footer" role="contentinfo"><div class="footer-inner"><div class="footer-bottom"><span>© 2026 Tencent Youtu Lab. Released under AGPL-3.0.</span><span><a href="https://github.com/Tencent/YOLO-Master">GitHub</a> · <a href="./docs.html">Docs</a> · <a href="./model-zoo.html">Model Zoo</a></span></div></div></footer>
+<script src="./assets/js/model-zoo.js" defer></script>
+</body></html>

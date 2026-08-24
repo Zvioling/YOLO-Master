@@ -36,15 +36,25 @@ class RTDETRPredictor(BasePredictor):
         """Postprocess the raw predictions from the model to generate bounding boxes and confidence scores.
 
         The method filters detections based on confidence and class if specified in `self.args`. It converts model
+<<<<<<< HEAD
         predictions to Results objects containing properly scaled bounding boxes.
 
         Args:
             preds (list | tuple): List of [predictions, extra] from the model, where predictions contain bounding boxes
                 and scores.
+=======
+        predictions (already top-k selected by the decoder head) to Results objects containing properly scaled bounding
+        boxes.
+
+        Args:
+            preds (list | tuple): List of [predictions, extra] from the model, where predictions have shape (bs,
+                num_queries, 6) with format [cx, cy, w, h, score, class].
+>>>>>>> origin/main
             img (torch.Tensor): Processed input images with shape (N, 3, H, W).
             orig_imgs (list | torch.Tensor): Original, unprocessed images.
 
         Returns:
+<<<<<<< HEAD
             results (list[Results]): A list of Results objects containing the post-processed bounding boxes, confidence
                 scores, and class labels.
         """
@@ -54,10 +64,19 @@ class RTDETRPredictor(BasePredictor):
         nd = preds[0].shape[-1]
         bboxes, scores = preds[0].split((4, nd - 4), dim=-1)
 
+=======
+            (list[Results]): A list of Results objects containing the post-processed bounding boxes, confidence scores,
+                and class labels.
+        """
+        if isinstance(preds, (list, tuple)):
+            preds = preds[0]
+        bboxes, scores, labels = preds.split((4, 1, 1), dim=-1)
+>>>>>>> origin/main
         if not isinstance(orig_imgs, list):  # input images are a torch.Tensor, not a list
             orig_imgs = ops.convert_torch2numpy_batch(orig_imgs)[..., ::-1]
 
         results = []
+<<<<<<< HEAD
         for bbox, score, orig_img, img_path in zip(bboxes, scores, orig_imgs, self.batch[0]):  # (300, 4)
             bbox = ops.xywh2xyxy(bbox)
             max_score, cls = score.max(-1, keepdim=True)  # (300, 1)
@@ -66,6 +85,14 @@ class RTDETRPredictor(BasePredictor):
                 idx = (cls == torch.tensor(self.args.classes, device=cls.device)).any(1) & idx
             pred = torch.cat([bbox, max_score, cls], dim=-1)[idx]  # filter
             pred = pred[pred[:, 4].argsort(descending=True)][: self.args.max_det]
+=======
+        for bbox, score, label, orig_img, img_path in zip(bboxes, scores, labels, orig_imgs, self.batch[0]):
+            bbox = ops.xywh2xyxy(bbox)
+            idx = score.squeeze(-1) > self.args.conf
+            if self.args.classes is not None:
+                idx = (label == torch.tensor(self.args.classes, device=label.device)).any(1) & idx
+            pred = torch.cat([bbox, score, label], dim=-1)[idx][: self.args.max_det]
+>>>>>>> origin/main
             oh, ow = orig_img.shape[:2]
             pred[..., [0, 2]] *= ow  # scale x coordinates to original width
             pred[..., [1, 3]] *= oh  # scale y coordinates to original height
@@ -78,8 +105,12 @@ class RTDETRPredictor(BasePredictor):
         The input images are letterboxed to ensure a square aspect ratio and scale-filled.
 
         Args:
+<<<<<<< HEAD
             im (list[np.ndarray] | torch.Tensor): Input images of shape (N, 3, H, W) for tensor, [(H, W, 3) x N] for
                 list.
+=======
+            im (list[np.ndarray]): Input images of shape [(H, W, 3) x N].
+>>>>>>> origin/main
 
         Returns:
             (list): List of pre-transformed images ready for model inference.

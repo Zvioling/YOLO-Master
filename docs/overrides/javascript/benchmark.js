@@ -17,6 +17,7 @@ const loadChartWidget = () =>
 
 // YOLO models chart ---------------------------------------------------------------------------------------------------
 const data = {
+<<<<<<< HEAD
   //  YOLO12: {
   //    n: { speed: 1.64, mAP: 40.6 },
   //    s: { speed: 2.61, mAP: 48.0 },
@@ -24,6 +25,15 @@ const data = {
   //    l: { speed: 6.77, mAP: 53.7 },
   //    x: { speed: 11.79, mAP: 55.2 },
   //  },
+=======
+  YOLO26: {
+    n: { speed: 1.7, mAP: 40.9 },
+    s: { speed: 2.5, mAP: 48.6 },
+    m: { speed: 4.7, mAP: 53.1 },
+    l: { speed: 6.2, mAP: 55.0 },
+    x: { speed: 11.8, mAP: 57.5 },
+  },
+>>>>>>> origin/main
   YOLO11: {
     n: { speed: 1.5, mAP: 39.5 },
     s: { speed: 2.5, mAP: 47.0 },
@@ -107,7 +117,12 @@ const data = {
 
 // Color overrides for specific models
 const colorOverrides = {
+<<<<<<< HEAD
   YOLO11: "#0b23a9",
+=======
+  YOLO26: "#0b23a9",
+  YOLO11: "#1e90ff",
+>>>>>>> origin/main
   YOLOv10: "#ff7f0e",
   YOLOv9: "#2ca02c",
   YOLOv8: "#d62728",
@@ -199,7 +214,11 @@ const chartConfig = {
         grid: { color: "#e0e0e0" },
         ticks: { color: "#808080" },
         min: 36,
+<<<<<<< HEAD
         max: 56,
+=======
+        max: 58,
+>>>>>>> origin/main
       },
     },
   },

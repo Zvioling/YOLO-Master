@@ -12,6 +12,10 @@ import platform
 import re
 import shutil
 import subprocess
+<<<<<<< HEAD
+=======
+import sys
+>>>>>>> origin/main
 import time
 from importlib import metadata
 from pathlib import Path
@@ -28,6 +32,10 @@ from ultralytics.utils import (
     AUTOINSTALL,
     GIT,
     IS_COLAB,
+<<<<<<< HEAD
+=======
+    IS_DOCKER,
+>>>>>>> origin/main
     IS_JETSON,
     IS_KAGGLE,
     IS_PIP_PACKAGE,
@@ -35,6 +43,10 @@ from ultralytics.utils import (
     LOGGER,
     MACOS,
     ONLINE,
+<<<<<<< HEAD
+=======
+    PLATFORM_URL,
+>>>>>>> origin/main
     PYTHON_VERSION,
     RKNN_CHIPS,
     ROOT,
@@ -48,10 +60,32 @@ from ultralytics.utils import (
     clean_url,
     colorstr,
     downloads,
+<<<<<<< HEAD
+=======
+    env_bool,
+>>>>>>> origin/main
     is_github_action_running,
     url2file,
 )
 
+<<<<<<< HEAD
+=======
+REMOTE_FILE_PREFIXES = ("https://", "http://", "rtsp://", "rtmp://", "tcp://", "ul://", "gs://")
+
+
+def normalize_platform_uri(uri):
+    """Rewrite an Ultralytics Platform web URL to its ul:// URI so it can be loaded directly as data or model.
+
+    Args:
+        uri (str | Path): Resource identifier, e.g. "https://platform.ultralytics.com/user/datasets/slug".
+
+    Returns:
+        (str | Path): "ul://user/datasets/slug" for Platform web URLs, otherwise the input unchanged.
+    """
+    s = str(uri)
+    return f"ul://{s[len(PLATFORM_URL) + 1 :].strip('/')}" if s.startswith(f"{PLATFORM_URL}/") else uri
+
+>>>>>>> origin/main
 
 def parse_requirements(file_path=ROOT.parent / "requirements.txt", package=""):
     """Parse a requirements.txt file, ignoring lines that start with '#' and any text after '#'.
@@ -84,6 +118,7 @@ def parse_requirements(file_path=ROOT.parent / "requirements.txt", package=""):
     return requirements
 
 
+<<<<<<< HEAD
 @functools.lru_cache
 def parse_version(version="0.0.0") -> tuple:
     """Convert a version string to a tuple of integers, ignoring any extra non-numeric string attached to the version.
@@ -96,6 +131,33 @@ def parse_version(version="0.0.0") -> tuple:
     """
     try:
         return tuple(map(int, re.findall(r"\d+", version)[:3]))  # '2.0.1+cpu' -> (2, 0, 1)
+=======
+def get_distribution_name(import_name: str) -> str:
+    """Get the pip distribution name for a given import name (e.g., 'cv2' -> 'opencv-python-headless')."""
+    for dist in metadata.distributions():
+        top_level = (dist.read_text("top_level.txt") or "").split()
+        if import_name in top_level:
+            return dist.metadata["Name"]
+    return import_name
+
+
+@functools.lru_cache
+def parse_version(version="0.0.0") -> tuple:
+    """Convert a version string to a tuple of integers from its release segments, ignoring prefixes and suffixes.
+
+    Not PEP 440: pre-release/dev/post/local suffixes are dropped, so '1.0rc1', '1.0.post1', and '1.0+cu118' all compare
+    equal to '1.0'. Use the `packaging` library where exact pre-release ordering matters.
+
+    Args:
+        version (str): Version string, i.e. '2.0.1+cpu', '4.13.0.92', or 'v2.1'
+
+    Returns:
+        (tuple): Tuple of integers representing the release segments, at least 3 long, i.e. (2, 0, 1)
+    """
+    try:
+        nums = [int(x) for x in re.search(r"\d+(?:\.\d+)*", version).group(0).split(".")]
+        return tuple(nums + [0] * (3 - len(nums)))  # keep all release segments, ignore 'v' prefix and '+cu118'/'rc1'
+>>>>>>> origin/main
     except Exception as e:
         LOGGER.warning(f"failure for parse_version({version}), returning (0, 0, 0): {e}")
         return 0, 0, 0
@@ -136,7 +198,17 @@ def check_imgsz(imgsz, stride=32, min_dim=1, max_dim=2, floor=0):
     elif isinstance(imgsz, (list, tuple)):
         imgsz = list(imgsz)
     elif isinstance(imgsz, str):  # i.e. '640' or '[640,640]'
+<<<<<<< HEAD
         imgsz = [int(imgsz)] if imgsz.isnumeric() else ast.literal_eval(imgsz)
+=======
+        try:
+            imgsz = [int(imgsz)] if imgsz.isnumeric() else ast.literal_eval(imgsz)
+        except (ValueError, SyntaxError):
+            raise ValueError(
+                f"'imgsz={imgsz}' is not a valid image size. "
+                f"Valid imgsz values are int i.e. 'imgsz=640' or list i.e. 'imgsz=[640,640]'"
+            ) from None
+>>>>>>> origin/main
     else:
         raise TypeError(
             f"'imgsz={imgsz}' is of invalid type {type(imgsz).__name__}. "
@@ -190,7 +262,11 @@ def check_version(
         current (str): Current version or package name to get version from.
         required (str): Required version or range (in pip-style format).
         name (str): Name to be used in warning message.
+<<<<<<< HEAD
         hard (bool): If True, raise an AssertionError if the requirement is not met.
+=======
+        hard (bool): If True, raise a ModuleNotFoundError if the requirement is not met.
+>>>>>>> origin/main
         verbose (bool): If True, print warning message if requirement is not met.
         msg (str): Extra message to display if verbose.
 
@@ -218,7 +294,18 @@ def check_version(
             name = current  # assigned package name to 'name' arg
             current = metadata.version(current)  # get version string from package name
         except metadata.PackageNotFoundError as e:
+<<<<<<< HEAD
             if hard:
+=======
+            if re.fullmatch(
+                r"v\d+(\.\d+)*([-_.]?(a|b|c|rc|alpha|beta|pre|preview)[-_.]?\d*)?"
+                r"([-_.]?(post|rev|r)[-_.]?\d*)?([-_.]?dev[-_.]?\d*)?(\+[\w.-]+)?",
+                current,
+                re.I,
+            ):
+                pass
+            elif hard:
+>>>>>>> origin/main
                 raise ModuleNotFoundError(f"{current} package is required but not installed") from e
             else:
                 return False
@@ -233,8 +320,11 @@ def check_version(
     ):
         return True
 
+<<<<<<< HEAD
     op = ""
     version = ""
+=======
+>>>>>>> origin/main
     result = True
     c = parse_version(current)  # '1.2.3' -> (1, 2, 3)
     for r in required.strip(",").split(","):
@@ -242,6 +332,7 @@ def check_version(
         if not op:
             op = ">="  # assume >= if no op passed
         v = parse_version(version)  # '1.2.3' -> (1, 2, 3)
+<<<<<<< HEAD
         if op == "==" and c != v:
             result = False
         elif op == "!=" and c == v:
@@ -253,6 +344,21 @@ def check_version(
         elif op == ">" and not (c > v):
             result = False
         elif op == "<" and not (c < v):
+=======
+        n = max(len(c), len(v))  # pad to equal length so 4-segment pins like '!=4.13.0.90' compare exactly
+        cn, vn = c + (0,) * (n - len(c)), v + (0,) * (n - len(v))
+        if op == "==" and cn != vn:
+            result = False
+        elif op == "!=" and cn == vn:
+            result = False
+        elif op == ">=" and not (cn >= vn):
+            result = False
+        elif op == "<=" and not (cn <= vn):
+            result = False
+        elif op == ">" and not (cn > vn):
+            result = False
+        elif op == "<" and not (cn < vn):
+>>>>>>> origin/main
             result = False
     if not result:
         warning = f"{name}{required} is required, but {name}=={current} is currently installed {msg}"
@@ -270,7 +376,11 @@ def check_latest_pypi_version(package_name="ultralytics"):
         package_name (str): The name of the package to find the latest version for.
 
     Returns:
+<<<<<<< HEAD
         (str): The latest version of the package.
+=======
+        (str | None): The latest version of the package, or None if unavailable.
+>>>>>>> origin/main
     """
     import requests  # scoped as slow import
 
@@ -314,7 +424,11 @@ def check_font(font="Arial.ttf"):
         font (str): Path or name of font.
 
     Returns:
+<<<<<<< HEAD
         (Path): Resolved font file path.
+=======
+        (Path | str): Resolved font file path.
+>>>>>>> origin/main
     """
     from matplotlib import font_manager  # scope for faster 'import ultralytics'
 
@@ -341,7 +455,11 @@ def check_python(minimum: str = "3.8.0", hard: bool = True, verbose: bool = Fals
 
     Args:
         minimum (str): Required minimum version of python.
+<<<<<<< HEAD
         hard (bool): If True, raise an AssertionError if the requirement is not met.
+=======
+        hard (bool): If True, raise a ModuleNotFoundError if the requirement is not met.
+>>>>>>> origin/main
         verbose (bool): If True, print warning message if requirement is not met.
 
     Returns:
@@ -355,7 +473,11 @@ def check_apt_requirements(requirements):
     """Check if apt packages are installed and install missing ones.
 
     Args:
+<<<<<<< HEAD
         requirements: List of apt package names to check and install
+=======
+        requirements (list[str]): List of apt package names to check and install.
+>>>>>>> origin/main
     """
     prefix = colorstr("red", "bold", "apt requirements:")
     # Check which packages are missing
@@ -391,7 +513,11 @@ def check_apt_requirements(requirements):
 
 
 @TryExcept()
+<<<<<<< HEAD
 def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=(), install=True, cmds=""):
+=======
+def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=(), install=True, cmds="", constrain=()):
+>>>>>>> origin/main
     """Check if installed dependencies meet Ultralytics YOLO models requirements and attempt to auto-update if needed.
 
     Args:
@@ -401,6 +527,11 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
         exclude (tuple): Tuple of package names to exclude from checking.
         install (bool): If True, attempt to auto-update packages that don't meet requirements.
         cmds (str): Additional commands to pass to the pip install command when auto-updating.
+<<<<<<< HEAD
+=======
+        constrain (tuple | list): Extra version constraints always appended to the install command even if already
+            satisfied, preventing the resolver from upgrading those packages during install.
+>>>>>>> origin/main
 
     Examples:
         >>> from ultralytics.utils.checks import check_requirements
@@ -418,6 +549,14 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
         >>> check_requirements([("onnxruntime", "onnxruntime-gpu"), "numpy"])
     """
     prefix = colorstr("red", "bold", "requirements:")
+<<<<<<< HEAD
+=======
+
+    if env_bool("ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS"):
+        LOGGER.info(f"{prefix} ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS detected, skipping requirements check.")
+        return True
+
+>>>>>>> origin/main
     if isinstance(requirements, Path):  # requirements.txt file
         file = requirements.resolve()
         assert file.exists(), f"{prefix} {file} not found, check failed."
@@ -442,12 +581,21 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
                 continue
 
         if not satisfied:
+<<<<<<< HEAD
             pkgs.append(candidates[0])
+=======
+            pkg = candidates[0]
+            if "git+" in pkg:  # strip version constraints from git URLs for pip
+                url, sep, marker = pkg.partition(";")
+                pkg = re.sub(r"[<>!=~]+.*$", "", url) + sep + marker
+            pkgs.append(pkg)
+>>>>>>> origin/main
 
     @Retry(times=2, delay=1)
     def attempt_install(packages, commands, use_uv):
         """Attempt package installation with uv if available, falling back to pip."""
         if use_uv:
+<<<<<<< HEAD
             base = (
                 f"uv pip install --no-cache-dir {packages} {commands} "
                 f"--index-strategy=unsafe-best-match --break-system-packages"
@@ -468,6 +616,27 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
         )
 
     s = " ".join(f'"{x}"' for x in pkgs)  # console string
+=======
+            # Use --python to explicitly target current interpreter (venv or system)
+            # This ensures correct installation when VIRTUAL_ENV env var isn't set
+            return subprocess.check_output(
+                f'uv pip install --no-cache-dir --python "{sys.executable}" {packages} {commands} '
+                f"--index-strategy=unsafe-best-match --break-system-packages",
+                shell=True,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+        return subprocess.check_output(
+            f'"{sys.executable}" -m pip install --no-cache-dir {packages} {commands}',
+            shell=True,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+
+    s = " ".join(f'"{x}"' for x in pkgs)  # console string
+    if s and constrain:  # append version constraints to prevent upgrades during install
+        s += " " + " ".join(f'"{c}"' for c in constrain)
+>>>>>>> origin/main
     if s:
         if install and AUTOINSTALL:  # check environment variable
             # Note uv fails on arm64 macOS and Raspberry Pi runners
@@ -484,7 +653,14 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
                     f"{prefix} {colorstr('bold', 'Restart runtime or rerun command for updates to take effect')}\n"
                 )
             except Exception as e:
+<<<<<<< HEAD
                 LOGGER.warning(f"{prefix} ❌ {e}")
+=======
+                msg = f"{prefix} ❌ {e}"
+                if hasattr(e, "output") and e.output:
+                    msg += f"\n{e.output}"
+                LOGGER.warning(msg)
+>>>>>>> origin/main
                 return False
         else:
             return False
@@ -492,6 +668,29 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
     return True
 
 
+<<<<<<< HEAD
+=======
+def check_executorch_requirements():
+    """Check and install ExecuTorch requirements including platform-specific dependencies."""
+    # BUG executorch build on arm64 Docker requires packaging>=22.0 https://github.com/pypa/setuptools/issues/4483
+    if LINUX and ARM64 and IS_DOCKER:
+        check_requirements("packaging>=22.0")
+
+    check_requirements("executorch", cmds=f"torch=={TORCH_VERSION.split('+')[0]}")
+
+
+def check_tensorrt(min_version: str = "7.0.0"):
+    """Check and install TensorRT requirements including platform-specific dependencies.
+
+    Args:
+        min_version (str): Minimum supported TensorRT version (default: "7.0.0").
+    """
+    if LINUX:
+        cuda_version = torch.version.cuda.split(".")[0]
+        check_requirements(f"tensorrt-cu{cuda_version}>={min_version},!=10.2.0")
+
+
+>>>>>>> origin/main
 def check_torchvision():
     """Check the installed versions of PyTorch and Torchvision to ensure they're compatible.
 
@@ -499,6 +698,10 @@ def check_torchvision():
     to the compatibility table based on: https://github.com/pytorch/vision#installation.
     """
     compatibility_table = {
+<<<<<<< HEAD
+=======
+        "2.10": ["0.25"],
+>>>>>>> origin/main
         "2.9": ["0.24"],
         "2.8": ["0.23"],
         "2.7": ["0.22"],
@@ -527,7 +730,11 @@ def check_torchvision():
             )
 
 
+<<<<<<< HEAD
 def check_suffix(file="yolo11n.pt", suffix=".pt", msg=""):
+=======
+def check_suffix(file="yolo26n.pt", suffix=".pt", msg=""):
+>>>>>>> origin/main
     """Check file(s) for acceptable suffix.
 
     Args:
@@ -539,11 +746,19 @@ def check_suffix(file="yolo11n.pt", suffix=".pt", msg=""):
         if isinstance(suffix, str):
             suffix = {suffix}
         for f in file if isinstance(file, (list, tuple)) else [file]:
+<<<<<<< HEAD
             if s := str(f).rpartition(".")[-1].lower().strip():  # file suffix
                 assert f".{s}" in suffix, f"{msg}{f} acceptable suffix is {suffix}, not .{s}"
 
 
 def check_yolov5u_filename(file: str, verbose: bool = True):
+=======
+            if s := clean_url(f).rpartition(".")[-1].lower().strip():  # file suffix
+                assert f".{s}" in suffix, f"{msg}{f} acceptable suffix is {suffix}, not .{s}"
+
+
+def check_yolov5u_filename(file: str, verbose: bool = True) -> str:
+>>>>>>> origin/main
     """Replace legacy YOLOv5 filenames with updated YOLOv5u filenames.
 
     Args:
@@ -565,12 +780,20 @@ def check_yolov5u_filename(file: str, verbose: bool = True):
                 LOGGER.info(
                     f"PRO TIP 💡 Replace 'model={original_file}' with new 'model={file}'.\nYOLOv5 'u' models are "
                     f"trained with https://github.com/ultralytics/ultralytics and feature improved performance vs "
+<<<<<<< HEAD
                     f"standard YOLOv5 models trained with https://github.com/ultralytics/yolov5.\n"
+=======
+                    f"standard YOLOv5 models trained with https://github.com/ultralytics/yolov5."
+>>>>>>> origin/main
                 )
     return file
 
 
+<<<<<<< HEAD
 def check_model_file_from_stem(model="yolo11n"):
+=======
+def check_model_file_from_stem(model: str = "yolo11n") -> str | Path:
+>>>>>>> origin/main
     """Return a model filename from a valid model stem.
 
     Args:
@@ -581,7 +804,11 @@ def check_model_file_from_stem(model="yolo11n"):
     """
     path = Path(model)
     if not path.suffix and path.stem in downloads.GITHUB_ASSETS_STEMS:
+<<<<<<< HEAD
         return path.with_suffix(".pt")  # add suffix, i.e. yolo11n -> yolo11n.pt
+=======
+        return path.with_suffix(".pt")  # add suffix, i.e. yolo26n -> yolo26n.pt
+>>>>>>> origin/main
     return model
 
 
@@ -589,15 +816,25 @@ def check_file(file, suffix="", download=True, download_dir=".", hard=True):
     """Search/download file (if necessary), check suffix (if provided), and return path.
 
     Args:
+<<<<<<< HEAD
         file (str): File name or path.
+=======
+        file (str): File name or path, URL, platform URI (ul://), or GCS path (gs://).
+>>>>>>> origin/main
         suffix (str | tuple): Acceptable suffix or tuple of suffixes to validate against the file.
         download (bool): Whether to download the file if it doesn't exist locally.
         download_dir (str): Directory to download the file to.
         hard (bool): Whether to raise an error if the file is not found.
 
     Returns:
+<<<<<<< HEAD
         (str): Path to the file.
     """
+=======
+        (str | list): Path to the file, or an empty list if not found.
+    """
+    file = normalize_platform_uri(file)  # accept Platform web URLs (rewritten to ul://)
+>>>>>>> origin/main
     check_suffix(file, suffix)  # optional
     file = str(file).strip()  # convert to string and strip spaces
     file = check_yolov5u_filename(file)  # yolov5n -> yolov5nu
@@ -607,9 +844,37 @@ def check_file(file, suffix="", download=True, download_dir=".", hard=True):
         or file.lower().startswith("grpc://")
     ):  # file exists or gRPC Triton images
         return file
+<<<<<<< HEAD
     elif download and file.lower().startswith(("https://", "http://", "rtsp://", "rtmp://", "tcp://")):  # download
         url = file  # warning: Pathlib turns :// -> :/
         file = Path(download_dir) / url2file(file)  # '%2F' to '/', split https://url.com/file.txt?auth
+=======
+    elif download and file.lower().startswith("ul://"):  # Ultralytics Platform URI
+        from ultralytics.utils.callbacks.platform import resolve_platform_uri
+
+        url = resolve_platform_uri(file, hard=hard)  # Convert to signed HTTPS URL
+        if url is None:
+            return []  # Not found, soft fail (consistent with file search behavior)
+        # Use URI path for unique directory structure: ul://user/project/model -> user/project/model/filename.pt
+        uri_path = Path(file[5:])  # Remove "ul://"
+        if uri_path.is_absolute() or ".." in uri_path.parts:
+            raise ValueError(f"Unsafe Ultralytics Platform URI path: {file}")
+        local_file = Path(download_dir) / uri_path / url2file(url)
+        # Always re-download NDJSON datasets (cheap, ensures fresh data after updates)
+        if local_file.suffix == ".ndjson":
+            local_file.unlink(missing_ok=True)
+        if local_file.exists():
+            LOGGER.info(f"Found {clean_url(url)} locally at {local_file}")
+        else:
+            local_file.parent.mkdir(parents=True, exist_ok=True)
+            downloads.safe_download(url=url, file=local_file, unzip=False)
+        return str(local_file)
+    elif download and file.lower().startswith(REMOTE_FILE_PREFIXES):  # download
+        if file.startswith("gs://"):
+            file = "https://storage.googleapis.com/" + file[5:]  # convert gs:// to public HTTPS URL
+        url = file  # warning: Pathlib turns :// -> :/
+        file = Path(download_dir) / url2file(file)  # '%2F' to '/', split authentication query strings
+>>>>>>> origin/main
         if file.exists():
             LOGGER.info(f"Found {clean_url(url)} locally at {file}")  # file already exists
         else:
@@ -638,7 +903,11 @@ def check_yaml(file, suffix=(".yaml", ".yml"), hard=True):
     return check_file(file, suffix, hard=hard)
 
 
+<<<<<<< HEAD
 def check_is_path_safe(basedir, path):
+=======
+def check_is_path_safe(basedir: Path | str, path: Path | str) -> bool:
+>>>>>>> origin/main
     """Check if the resolved path is under the intended directory to prevent path traversal.
 
     Args:
@@ -680,7 +949,11 @@ def check_imshow(warn=False):
 
 
 def check_yolo(verbose=True, device=""):
+<<<<<<< HEAD
     """Return a human-readable YOLO software and hardware summary.
+=======
+    """Print a human-readable YOLO software and hardware summary.
+>>>>>>> origin/main
 
     Args:
         verbose (bool): Whether to print verbose information.
@@ -729,7 +1002,11 @@ def collect_system_info():
     gib = 1 << 30  # bytes per GiB
     cuda = torch.cuda.is_available()
     check_yolo()
+<<<<<<< HEAD
     total, _used, free = shutil.disk_usage("/")
+=======
+    total, _, free = shutil.disk_usage("/")
+>>>>>>> origin/main
 
     info_dict = {
         "OS": platform.platform(),
@@ -748,10 +1025,17 @@ def collect_system_info():
     LOGGER.info("\n" + "\n".join(f"{k:<23}{v}" for k, v in info_dict.items()) + "\n")
 
     package_info = {}
+<<<<<<< HEAD
     for r in parse_requirements(package="ultralytics"):
         try:
             current = metadata.version(r.name)
             is_met = "✅ " if check_version(current, str(r.specifier), name=r.name, hard=True) else "❌ "
+=======
+    for r in parse_requirements(package=get_distribution_name("ultralytics")):
+        try:
+            current = metadata.version(r.name)
+            is_met = "✅ " if check_version(current, str(r.specifier), name=r.name) else "❌ "
+>>>>>>> origin/main
         except metadata.PackageNotFoundError:
             current = "(not installed)"
             is_met = "❌ "
@@ -785,12 +1069,20 @@ def check_amp(model):
         model (torch.nn.Module): A YOLO model instance.
 
     Returns:
+<<<<<<< HEAD
         (bool): Returns True if the AMP functionality works correctly with YOLO11 model, else False.
+=======
+        (bool): Returns True if the AMP functionality works correctly with YOLO model, else False.
+>>>>>>> origin/main
 
     Examples:
         >>> from ultralytics import YOLO
         >>> from ultralytics.utils.checks import check_amp
+<<<<<<< HEAD
         >>> model = YOLO("yolo11n.pt").model.cuda()
+=======
+        >>> model = YOLO("yolo26n.pt").model.cuda()
+>>>>>>> origin/main
         >>> check_amp(model)
     """
     from ultralytics.utils.torch_utils import autocast
@@ -829,6 +1121,7 @@ def check_amp(model):
     try:
         from ultralytics import YOLO
 
+<<<<<<< HEAD
         assert amp_allclose(YOLO("yolo11n.pt"), im)
         LOGGER.info(f"{prefix}checks passed ✅")
     except ConnectionError:
@@ -837,6 +1130,16 @@ def check_amp(model):
         LOGGER.warning(
             f"{prefix}checks skipped. "
             f"Unable to load YOLO11n for AMP checks due to possible Ultralytics package modifications. {warning_msg}"
+=======
+        assert amp_allclose(YOLO("yolo26n.pt"), im)
+        LOGGER.info(f"{prefix}checks passed ✅")
+    except ConnectionError:
+        LOGGER.warning(f"{prefix}checks skipped. Offline and unable to download YOLO26n for AMP checks. {warning_msg}")
+    except (AttributeError, ModuleNotFoundError):
+        LOGGER.warning(
+            f"{prefix}checks skipped. "
+            f"Unable to load YOLO26n for AMP checks due to possible Ultralytics package modifications. {warning_msg}"
+>>>>>>> origin/main
         )
     except AssertionError:
         LOGGER.error(
@@ -942,7 +1245,11 @@ def is_rockchip():
             with open("/proc/device-tree/compatible") as f:
                 dev_str = f.read()
                 *_, soc = dev_str.split(",")
+<<<<<<< HEAD
                 if soc.replace("\x00", "") in RKNN_CHIPS:
+=======
+                if soc.replace("\x00", "").split("-", 1)[0] in RKNN_CHIPS:
+>>>>>>> origin/main
                     return True
         except OSError:
             return False
@@ -996,3 +1303,7 @@ IS_PYTHON_3_13 = PYTHON_VERSION.startswith("3.13")
 IS_PYTHON_MINIMUM_3_9 = check_python("3.9", hard=False)
 IS_PYTHON_MINIMUM_3_10 = check_python("3.10", hard=False)
 IS_PYTHON_MINIMUM_3_12 = check_python("3.12", hard=False)
+<<<<<<< HEAD
+=======
+IS_PYTHON_MINIMUM_3_13 = check_python("3.13", hard=False)
+>>>>>>> origin/main

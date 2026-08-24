@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.metrics API Reference
+>>>>>>> origin/main
 description: Explore detailed metrics and utility functions for model validation and performance analysis with Ultralytics' metrics module.
 keywords: Ultralytics, metrics, model validation, performance analysis, IoU, confusion matrix
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, metrics, model validation, performance analysis, IoU, con
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/metrics.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/metrics.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/metrics.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/metrics.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -39,6 +47,13 @@ keywords: Ultralytics, metrics, model validation, performance analysis, IoU, con
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.metrics.SemanticMetrics
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.metrics.bbox_ioa
 
 <br><br><hr><br>

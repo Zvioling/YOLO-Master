@@ -103,7 +103,11 @@ def spaces_in_path(path: str | Path):
         yield path
 
 
+<<<<<<< HEAD
 def increment_path(path: str | Path, exist_ok: bool = False, sep: str = "", mkdir: bool = False) -> Path:
+=======
+def increment_path(path: str | Path, exist_ok: bool = False, sep: str = "-", mkdir: bool = False) -> Path:
+>>>>>>> origin/main
     """Increment a file or directory path, i.e., runs/exp --> runs/exp{sep}2, runs/exp{sep}3, ... etc.
 
     If the path exists and `exist_ok` is not True, the path will be incremented by appending a number and `sep` to the
@@ -125,13 +129,21 @@ def increment_path(path: str | Path, exist_ok: bool = False, sep: str = "", mkdi
         >>> path = Path("runs/exp")
         >>> new_path = increment_path(path)
         >>> print(new_path)
+<<<<<<< HEAD
         runs/exp2
+=======
+        runs/exp-2
+>>>>>>> origin/main
 
         Increment a file path:
         >>> path = Path("runs/exp/results.txt")
         >>> new_path = increment_path(path)
         >>> print(new_path)
+<<<<<<< HEAD
         runs/exp/results2.txt
+=======
+        runs/exp/results-2.txt
+>>>>>>> origin/main
     """
     path = Path(path)  # os-agnostic
     if path.exists() and not exist_ok:
@@ -163,7 +175,11 @@ def file_date(path: str | Path = __file__) -> str:
 
 
 def file_size(path: str | Path) -> float:
+<<<<<<< HEAD
     """Return the size of a file or directory in megabytes (MB)."""
+=======
+    """Return the size of a file or directory in mebibytes (MiB)."""
+>>>>>>> origin/main
     if isinstance(path, (str, Path)):
         mb = 1 << 20  # bytes to MiB (1024 ** 2)
         path = Path(path)
@@ -180,7 +196,11 @@ def get_latest_run(search_dir: str = ".") -> str:
     return max(last_list, key=os.path.getctime) if last_list else ""
 
 
+<<<<<<< HEAD
 def update_models(model_names: tuple = ("yolo11n.pt",), source_dir: Path = Path("."), update_names: bool = False):
+=======
+def update_models(model_names: tuple = ("yolo26n.pt",), source_dir: Path = Path("."), update_names: bool = False):
+>>>>>>> origin/main
     """Update and re-save specified YOLO models in an 'updated_models' subdirectory.
 
     Args:
@@ -191,7 +211,11 @@ def update_models(model_names: tuple = ("yolo11n.pt",), source_dir: Path = Path(
     Examples:
         Update specified YOLO models and save them in 'updated_models' subdirectory:
         >>> from ultralytics.utils.files import update_models
+<<<<<<< HEAD
         >>> model_names = ("yolo11n.pt", "yolov8s.pt")
+=======
+        >>> model_names = ("yolo26n.pt", "yolo11s.pt")
+>>>>>>> origin/main
         >>> update_models(model_names, source_dir=Path("/models"), update_names=True)
     """
     from ultralytics import YOLO

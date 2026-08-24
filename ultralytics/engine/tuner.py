@@ -8,25 +8,45 @@ that yield the best model performance. This is particularly crucial in deep lear
 where small changes in hyperparameters can lead to significant differences in model accuracy and efficiency.
 
 Examples:
+<<<<<<< HEAD
     Tune hyperparameters for YOLO11n on COCO8 at imgsz=640 and epochs=10 for 300 tuning iterations.
     >>> from ultralytics import YOLO
     >>> model = YOLO("yolo11n.pt")
+=======
+    Tune hyperparameters for YOLO26n on COCO8 at imgsz=640 and epochs=10 for 300 tuning iterations.
+    >>> from ultralytics import YOLO
+    >>> model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
     >>> model.tune(data="coco8.yaml", epochs=10, iterations=300, optimizer="AdamW", plots=False, save=False, val=False)
 """
 
 from __future__ import annotations
 
 import gc
+<<<<<<< HEAD
+=======
+import json
+>>>>>>> origin/main
 import random
 import shutil
 import subprocess
 import time
+<<<<<<< HEAD
 from datetime import datetime
+=======
+from collections import Counter
+from datetime import datetime
+from pathlib import Path
+>>>>>>> origin/main
 
 import numpy as np
 import torch
 
+<<<<<<< HEAD
 from ultralytics.cfg import get_cfg, get_save_dir
+=======
+from ultralytics.cfg import _YOLO_CLI_COMMAND, CFG_INT_KEYS, get_cfg, get_save_dir
+>>>>>>> origin/main
 from ultralytics.utils import DEFAULT_CFG, LOGGER, YAML, callbacks, colorstr, remove_colorstr
 from ultralytics.utils.checks import check_requirements
 from ultralytics.utils.patches import torch_load
@@ -37,15 +57,26 @@ class Tuner:
     """A class for hyperparameter tuning of YOLO models.
 
     The class evolves YOLO model hyperparameters over a given number of iterations by mutating them according to the
+<<<<<<< HEAD
     search space and retraining the model to evaluate their performance. Supports both local CSV storage and distributed
     MongoDB Atlas coordination for multi-machine hyperparameter optimization.
+=======
+    search space and retraining the model to evaluate their performance. Supports both local NDJSON storage and
+    distributed MongoDB Atlas coordination for multi-machine hyperparameter optimization.
+>>>>>>> origin/main
 
     Attributes:
         space (dict[str, tuple]): Hyperparameter search space containing bounds and scaling factors for mutation.
         tune_dir (Path): Directory where evolution logs and results will be saved.
+<<<<<<< HEAD
         tune_csv (Path): Path to the CSV file where evolution logs are saved.
         args (dict): Configuration arguments for the tuning process.
         callbacks (list): Callback functions to be executed during tuning.
+=======
+        tune_file (Path): Path to the NDJSON file where evolution logs are saved.
+        args (SimpleNamespace): Configuration arguments for the tuning process.
+        callbacks (dict): Callback functions to be executed during tuning.
+>>>>>>> origin/main
         prefix (str): Prefix string for logging messages.
         mongodb (MongoClient): Optional MongoDB client for distributed tuning.
         collection (Collection): MongoDB collection for storing tuning results.
@@ -55,9 +86,15 @@ class Tuner:
         __call__: Execute the hyperparameter evolution across multiple iterations.
 
     Examples:
+<<<<<<< HEAD
         Tune hyperparameters for YOLO11n on COCO8 at imgsz=640 and epochs=10 for 300 tuning iterations.
         >>> from ultralytics import YOLO
         >>> model = YOLO("yolo11n.pt")
+=======
+        Tune hyperparameters for YOLO26n on COCO8 at imgsz=640 and epochs=10 for 300 tuning iterations.
+        >>> from ultralytics import YOLO
+        >>> model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
         >>> model.tune(
         >>>     data="coco8.yaml",
         >>>     epochs=10,
@@ -78,27 +115,48 @@ class Tuner:
         >>> )
 
         Tune with custom search space:
+<<<<<<< HEAD
         >>> model.tune(space={"lr0": (1e-5, 1e-1), "momentum": (0.6, 0.98)})
     """
 
     def __init__(self, args=DEFAULT_CFG, _callbacks: list | None = None):
+=======
+        >>> model.tune(space={"lr0": (1e-5, 1e-2), "momentum": (0.7, 0.98)})
+    """
+
+    def __init__(self, args=DEFAULT_CFG, _callbacks: dict | None = None):
+>>>>>>> origin/main
         """Initialize the Tuner with configurations.
 
         Args:
             args (dict): Configuration for hyperparameter evolution.
+<<<<<<< HEAD
             _callbacks (list | None, optional): Callback functions to be executed during tuning.
         """
         self.space = args.pop("space", None) or {  # key: (min, max, gain(optional))
             # 'optimizer': tune.choice(['SGD', 'Adam', 'AdamW', 'NAdam', 'RAdam', 'RMSProp']),
             "lr0": (1e-5, 1e-1),  # initial learning rate (i.e. SGD=1E-2, Adam=1E-3)
             "lrf": (0.0001, 0.1),  # final OneCycleLR learning rate (lr0 * lrf)
+=======
+            _callbacks (dict | None, optional): Callback functions to be executed during tuning.
+        """
+        self.space = args.pop("space", None) or {  # key: (min, max, gain(optional))
+            # 'optimizer': tune.choice(['SGD', 'Adam', 'AdamW', 'NAdam', 'RAdam', 'RMSProp']),
+            "lr0": (1e-5, 1e-2),  # initial learning rate (i.e. SGD=1E-2, Adam=1E-3)
+            "lrf": (0.01, 1.0),  # final OneCycleLR learning rate (lr0 * lrf)
+>>>>>>> origin/main
             "momentum": (0.7, 0.98, 0.3),  # SGD momentum/Adam beta1
             "weight_decay": (0.0, 0.001),  # optimizer weight decay 5e-4
             "warmup_epochs": (0.0, 5.0),  # warmup epochs (fractions ok)
             "warmup_momentum": (0.0, 0.95),  # warmup initial momentum
             "box": (1.0, 20.0),  # box loss gain
             "cls": (0.1, 4.0),  # cls loss gain (scale with pixels)
+<<<<<<< HEAD
             "dfl": (0.4, 6.0),  # dfl loss gain
+=======
+            "cls_pw": (0.0, 1.0),  # cls power weight
+            "dfl": (0.4, 12.0),  # dfl loss gain
+>>>>>>> origin/main
             "hsv_h": (0.0, 0.1),  # image HSV-Hue augmentation (fraction)
             "hsv_s": (0.0, 0.9),  # image HSV-Saturation augmentation (fraction)
             "hsv_v": (0.0, 0.9),  # image HSV-Value augmentation (fraction)
@@ -124,7 +182,11 @@ class Tuner:
         self.args.exist_ok = self.args.resume  # resume w/ same tune_dir
         self.tune_dir = get_save_dir(self.args, name=self.args.name or "tune")
         self.args.name, self.args.exist_ok, self.args.resume = (None, False, False)  # reset to not affect training
+<<<<<<< HEAD
         self.tune_csv = self.tune_dir / "tune_results.csv"
+=======
+        self.tune_file = self.tune_dir / "tune_results.ndjson"
+>>>>>>> origin/main
         self.callbacks = _callbacks or callbacks.get_default_callbacks()
         self.prefix = colorstr("Tuner: ")
         callbacks.add_integration_callbacks(self)
@@ -139,7 +201,11 @@ class Tuner:
             f"{self.prefix}💡 Learn about tuning at https://docs.ultralytics.com/guides/hyperparameter-tuning"
         )
 
+<<<<<<< HEAD
     def _connect(self, uri: str = "mongodb+srv://username:password@cluster.mongodb.net/", max_retries: int = 3):
+=======
+    def _connect(self, uri: str = "", max_retries: int = 3):
+>>>>>>> origin/main
         """Create MongoDB client with exponential backoff retry on connection failures.
 
         Args:
@@ -186,13 +252,21 @@ class Tuner:
         saves results to a shared collection and reads the latest best hyperparameters from all workers for evolution.
 
         Args:
+<<<<<<< HEAD
             mongodb_uri (str): MongoDB connection string, e.g. 'mongodb+srv://username:password@cluster.mongodb.net/'.
+=======
+            mongodb_uri (str): MongoDB connection string.
+>>>>>>> origin/main
             mongodb_db (str, optional): Database name.
             mongodb_collection (str, optional): Collection name.
 
         Notes:
             - Creates a fitness index for fast queries of top results
+<<<<<<< HEAD
             - Falls back to CSV-only mode if connection fails
+=======
+            - Falls back to local NDJSON mode if connection fails
+>>>>>>> origin/main
             - Uses connection pooling and retry logic for production reliability
         """
         self.mongodb = self._connect(mongodb_uri)
@@ -214,13 +288,52 @@ class Tuner:
         except Exception:
             return []
 
+<<<<<<< HEAD
     def _save_to_mongodb(self, fitness: float, hyperparameters: dict[str, float], metrics: dict, iteration: int):
+=======
+    @staticmethod
+    def _json_default(x):
+        """Convert tensor-like values for JSON serialization."""
+        return x.item() if hasattr(x, "item") else str(x)
+
+    def _result_record(
+        self,
+        iteration: int,
+        fitness: float,
+        hyperparameters: dict[str, float],
+        datasets: dict[str, dict],
+        save_dirs: dict[str, str] | None = None,
+    ) -> dict:
+        """Build one local tuning result record."""
+        result = {
+            "iteration": iteration,
+            "fitness": round(fitness, 5),
+            "hyperparameters": hyperparameters,
+            "datasets": datasets,
+        }
+        if save_dirs:
+            result["save_dirs"] = save_dirs
+        return result
+
+    def _save_to_mongodb(
+        self,
+        fitness: float,
+        hyperparameters: dict[str, float],
+        metrics: dict,
+        datasets: dict[str, dict],
+        iteration: int,
+    ):
+>>>>>>> origin/main
         """Save results to MongoDB with proper type conversion.
 
         Args:
             fitness (float): Fitness score achieved with these hyperparameters.
             hyperparameters (dict[str, float]): Dictionary of hyperparameter values.
             metrics (dict): Complete training metrics dictionary (mAP, precision, recall, losses, etc.).
+<<<<<<< HEAD
+=======
+            datasets (dict[str, dict]): Per-dataset metrics for the iteration.
+>>>>>>> origin/main
             iteration (int): Current iteration number.
         """
         try:
@@ -229,6 +342,10 @@ class Tuner:
                     "fitness": fitness,
                     "hyperparameters": {k: (v.item() if hasattr(v, "item") else v) for k, v in hyperparameters.items()},
                     "metrics": metrics,
+<<<<<<< HEAD
+=======
+                    "datasets": datasets,
+>>>>>>> origin/main
                     "timestamp": datetime.now(),
                     "iteration": iteration,
                 }
@@ -236,6 +353,7 @@ class Tuner:
         except Exception as e:
             LOGGER.warning(f"{self.prefix}MongoDB save failed: {e}")
 
+<<<<<<< HEAD
     def _sync_mongodb_to_csv(self):
         """Sync MongoDB results to CSV for plotting compatibility.
 
@@ -244,10 +362,20 @@ class Tuner:
         """
         try:
             # Get all results from MongoDB
+=======
+    def _sync_mongodb_to_file(self):
+        """Sync MongoDB results to the local NDJSON tuning log.
+
+        Downloads all results from MongoDB and writes them to the local NDJSON file in chronological order. This keeps
+        resume, mutation, and plotting on the same local source of truth when using distributed tuning.
+        """
+        try:
+>>>>>>> origin/main
             all_results = list(self.collection.find().sort("iteration", 1))
             if not all_results:
                 return
 
+<<<<<<< HEAD
             # Write to CSV
             headers = ",".join(["fitness", *list(self.space.keys())]) + "\n"
             with open(self.tune_csv, "w", encoding="utf-8") as f:
@@ -262,6 +390,91 @@ class Tuner:
             LOGGER.warning(f"{self.prefix}MongoDB to CSV sync failed: {e}")
 
     def _crossover(self, x: np.ndarray, alpha: float = 0.2, k: int = 9) -> np.ndarray:
+=======
+            with open(self.tune_file, "w", encoding="utf-8") as f:
+                for result in all_results:
+                    f.write(
+                        json.dumps(
+                            self._result_record(
+                                result["iteration"],
+                                result["fitness"] or 0.0,
+                                result.get("hyperparameters", {}),
+                                result.get("datasets", {}),
+                                result.get("save_dirs"),
+                            ),
+                            default=self._json_default,
+                        )
+                        + "\n"
+                    )
+
+        except Exception as e:
+            LOGGER.warning(f"{self.prefix}MongoDB to NDJSON sync failed: {e}")
+
+    def _load_local_results(self) -> list[dict]:
+        """Load local tuning results from the NDJSON log."""
+        if not self.tune_file.exists():
+            return []
+        with open(self.tune_file, encoding="utf-8") as f:
+            return [json.loads(line) for line in f if line.strip()]
+
+    def _local_results_to_array(self, results: list[dict], n: int | None = None) -> np.ndarray | None:
+        """Convert local NDJSON records to a fitness-plus-hyperparameters numpy array."""
+        if not results:
+            return None
+        x = np.array(
+            [
+                [r.get("fitness", 0.0)]
+                + [r.get("hyperparameters", {}).get(k, getattr(self.args, k)) for k in self.space]
+                for r in results
+            ],
+            dtype=float,
+        )
+        if n is None:
+            return x
+        order = np.argsort(-x[:, 0])
+        return x[order][:n]
+
+    def _save_local_result(self, result: dict):
+        """Append one tuning result to the local NDJSON log."""
+        with open(self.tune_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps(result, default=self._json_default) + "\n")
+
+    @staticmethod
+    def _best_metrics(result: dict) -> dict | None:
+        """Summarize best-result metrics for logging."""
+        datasets = result.get("datasets", {})
+        if len(datasets) == 1:
+            return next(iter(datasets.values()))
+        if len(datasets) > 1:
+            return {k: round(v.get("fitness") or 0.0, 5) for k, v in datasets.items()}
+        return None
+
+    @staticmethod
+    def _has_training_metrics(result: dict, require_all: bool = False) -> bool:
+        """Return whether a tuning result contains training metrics."""
+        datasets = result.get("datasets", {})
+        return bool(datasets) and (all(datasets.values()) if require_all else any(datasets.values()))
+
+    @classmethod
+    def _best_result_index(cls, results: list[dict], fitness: np.ndarray) -> int:
+        """Return the best result index, preferring rows with training metrics."""
+        valid = [i for i, result in enumerate(results) if cls._has_training_metrics(result)]
+        return valid[int(fitness[valid].argmax())] if valid else int(fitness.argmax())
+
+    @staticmethod
+    def _dataset_names(data: list) -> list[str]:
+        """Create stable unique dataset names for logging and per-run directories."""
+        stems = [Path(str(d)).stem for d in data]
+        totals, seen = Counter(stems), Counter()
+        names = []
+        for stem in stems:
+            seen[stem] += 1
+            names.append(f"{stem}-{seen[stem]}" if totals[stem] > 1 else stem)
+        return names
+
+    @staticmethod
+    def _crossover(x: np.ndarray, alpha: float = 0.2, k: int = 9) -> np.ndarray:
+>>>>>>> origin/main
         """BLX-α crossover from up to top-k parents (x[:,0]=fitness, rest=genes)."""
         k = min(k, len(x))
         # fitness weights (shifted to >0); fallback to uniform if degenerate
@@ -272,6 +485,11 @@ class Tuner:
         parents_mat = np.stack([x[i][1:] for i in idxs], 0)  # (k, ng) strip fitness
         lo, hi = parents_mat.min(0), parents_mat.max(0)
         span = hi - lo
+<<<<<<< HEAD
+=======
+        # given a small value when span is zero to avoid no mutation
+        span = np.where(span == 0, np.random.uniform(0.01, 0.1, span.shape), span)
+>>>>>>> origin/main
         return np.random.uniform(lo - alpha * span, hi + alpha * span)
 
     def _mutate(
@@ -296,6 +514,7 @@ class Tuner:
         if self.mongodb:
             if results := self._get_mongodb_results(n):
                 # MongoDB already sorted by fitness DESC, so results[0] is best
+<<<<<<< HEAD
                 x = np.array([[r["fitness"]] + [r["hyperparameters"][k] for k in self.space.keys()] for r in results])
             elif self.collection.name in self.collection.database.list_collection_names():  # Tuner started elsewhere
                 x = np.array([[0.0] + [getattr(self.args, k) for k in self.space.keys()]])
@@ -311,6 +530,24 @@ class Tuner:
         # Mutate if we have data, otherwise use defaults
         if x is not None:
             np.random.seed(int(time.time()))
+=======
+                x = np.array(
+                    [
+                        [r["fitness"]] + [r["hyperparameters"].get(k, self.args.get(k)) for k in self.space.keys()]
+                        for r in results
+                    ]
+                )
+            elif self.collection.name in self.collection.database.list_collection_names():  # Tuner started elsewhere
+                x = np.array([[0.0] + [getattr(self.args, k) for k in self.space.keys()]])
+
+        # Fall back to local NDJSON if MongoDB unavailable or empty
+        if x is None:
+            x = self._local_results_to_array(self._load_local_results(), n=n)
+
+        # Mutate if we have data, otherwise use defaults
+        if x is not None:
+            rng = np.random.default_rng()
+>>>>>>> origin/main
             ng = len(self.space)
 
             # Crossover
@@ -320,8 +557,13 @@ class Tuner:
             gains = np.array([v[2] if len(v) == 3 else 1.0 for v in self.space.values()])  # gains 0-1
             factors = np.ones(ng)
             while np.all(factors == 1):  # mutate until a change occurs (prevent duplicates)
+<<<<<<< HEAD
                 mask = np.random.random(ng) < mutation
                 step = np.random.randn(ng) * (sigma * gains)
+=======
+                mask = rng.random(ng) < mutation
+                step = rng.standard_normal(ng) * (sigma * gains)
+>>>>>>> origin/main
                 factors = np.where(mask, np.exp(step), 1.0).clip(0.25, 4.0)
             hyp = {k: float(genes[i] * factors[i]) for i, k in enumerate(self.space.keys())}
         else:
@@ -334,6 +576,7 @@ class Tuner:
         # Update types
         if "close_mosaic" in hyp:
             hyp["close_mosaic"] = round(hyp["close_mosaic"])
+<<<<<<< HEAD
 
         return hyp
 
@@ -349,10 +592,29 @@ class Tuner:
 
         Args:
             model (Model | None, optional): A pre-initialized YOLO model to be used for training.
+=======
+        if "epochs" in hyp:
+            hyp["epochs"] = round(hyp["epochs"])
+
+        return hyp
+
+    def __call__(self, iterations: int = 10, cleanup: bool = True):
+        """Execute the hyperparameter evolution process when the Tuner instance is called.
+
+        This method iterates through the specified number of iterations, performing the following steps:
+        1. Sync MongoDB results to local NDJSON (if using distributed mode)
+        2. Mutate hyperparameters using the best previous results or defaults
+        3. Train a YOLO model with the mutated hyperparameters
+        4. Log fitness scores and hyperparameters to MongoDB and/or NDJSON
+        5. Track the best performing configuration across all iterations
+
+        Args:
+>>>>>>> origin/main
             iterations (int): The number of generations to run the evolution for.
             cleanup (bool): Whether to delete iteration weights to reduce storage space during tuning.
         """
         t0 = time.time()
+<<<<<<< HEAD
         best_save_dir, best_metrics = None, None
         (self.tune_dir / "weights").mkdir(parents=True, exist_ok=True)
 
@@ -364,6 +626,20 @@ class Tuner:
         if self.tune_csv.exists():
             x = np.loadtxt(self.tune_csv, ndmin=2, delimiter=",", skiprows=1)
             start = x.shape[0]
+=======
+        self.tune_dir.mkdir(parents=True, exist_ok=True)
+        (self.tune_dir / "weights").mkdir(parents=True, exist_ok=True)
+        best_save_dirs = {}
+        n_successful = 0  # iters with real training metrics in this invocation (excludes resumed/MongoDB rows)
+
+        # Sync MongoDB to local NDJSON at startup for proper resume logic
+        if self.mongodb:
+            self._sync_mongodb_to_file()
+
+        start = 0
+        if self.tune_file.exists():
+            start = len(self._load_local_results())
+>>>>>>> origin/main
             LOGGER.info(f"{self.prefix}Resuming tuning run {self.tune_dir} from iteration {start + 1}...")
         for i in range(start, iterations):
             # Linearly decay sigma from 0.2 → 0.1 over first 300 iterations
@@ -374,6 +650,7 @@ class Tuner:
             mutated_hyp = self._mutate(sigma=sigma_i)
             LOGGER.info(f"{self.prefix}Starting iteration {i + 1}/{iterations} with hyperparameters: {mutated_hyp}")
 
+<<<<<<< HEAD
             metrics = {}
             train_args = {**vars(self.args), **mutated_hyp}
             save_dir = get_save_dir(get_cfg(train_args))
@@ -445,3 +722,134 @@ class Tuner:
                 header=remove_colorstr(header.replace(self.prefix, "# ")) + "\n",
             )
             YAML.print(self.tune_dir / "best_hyperparameters.yaml")
+=======
+            train_args = {**vars(self.args), **mutated_hyp}
+            data = train_args.pop("data")
+            if not isinstance(data, (list, tuple)):
+                data = [data]
+            dataset_names = self._dataset_names(data)
+            save_dir = (
+                [get_save_dir(get_cfg(train_args))]
+                if len(data) == 1
+                else [get_save_dir(get_cfg(train_args), name=name) for name in dataset_names]
+            )
+            weights_dir = [s / "weights" for s in save_dir]
+            metrics = {}
+            all_fitness = []
+            dataset_metrics = {}
+            for j, (d, dataset) in enumerate(zip(data, dataset_names)):
+                metrics_i = {}
+                try:
+                    train_args["data"] = d
+                    train_args["save_dir"] = str(save_dir[j])  # pass save_dir to subprocess to ensure same path is used
+                    # Train YOLO model with mutated hyperparameters (run in subprocess to avoid dataloader hang)
+                    cmd = [*_YOLO_CLI_COMMAND, "train", *(f"{k}={v}" for k, v in train_args.items())]
+                    subprocess.run(cmd, check=True)
+                    ckpt_file = weights_dir[j] / ("best.pt" if (weights_dir[j] / "best.pt").exists() else "last.pt")
+                    metrics_i = torch_load(ckpt_file)["train_metrics"]
+                    metrics = metrics_i
+
+                    # Cleanup
+                    time.sleep(1)
+                    gc.collect()
+                    torch.cuda.empty_cache()
+
+                except Exception as e:
+                    LOGGER.error(f"training failure for hyperparameter tuning iteration {i + 1}\n{e}")
+
+                # Save results - MongoDB takes precedence
+                dataset_metrics[dataset] = metrics_i
+                all_fitness.append(metrics_i.get("fitness") or 0.0)
+            fitness = sum(all_fitness) / len(all_fitness)
+            result = self._result_record(
+                i + 1,
+                fitness,
+                mutated_hyp,
+                dataset_metrics,
+                {dataset: str(s) for dataset, s in zip(dataset_names, save_dir)},
+            )
+            if self._has_training_metrics(result, require_all=True):
+                n_successful += 1
+            stop_after_iteration = False
+            if self.mongodb:
+                self._save_to_mongodb(fitness, mutated_hyp, metrics, dataset_metrics, i + 1)
+                self._sync_mongodb_to_file()
+                total_mongo_iterations = self.collection.count_documents({})
+                if total_mongo_iterations >= iterations:
+                    stop_after_iteration = True
+            else:
+                self._save_local_result(result)
+
+            # Get best results
+            results = self._load_local_results()
+            x = self._local_results_to_array(results)
+            fitness = x[:, 0]  # first column
+            best_idx = self._best_result_index(results, fitness)
+            best_result = results[best_idx]
+            n_attempted = (i + 1) - start  # iters tried in this invocation
+            current_best_save_dirs = best_result.get("save_dirs", {})
+            best_is_current = best_idx == i
+            if best_is_current:
+                if cleanup:
+                    for s in best_save_dirs.values():
+                        if s not in current_best_save_dirs.values():
+                            shutil.rmtree(s, ignore_errors=True)
+                for dataset, weight_dir in zip(dataset_names, weights_dir):
+                    best_weights_dir = (
+                        self.tune_dir / "weights" if len(data) == 1 else self.tune_dir / "weights" / dataset
+                    )
+                    best_weights_dir.mkdir(parents=True, exist_ok=True)
+                    for ckpt in weight_dir.glob("*.pt"):
+                        shutil.copy2(ckpt, best_weights_dir)
+                best_save_dirs = current_best_save_dirs
+            elif cleanup:
+                for s in save_dir:
+                    shutil.rmtree(s, ignore_errors=True)  # remove iteration dirs to reduce storage space
+                best_save_dirs = current_best_save_dirs
+
+            # Plot tune results
+            plot_tune_results(str(self.tune_file))
+
+            # Save and print tune results
+            if n_successful == n_attempted:
+                status = "complete ✅"
+            elif n_successful == 0:
+                status = "complete (all failed) ❌"
+            else:
+                status = f"complete ({n_successful}/{n_attempted} succeeded) ⚠️"
+            has_valid_best = self._has_training_metrics(best_result)
+            header_lines = [
+                f"{self.prefix}{i + 1}/{iterations} iterations {status} ({time.time() - t0:.2f}s)",
+                f"{self.prefix}Results saved to {colorstr('bold', self.tune_dir)}",
+            ]
+            if has_valid_best:
+                header_lines.extend(
+                    [
+                        f"{self.prefix}Best fitness={fitness[best_idx]} observed at iteration {best_idx + 1}",
+                        f"{self.prefix}Best fitness metrics are {self._best_metrics(best_result)}",
+                        f"{self.prefix}Best fitness model is "
+                        f"{self.tune_dir / 'weights' if len(best_result.get('datasets', {})) == 1 else 'not saved for multi-dataset tuning'}",
+                    ]
+                )
+            header = "\n".join(header_lines)
+            LOGGER.info("\n" + header)
+            if not has_valid_best:
+                LOGGER.error(
+                    f"{self.prefix}No iterations produced training metrics; skipping best_hyperparameters.yaml"
+                )
+            else:
+                data = {
+                    k: int(v) if k in CFG_INT_KEYS else float(v) for k, v in zip(self.space.keys(), x[best_idx, 1:])
+                }
+                YAML.save(
+                    self.tune_dir / "best_hyperparameters.yaml",
+                    data=data,
+                    header=remove_colorstr(header.replace(self.prefix, "# ")) + "\n",
+                )
+                YAML.print(self.tune_dir / "best_hyperparameters.yaml")
+            if stop_after_iteration:
+                LOGGER.info(
+                    f"{self.prefix}Target iterations ({iterations}) reached in MongoDB ({total_mongo_iterations}). Stopping."
+                )
+                break
+>>>>>>> origin/main

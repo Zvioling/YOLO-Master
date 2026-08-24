@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.logger API Reference
+>>>>>>> origin/main
 description: High-performance console output capture with API/file streaming for YOLO11 training logs.
 keywords: ConsoleLogger, console capture, log streaming, API logging, file logging, YOLO11, Ultralytics
 ---
@@ -7,7 +11,11 @@ keywords: ConsoleLogger, console capture, log streaming, API logging, file loggi
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/logger.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/logger.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/logger.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/logger.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -15,6 +23,13 @@ keywords: ConsoleLogger, console capture, log streaming, API logging, file loggi
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.logger._DriveInfo
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.logger.SystemLogger
 
 <br><br>

@@ -1,5 +1,9 @@
 # 🐧Please note that this file has been modified by Tencent on 2026/02/13. All Tencent Modifications are Copyright (C) 2026 Tencent.
 import math
+<<<<<<< HEAD
+=======
+import weakref
+>>>>>>> origin/main
 from typing import Any, Dict, Optional
 
 import torch
@@ -23,8 +27,18 @@ class LoraTrainingStrategy:
         self.model = model
         self.config = config or getattr(model, 'lora_config', None)
         self.epochs = epochs
+<<<<<<< HEAD
         self._original_alphas = {}  # Store original alpha values per layer
         self._strategy_active = False
+=======
+        # Store original alpha values per layer.
+        # Uses weakref.ref as key to survive model deepcopy / serialization,
+        # unlike id(module) which becomes stale after copy.deepcopy() or
+        # pickle round-trip.
+        self._original_alphas: Dict[weakref.ref, Dict[str, Any]] = {}
+        self._strategy_active = False
+        self._warmup_required = False  # True when area-attention needs warmup
+>>>>>>> origin/main
 
     # ── Strategy 1: Layer-wise LR decay ──
     @staticmethod
@@ -130,6 +144,7 @@ class LoraTrainingStrategy:
         if not factors:
             return 0
 
+<<<<<<< HEAD
         # Find the LoRA param group index and its base_lr.
         # Build a name lookup once to avoid O(N*M) scan; then collect ALL LoRA
         # params (the earlier implementation had an off-by-one break that only
@@ -192,11 +207,72 @@ class LoraTrainingStrategy:
         # Replace optimizer's param_groups
         optimizer.param_groups = new_param_groups
         
+=======
+        # Build a name lookup once to avoid O(N*M) scans. Adapter parameters can
+        # live in more than one source group (for example MuSGD's special-LR
+        # split), so every source group must be rebuilt independently.
+        name_by_id = {id(p): n for n, p in self.model.named_parameters()}
+        from collections import defaultdict
+
+        original_groups = list(optimizer.param_groups)
+        new_param_groups = []
+        used_factors = []
+        adjusted = 0
+        for pg in original_groups:
+            adapter_entries = []
+            remaining = []
+            for param in pg.get("params", []):
+                name = name_by_id.get(id(param))
+                if name is not None and _is_adapter_param(name):
+                    adapter_entries.append((name, param))
+                else:
+                    remaining.append(param)
+
+            if not adapter_entries:
+                new_param_groups.append(pg)
+                continue
+
+            if remaining:
+                remaining_group = dict(pg)
+                remaining_group["params"] = remaining
+                new_param_groups.append(remaining_group)
+
+            layer_groups = defaultdict(list)
+            for name, param in adapter_entries:
+                rounded_factor = round(factors.get(name, 1.0), 1)
+                layer_groups[rounded_factor].append(param)
+            base_lr = float(pg.get("lr", 0.0))
+            base_initial_lr = float(pg.get("initial_lr", base_lr))
+            for factor, params in sorted(layer_groups.items(), reverse=True):
+                new_group = {key: value for key, value in pg.items() if key != "params"}
+                new_group["params"] = params
+                new_group["lr"] = base_lr * factor
+                new_group["initial_lr"] = base_initial_lr * factor
+                new_param_groups.append(new_group)
+                used_factors.append(factor)
+                adjusted += len(params)
+
+        if adjusted == 0:
+            LOGGER.warning("[LoRA-Strategy] No LoRA param group found for layer decay.")
+            return 0
+
+        # Replace optimizer's param_groups
+        optimizer.param_groups = new_param_groups
+
+>>>>>>> origin/main
         # Also rebuild state if necessary (state is keyed by parameter object, so it remains valid)
         # But we need to update the optimizer's internal _param_group map if it exists
         if hasattr(optimizer, '_param_groups'):
             optimizer._param_groups = optimizer.param_groups
+<<<<<<< HEAD
         
+=======
+
+        parameter_ids = [id(param) for pg in optimizer.param_groups for param in pg.get("params", [])]
+        if len(parameter_ids) != len(set(parameter_ids)):
+            raise RuntimeError("Layer-wise LR decay produced duplicate optimizer parameters.")
+
+>>>>>>> origin/main
         avg_factor = sum(factors.values()) / len(factors)
         min_factor = min(factors.values())
         max_factor = max(factors.values())
@@ -206,7 +282,11 @@ class LoraTrainingStrategy:
         # for every LoRA param (e.g. when all names come from a sub-module without a
         # leading digit), or when decay_rate is so extreme that all factors round to
         # the same bucket.
+<<<<<<< HEAD
         if len(layer_groups) == 1:
+=======
+        if len(set(used_factors)) == 1:
+>>>>>>> origin/main
             LOGGER.warning(
                 f"[LoRA-Strategy] ⚠️ Layer decay produced only 1 LR group "
                 f"(decay_rate={decay_rate}, factor_range=[{min_factor:.4f}, {max_factor:.4f}]). "
@@ -215,11 +295,19 @@ class LoraTrainingStrategy:
 
         LOGGER.info(
             f"[LoRA-Strategy] 📐 Layer-wise LR decay applied (rate={decay_rate}): "
+<<<<<<< HEAD
             f"{len(layer_groups)} LR groups, "
             f"avg_factor={avg_factor:.3f}, range=[{min_factor:.3f}, {max_factor:.3f}]"
         )
         self._layer_decay_factors = factors
         return len(factors)
+=======
+            f"{len(used_factors)} LR groups, "
+            f"avg_factor={avg_factor:.3f}, range=[{min_factor:.3f}, {max_factor:.3f}]"
+        )
+        self._layer_decay_factors = factors
+        return adjusted
+>>>>>>> origin/main
 
     # ── Strategy 2: Alpha Warmup ──
     def prepare_alpha_warmup(self):
@@ -252,7 +340,13 @@ class LoraTrainingStrategy:
             # PEFT >= 0.18 uses nn.ModuleDict for lora_A (e.g. {'default': Conv2d}).
             # Older PEFT stores lora_A as a single Parameter or Module with .weight.
             is_lora_layer = False
+<<<<<<< HEAD
             if isinstance(lora_a, nn.ModuleDict):
+=======
+            if isinstance(lora_a, nn.Parameter):
+                is_lora_layer = True
+            elif isinstance(lora_a, nn.ModuleDict):
+>>>>>>> origin/main
                 # Check that at least one adapter entry has a weight attribute
                 is_lora_layer = any(hasattr(child, 'weight') for child in lora_a.values())
             elif hasattr(lora_a, 'weight'):
@@ -272,7 +366,11 @@ class LoraTrainingStrategy:
                 adapter_name = list(la_attr.keys())[0] if la_attr else 'default'
                 orig_alpha = float(la_attr.get(adapter_name, cfg_alpha))
                 orig_scaling = float(sc_attr.get(adapter_name, orig_alpha / max(cfg_r, 1)))
+<<<<<<< HEAD
                 self._original_alphas[id(module)] = {
+=======
+                self._original_alphas[weakref.ref(module)] = {
+>>>>>>> origin/main
                     '_type': 'scaling_dict',
                     'orig_alpha': orig_alpha,
                     'orig_scaling': orig_scaling,
@@ -288,7 +386,11 @@ class LoraTrainingStrategy:
             if (isinstance(la_attr, (int, float)) and isinstance(lr_attr, (int, float))
                     and lr_attr > 0):
                 orig_alpha = float(la_attr)
+<<<<<<< HEAD
                 self._original_alphas[id(module)] = {
+=======
+                self._original_alphas[weakref.ref(module)] = {
+>>>>>>> origin/main
                     '_type': 'direct',
                     'orig_alpha': orig_alpha,
                     'r': float(lr_attr),
@@ -303,7 +405,11 @@ class LoraTrainingStrategy:
                 try:
                     _orig_alpha = float(la_attr)
                     _r = float(lr_attr) if isinstance(lr_attr, (int, float)) else float(cfg_r)
+<<<<<<< HEAD
                     self._original_alphas[id(module)] = {
+=======
+                    self._original_alphas[weakref.ref(module)] = {
+>>>>>>> origin/main
                         '_type': 'property',
                         'orig_alpha': _orig_alpha,
                         'r': _r,
@@ -317,7 +423,11 @@ class LoraTrainingStrategy:
 
             # ── Path D: Has numeric 'scaling' attribute (older PEFT or custom) ──
             if isinstance(sc_attr, (int, float)) and sc_attr > 0:
+<<<<<<< HEAD
                 self._original_alphas[id(module)] = {
+=======
+                self._original_alphas[weakref.ref(module)] = {
+>>>>>>> origin/main
                     '_type': 'scaling',
                     'orig_scaling': float(sc_attr),
                 }
@@ -332,7 +442,11 @@ class LoraTrainingStrategy:
                     if isinstance(peft_config, dict) and 'lora_alpha' in peft_config:
                         _orig_alpha = float(peft_config['lora_alpha'])
                         _r = float(peft_config.get('r', cfg_r))
+<<<<<<< HEAD
                         self._original_alphas[id(module)] = {
+=======
+                        self._original_alphas[weakref.ref(module)] = {
+>>>>>>> origin/main
                             '_type': 'config_dict',
                             'orig_alpha': _orig_alpha,
                             'r': _r,
@@ -356,11 +470,35 @@ class LoraTrainingStrategy:
                 f"| path distribution: {type_summary}"
             )
         else:
+<<<<<<< HEAD
             LOGGER.warning(
                 "[LoRA-Strategy] ⚠️ No modifiable alpha attributes found for warmup. "
                 "This usually indicates a PEFT version mismatch — alpha warmup will be silently disabled "
                 "but training will continue normally. Please report PEFT version to maintainers."
             )
+=======
+            # Determine if this architecture critically depends on warmup.
+            # YOLO12 Area-Attention (AAttn) requires alpha warmup to prevent NaN.
+            has_area_attn = any(
+                "AAttn" in m.__class__.__name__ or "A2C2f" in m.__class__.__name__
+                for m in self.model.modules()
+            )
+            if has_area_attn:
+                self._warmup_required = True
+                LOGGER.error(
+                    "[LoRA-Strategy] 🚨 CRITICAL: Alpha warmup FAILED on Area-Attention "
+                    "architecture (YOLO12/A2C2f). This model REQUIRES warmup to prevent "
+                    "training collapse (loss→0, NaN). No modifiable alpha attributes found "
+                    "— likely a PEFT version incompatibility. Training will likely crash. "
+                    "Please upgrade peft or set lora_alpha_warmup=0 to proceed at your own risk."
+                )
+            else:
+                LOGGER.warning(
+                    "[LoRA-Strategy] ⚠️ No modifiable alpha attributes found for warmup. "
+                    "This usually indicates a PEFT version mismatch — alpha warmup will be "
+                    "silently disabled but training will continue normally."
+                )
+>>>>>>> origin/main
         return found
 
     def step_alpha_warmup(self, epoch, warmup_epochs=5):
@@ -378,11 +516,22 @@ class LoraTrainingStrategy:
 
         updated = 0
         for module in self.model.modules():
+<<<<<<< HEAD
             mid = id(module)
             if mid not in self._original_alphas:
                 continue
 
             orig = self._original_alphas[mid]
+=======
+            # Use weakref.ref for key lookup — survives deepcopy/serialization.
+            # The weakref key matches if the module is the same object that was
+            # registered during prepare_alpha_warmup().
+            ref = weakref.ref(module)
+            if ref not in self._original_alphas:
+                continue
+
+            orig = self._original_alphas[ref]
+>>>>>>> origin/main
             _type = orig['_type']
 
             try:
@@ -434,7 +583,11 @@ class LoraTrainingStrategy:
                         updated += 1
 
             except Exception as e:
+<<<<<<< HEAD
                 LOGGER.debug(f"[LoRA-Strategy] Alpha warmup step failed for module {mid}: {e}")
+=======
+                LOGGER.debug(f"[LoRA-Strategy] Alpha warmup step failed for module {type(module).__name__}: {e}")
+>>>>>>> origin/main
                 continue
 
         return current_scale
@@ -443,10 +596,17 @@ class LoraTrainingStrategy:
         """Restore all alphas to their original values."""
         restored = 0
         for module in self.model.modules():
+<<<<<<< HEAD
             mid = id(module)
             if mid not in self._original_alphas:
                 continue
             orig = self._original_alphas[mid]
+=======
+            ref = weakref.ref(module)
+            if ref not in self._original_alphas:
+                continue
+            orig = self._original_alphas[ref]
+>>>>>>> origin/main
             _type = orig['_type']
 
             try:
@@ -476,15 +636,28 @@ class LoraTrainingStrategy:
                         restored += 1
 
             except Exception as e:
+<<<<<<< HEAD
                 LOGGER.debug(f"[LoRA-Strategy] Alpha warmup finalize failed for module {mid}: {e}")
+=======
+                LOGGER.debug(f"[LoRA-Strategy] Alpha warmup finalize failed for module {type(module).__name__}: {e}")
+>>>>>>> origin/main
                 continue
 
         LOGGER.info(f"[LoRA-Strategy] Alpha warmup finalized — {restored}/{len(self._original_alphas)} alphas restored.")
         self._strategy_active = False
 
     # ── Strategy 3: Orthogonal Regularization Loss ──
+<<<<<<< HEAD
     @staticmethod
     def compute_orthogonal_loss(model, weight=1e-4) -> torch.Tensor:
+=======
+    # Chunk size for batched computation — reduces peak memory by processing
+    # N layers at a time instead of accumulating all r×r matrices simultaneously.
+    _ORTHO_CHUNK_SIZE = 32
+
+    @staticmethod
+    def compute_orthogonal_loss(model, weight=1e-4, chunk_size=None) -> torch.Tensor:
+>>>>>>> origin/main
         """
         Compute regularization loss encouraging LoRA A/B matrices to stay orthogonal.
 
@@ -492,11 +665,25 @@ class LoraTrainingStrategy:
         
         Loss = λ × (Σ||A^T A - I||_F + Σ||B^T B - I||_F) / N_pairs
         
+<<<<<<< HEAD
         OPTIMIZED: Uses cached module list and avoids redundant device/dtype conversions.
+=======
+        OPTIMIZED (v2): Uses chunked computation to reduce peak GPU memory.
+        Instead of accumulating all r×r intermediate matrices simultaneously,
+        processes layers in chunks of ``chunk_size`` (default 32). Each chunk's
+        loss is computed and immediately reduced to a scalar before the next
+        chunk, keeping peak temporary memory at O(chunk_size × r²) instead of
+        O(N_layers × r²).
+>>>>>>> origin/main
         
         Args:
             model: LoRA-enabled model
             weight: Scaling factor for the loss
+<<<<<<< HEAD
+=======
+            chunk_size: Number of weight matrices per chunk (default: 32).
+                Set to None to use the class default (_ORTHO_CHUNK_SIZE).
+>>>>>>> origin/main
 
         Returns:
             Scalar tensor (orthogonal regularization loss)
@@ -506,6 +693,7 @@ class LoraTrainingStrategy:
         except StopIteration:
             device = torch.device('cpu')
             
+<<<<<<< HEAD
         ortho_loss = torch.tensor(0.0, device=device, dtype=torch.float32)
         pair_count = 0
 
@@ -513,11 +701,23 @@ class LoraTrainingStrategy:
         # and cache the model's modules to avoid generator overhead
         def _iter_weights(attr):
             """Yield weight tensors from either a direct LoRA layer or a ModuleDict (PEFT >=0.18)."""
+=======
+        if chunk_size is None:
+            chunk_size = LoraTrainingStrategy._ORTHO_CHUNK_SIZE
+
+        # Collect all (weight, is_A) pairs first, then process in chunks.
+        # This avoids re-iterating model.modules() and allows controlled memory.
+        weight_pairs = []  # List of (weight_tensor, is_matrix_A)
+
+        def _collect_weights(attr, is_A):
+            """Collect weight tensors from either a direct LoRA layer or a ModuleDict."""
+>>>>>>> origin/main
             if attr is None:
                 return
             if isinstance(attr, nn.ModuleDict):
                 for child in attr.values():
                     if hasattr(child, 'weight') and child.weight.numel() > 0:
+<<<<<<< HEAD
                         yield child.weight
             elif hasattr(attr, 'weight') and attr.weight.numel() > 0:
                 yield attr.weight
@@ -557,11 +757,66 @@ class LoraTrainingStrategy:
                         ident = torch.eye(cols, device=device, dtype=BT_B.dtype)
                         ortho_loss = ortho_loss + torch.norm(BT_B - ident, p='fro')
                         pair_count += 1
+=======
+                        weight_pairs.append((child.weight, is_A))
+            elif hasattr(attr, 'weight') and attr.weight.numel() > 0:
+                weight_pairs.append((attr.weight, is_A))
+
+        # CRITICAL FIX: Do NOT detach() the weight tensors — that severs the
+        # gradient graph and the orthogonal regularization becomes a no-op.
+        for name, module in model.named_modules():
+            lora_a = getattr(module, 'lora_A', None)
+            if lora_a is not None:
+                _collect_weights(lora_a, is_A=True)
+            lora_b = getattr(module, 'lora_B', None)
+            if lora_b is not None:
+                _collect_weights(lora_b, is_A=False)
+
+        if not weight_pairs:
+            return torch.tensor(0.0, device=device, dtype=torch.float32)
+
+        # Process in chunks to bound peak memory.
+        total_loss = torch.tensor(0.0, device=device, dtype=torch.float32)
+        pair_count = 0
+
+        for chunk_start in range(0, len(weight_pairs), chunk_size):
+            chunk = weight_pairs[chunk_start:chunk_start + chunk_size]
+            chunk_loss = torch.tensor(0.0, device=device, dtype=torch.float32)
+
+            for A_w, is_A in chunk:
+                # Keep gradient connection (no .detach()).
+                W = A_w if A_w.dtype == torch.float32 else A_w.float()
+                if is_A:
+                    if W.dim() >= 2 and W.shape[0] > 0:
+                        if W.dim() > 2:
+                            W = W.reshape(W.shape[0], -1)
+                        WW_T = torch.matmul(W, W.t())
+                        rows = WW_T.shape[0]
+                        ident = torch.eye(rows, device=device, dtype=WW_T.dtype)
+                        chunk_loss = chunk_loss + torch.norm(WW_T - ident, p='fro')
+                        pair_count += 1
+                else:
+                    if W.dim() >= 2 and W.shape[-1] > 0:
+                        if W.dim() > 2:
+                            W = W.reshape(W.shape[0], -1)
+                        WT_W = torch.matmul(W.t(), W)
+                        cols = WT_W.shape[0]
+                        ident = torch.eye(cols, device=device, dtype=WT_W.dtype)
+                        chunk_loss = chunk_loss + torch.norm(WT_W - ident, p='fro')
+                        pair_count += 1
+
+            # Accumulate chunk loss (scalar addition, no retained intermediates).
+            total_loss = total_loss + chunk_loss
+>>>>>>> origin/main
 
         if pair_count == 0:
             return torch.tensor(0.0, device=device, dtype=torch.float32)
 
+<<<<<<< HEAD
         return weight * (ortho_loss / pair_count)
+=======
+        return weight * (total_loss / pair_count)
+>>>>>>> origin/main
 
     # ── Strategy 4: Dynamic Dropout Scheduling ──
     _DROPOUT_WARNED = False  # class-level flag to emit warning only once

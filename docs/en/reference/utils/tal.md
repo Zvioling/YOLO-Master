@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.tal API Reference
+>>>>>>> origin/main
 description: Explore the TaskAlignedAssigner in Ultralytics YOLO. Learn about the TaskAlignedMetric and its applications in object detection.
 keywords: Ultralytics, YOLO, TaskAlignedAssigner, object detection, machine learning, AI, Tal.py, PyTorch
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, YOLO, TaskAlignedAssigner, object detection, machine lear
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/tal.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/tal.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/tal.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/tal.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -33,4 +41,11 @@ keywords: Ultralytics, YOLO, TaskAlignedAssigner, object detection, machine lear
 
 ## ::: ultralytics.utils.tal.dist2rbox
 
+<<<<<<< HEAD
+=======
+<br><br><hr><br>
+
+## ::: ultralytics.utils.tal.rbox2dist
+
+>>>>>>> origin/main
 <br><br>

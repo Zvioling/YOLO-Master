@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🐧 YOLO-Master MoA Module — Mixture of Attention
 # Copyright (C) 2026 Tencent. All rights reserved.
 """Mixture-of-Attention (MoA) for YOLO-Master.
@@ -714,3 +715,25 @@ def collect_moa_aux_loss(model: nn.Module) -> torch.Tensor:
             if isinstance(l, torch.Tensor) and l.requires_grad:
                 total = l if total is None else total + l
     return total if total is not None else torch.zeros(1, device=_aux_loss_device(model))
+=======
+"""Backward-compatible import path for Mixture-of-Attention modules."""
+
+from ultralytics.nn.modules._numeric import all_reduce_mean  # noqa: F401
+
+from . import heads as _heads
+from .block import MoABlock
+from .heads import (  # noqa: F401
+    _GlobalAttnHead,
+    _LocalAttnHead,
+    _RegionalAttnHead,
+    _flash_attn,
+    _window_flash_attn,
+)
+from .router import _MoARouter, _moa_router_aux_loss, anneal_moa_temperature  # noqa: F401
+from .wrappers import C2fMoA, NeckMoAFusion, collect_moa_aux_loss
+
+# Historical monkeypatch target retained for plugins and tests.
+F = _heads.F
+
+__all__ = ("MoABlock", "C2fMoA", "NeckMoAFusion", "anneal_moa_temperature", "collect_moa_aux_loss")
+>>>>>>> origin/main

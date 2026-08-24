@@ -34,7 +34,11 @@ function loadGiscus() {
   }
 
   // Register event handlers for theme changes
+<<<<<<< HEAD
   var ref = document.querySelector("[data-md-component=palette]");
+=======
+  const ref = document.querySelector("[data-md-component=palette]");
+>>>>>>> origin/main
   if (ref) {
     ref.addEventListener("change", () => {
       const palette = __md_get("__palette");

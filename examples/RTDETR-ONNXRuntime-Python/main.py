@@ -18,6 +18,12 @@ def download_file(url: str, local_path: str) -> str:
     Args:
         url (str): URL of the file to download.
         local_path (str): Local path where the file will be saved.
+<<<<<<< HEAD
+=======
+
+    Returns:
+        (str): Local path where the file was saved.
+>>>>>>> origin/main
     """
     # Check if the local path already exists
     if os.path.exists(local_path):
@@ -187,7 +193,11 @@ class RTDETR:
         image_data = np.transpose(image_data, (2, 0, 1))  # Channel first
 
         # Expand the dimensions of the image data to match the expected input shape
+<<<<<<< HEAD
         image_data = np.expand_dims(image_data, axis=0).astype(np.float32)
+=======
+        image_data = image_data[None].astype(np.float32)
+>>>>>>> origin/main
 
         return image_data
 

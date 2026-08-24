@@ -1,11 +1,16 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 """Module defines the base classes and structures for object tracking in YOLO."""
 
+<<<<<<< HEAD
 from collections import OrderedDict
 from typing import Any
 
 import numpy as np
 
+=======
+from typing import Any
+
+>>>>>>> origin/main
 
 class TrackState:
     """Enumeration class representing the possible states of an object being tracked.
@@ -36,6 +41,7 @@ class BaseTrack:
         track_id (int): Unique identifier for the track.
         is_activated (bool): Flag indicating whether the track is currently active.
         state (TrackState): Current state of the track.
+<<<<<<< HEAD
         history (OrderedDict): Ordered history of the track's states.
         features (list): List of features extracted from the object for tracking.
         curr_feature (Any): The current feature of the object being tracked.
@@ -44,6 +50,11 @@ class BaseTrack:
         frame_id (int): The most recent frame ID processed by the track.
         time_since_update (int): Frames passed since the last update.
         location (tuple): The location of the object in the context of multi-camera tracking.
+=======
+        score (float): The confidence score of the tracking.
+        start_frame (int): The frame number where tracking started.
+        frame_id (int): The most recent frame ID processed by the track.
+>>>>>>> origin/main
 
     Methods:
         end_frame: Returns the ID of the last frame where the object was tracked.
@@ -69,6 +80,7 @@ class BaseTrack:
         self.track_id = 0
         self.is_activated = False
         self.state = TrackState.New
+<<<<<<< HEAD
         self.history = OrderedDict()
         self.features = []
         self.curr_feature = None
@@ -77,6 +89,11 @@ class BaseTrack:
         self.frame_id = 0
         self.time_since_update = 0
         self.location = (np.inf, np.inf)
+=======
+        self.score = 0
+        self.start_frame = 0
+        self.frame_id = 0
+>>>>>>> origin/main
 
     @property
     def end_frame(self) -> int:

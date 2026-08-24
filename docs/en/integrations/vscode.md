@@ -33,7 +33,11 @@ If you use Visual Studio Code and answered 'yes' to any of the above, then the U
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/snippet-prediction-preview.avif" alt="Snippet Prediction Preview">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/snippet-prediction-preview.avif" alt="Snippet Prediction Preview">
+>>>>>>> origin/main
   <br>
   Run example code using Ultralytics YOLO in under 20 seconds! 🚀
 </p>
@@ -62,7 +66,11 @@ Want to let us know what you use for developing code? Head over to our Discourse
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/vs-code-extension-menu.avif" alt="VS Code extension menu">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/vs-code-extension-menu.avif" alt="VS Code extension menu">
+>>>>>>> origin/main
   <br>
 </p>
 
@@ -76,7 +84,11 @@ Want to let us know what you use for developing code? Head over to our Discourse
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/vscode-marketplace-extension-install.avif" alt="VS Code marketplace extension install">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/vscode-marketplace-extension-install.avif" alt="VS Code marketplace extension install">
+>>>>>>> origin/main
   <br>
   Visual Studio Code Extension Marketplace page for <a href="https://marketplace.visualstudio.com/items?itemName=Ultralytics.ultralytics-snippets">Ultralytics-Snippets</a>
 </p>
@@ -101,7 +113,11 @@ Many snippets have "fields" with default placeholder values or names. For instan
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/multi-update-field-and-options.avif" alt="Multi-update field and options">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/multi-update-field-and-options.avif" alt="Multi-update field and options">
+>>>>>>> origin/main
   <br>
   After inserting snippet, renaming <code>model</code> as <code>world_model</code> updates all instances. Pressing <kbd>Tab ⇥</kbd> moves to the next field, which opens a dropdown menu and allows for selection of a model scale, and moving to the next field provides another dropdown to choose either <code>world</code> or <code>worldv2</code> model variant.
 </p>
@@ -116,7 +132,11 @@ The snippets are named in the most descriptive way possible, but this means ther
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/incomplete-snippet-example.avif" alt="Incomplete Snippet Example">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/incomplete-snippet-example.avif" alt="VS Code incomplete code snippet preview">
+>>>>>>> origin/main
   <br>
   Typing <code>ex-yolo-p</code> will <em>still</em> arrive at the correct snippet.
 </p>
@@ -145,7 +165,11 @@ The `ultra.examples` snippets are very useful for anyone looking to learn how to
     ```python
     from ultralytics import ASSETS, YOLO
 
+<<<<<<< HEAD
     model = YOLO("yolo11n.pt", task="detect")
+=======
+    model = YOLO("yolo26n.pt", task="detect")
+>>>>>>> origin/main
     results = model(source=ASSETS / "bus.jpg")
 
     for result in results:
@@ -172,7 +196,11 @@ However, since Ultralytics supports numerous [tasks](../tasks/index.md), when [w
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/results-loop-options.avif" alt="Results Loop Options">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/results-loop-options.avif" alt="VS Code YOLO results visualization options">
+>>>>>>> origin/main
   <br>
   Once tabbed to the <code>boxes</code> field, a dropdown menu appears to allow selection of another attribute as required.
 </p>
@@ -188,7 +216,11 @@ There are over 💯 keyword arguments for all the various Ultralytics [tasks](..
     ```python
     model.predict(
         source=src,  # (str, optional) source directory for images or videos
+<<<<<<< HEAD
         imgsz=640,  # (int | list) input images size as int or list[w,h] for predict
+=======
+        imgsz=640,  # (int | list) input images size as int or list[h,w] for predict
+>>>>>>> origin/main
         conf=0.25,  # (float) minimum confidence threshold
         iou=0.7,  # (float) intersection over union (IoU) threshold for NMS
         vid_stride=1,  # (int) video frame-rate stride
@@ -240,7 +272,11 @@ If you use VS Code and have started to see a message prompting you to install th
 
 1. Install Ultralytics-snippets and the message will no longer be shown 😆!
 
+<<<<<<< HEAD
 2. You can be using `yolo settings vscode_msg False` to disable the message from showing without having to install the extension. You can learn more about the [Ultralytics Settings](../quickstart.md#ultralytics-settings) on the [quickstart](../quickstart.md) page if you're unfamiliar.
+=======
+2. You can use `yolo settings vscode_msg=False` to disable the message from showing without having to install the extension. You can learn more about the [Ultralytics Settings](../quickstart.md#ultralytics-settings) on the [quickstart](../quickstart.md) page if you're unfamiliar.
+>>>>>>> origin/main
 
 ### I have an idea for a new Ultralytics code snippet, how can I get one added?
 
@@ -252,6 +288,10 @@ Like any other VS Code extension, you can uninstall it by navigating to the Exte
 
 <p align="center">
   <br>
+<<<<<<< HEAD
     <img src="https://github.com/ultralytics/docs/releases/download/0/vscode-extension-menu.avif" alt="VS Code extension menu">
+=======
+    <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/vscode-extension-menu.avif" alt="VS Code extension menu">
+>>>>>>> origin/main
   <br>
 </p>

@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.nas.predict API Reference
+>>>>>>> origin/main
 description: Learn about NASPredictor in Ultralytics YOLO for efficient object detection. Explore its attributes, methods, and usage with examples.
 keywords: Ultralytics, YOLO, NASPredictor, object detection, machine learning, AI, non-maximum suppression, bounding boxes, image processing
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, YOLO, NASPredictor, object detection, machine learning, A
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/nas/predict.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/nas/predict.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/nas/predict.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/nas/predict.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

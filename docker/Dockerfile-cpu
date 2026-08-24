@@ -9,6 +9,7 @@ FROM ultralytics/ultralytics:latest-python
 # Set default command to bash
 CMD ["/bin/bash"]
 
+<<<<<<< HEAD
 # Usage Examples -------------------------------------------------------------------------------------------------------
 
 # Build and Push
@@ -22,3 +23,13 @@ CMD ["/bin/bash"]
 
 # Pull and Run with local volume mounted
 # t=ultralytics/ultralytics:latest-cpu && sudo docker pull $t && sudo docker run -it --ipc=host -v "$(pwd)"/shared/datasets:/datasets $t
+=======
+# Usage --------------------------------------------------------------------------------------------------------------
+
+# Production builds: https://github.com/ultralytics/ultralytics/blob/main/.github/workflows/docker.yml
+# Example (build): t=ultralytics/ultralytics:latest-cpu && docker build -f docker/Dockerfile-cpu -t $t .
+# Example (push): docker push $t
+# Example (pull): t=ultralytics/ultralytics:latest-cpu && docker pull $t
+# Example (run): docker run -it --ipc=host $t
+# Example (run-with-volume): docker run -it --ipc=host -v "$PWD/shared/datasets:/datasets" $t
+>>>>>>> origin/main

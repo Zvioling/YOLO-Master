@@ -77,6 +77,10 @@ class Inference:
         self.model_path = None  # Model file path
         if self.temp_dict["model"] is not None:
             self.model_path = self.temp_dict["model"]
+<<<<<<< HEAD
+=======
+        self.imgsz = self.temp_dict.get("imgsz", 640)
+>>>>>>> origin/main
 
         LOGGER.info(f"Ultralytics Solutions: ✅ {self.temp_dict}")
 
@@ -150,7 +154,21 @@ class Inference:
     def configure(self) -> None:
         """Configure the model and load selected classes for inference."""
         # Add dropdown menu for model selection
+<<<<<<< HEAD
         M_ORD, T_ORD = ["yolo11n", "yolo11s", "yolo11m", "yolo11l", "yolo11x"], ["", "-seg", "-pose", "-obb", "-cls"]
+=======
+        M_ORD, T_ORD = (
+            ["yolo26n", "yolo26s", "yolo26m", "yolo26l", "yolo26x"],
+            [
+                "",
+                "-seg",
+                "-sem",
+                "-pose",
+                "-obb",
+                "-cls",
+            ],
+        )
+>>>>>>> origin/main
         available_models = sorted(
             [
                 x.replace("yolo", "YOLO")
@@ -232,10 +250,19 @@ class Inference:
                 # Process frame with model
                 if self.enable_trk:
                     results = self.model.track(
+<<<<<<< HEAD
                         frame, conf=self.conf, iou=self.iou, classes=self.selected_ind, persist=True
                     )
                 else:
                     results = self.model(frame, conf=self.conf, iou=self.iou, classes=self.selected_ind)
+=======
+                        frame, conf=self.conf, iou=self.iou, classes=self.selected_ind, imgsz=self.imgsz, persist=True
+                    )
+                else:
+                    results = self.model(
+                        frame, conf=self.conf, iou=self.iou, classes=self.selected_ind, imgsz=self.imgsz
+                    )
+>>>>>>> origin/main
 
                 annotated_frame = results[0].plot()  # Add annotations on frame
 

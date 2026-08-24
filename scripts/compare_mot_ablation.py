@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
+<<<<<<< HEAD
 """Run reproducible YOLO-Master MoT and MoA+MoT ablations.
+=======
+"""Run reproducible YOLO-Master MoT, MoA, and hybrid ablations.
+>>>>>>> origin/main
 
 Examples:
     python3 scripts/compare_mot_ablation.py --check-build
     python3 scripts/compare_mot_ablation.py --benchmark --imgsz 256 --reps 5 --device cpu
+<<<<<<< HEAD
     python3 scripts/compare_mot_ablation.py --train --epochs 50 --imgsz 640 --batch 8 --device 0
+=======
+    python3 scripts/compare_mot_ablation.py --train --epochs 50 --imgsz 640 --batch 8 --device 0 --models v10 v10_mot v10_moa
+>>>>>>> origin/main
     python3 scripts/compare_mot_ablation.py --summary-only
 """
 
@@ -13,6 +21,10 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+<<<<<<< HEAD
+=======
+import math
+>>>>>>> origin/main
 import os
 import sys
 import time
@@ -30,6 +42,10 @@ from ultralytics import YOLO  # noqa: E402
 from ultralytics.nn.modules.moa import C2fMoA, MoABlock, anneal_moa_temperature  # noqa: E402
 from ultralytics.nn.modules.mot import C2fMoT, MoTBlock, anneal_mot_temperature  # noqa: E402
 from ultralytics.nn.tasks import DetectionModel  # noqa: E402
+<<<<<<< HEAD
+=======
+from ultralytics.utils.torch_utils import get_flops  # noqa: E402
+>>>>>>> origin/main
 
 
 @dataclass(frozen=True)
@@ -40,6 +56,29 @@ class ModelSpec:
 
 
 SPECS = {
+<<<<<<< HEAD
+=======
+    "v10": ModelSpec(
+        key="v10",
+        label="YOLO-Master-v0.10-EsMoE-N",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_10/det/yolo-master-n.yaml",
+    ),
+    "v10_mot": ModelSpec(
+        key="v10_mot",
+        label="YOLO-Master-v0.10-MoT-N",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_10/det/yolo-master-mot-n.yaml",
+    ),
+    "v10_moa": ModelSpec(
+        key="v10_moa",
+        label="YOLO-Master-v0.10-MoA-N",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_10/det/yolo-master-moa-n.yaml",
+    ),
+    "v10_moa_mot": ModelSpec(
+        key="v10_moa_mot",
+        label="YOLO-Master-v0.10-MoA+MoT-N",
+        cfg=ROOT / "ultralytics/cfg/models/master/v0_10/det/yolo-master-moa-mot-n.yaml",
+    ),
+>>>>>>> origin/main
     "v08": ModelSpec(
         key="v08",
         label="YOLO-Master v0.8 baseline",
@@ -60,6 +99,7 @@ SPECS = {
         label="YOLO-Master v0.8 MoA+MoT",
         cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moa-mot-n.yaml",
     ),
+<<<<<<< HEAD
     "v08_moe_mot": ModelSpec(
         key="v08_moe_mot",
         label="YOLO-Master v0.8 MoE+MoT Hybrid (方案A: 4 C2fMoT)",
@@ -85,6 +125,8 @@ SPECS = {
         label="YOLO-Master v0.8 MoE+MoT Cross-Scale Shared (方案D: P3/P4 共享 expert pool)",
         cfg=ROOT / "ultralytics/cfg/models/master/v0_8/det/yolo-master-moe-mot-shared-n.yaml",
     ),
+=======
+>>>>>>> origin/main
 }
 
 METRIC_KEYS = (
@@ -98,6 +140,21 @@ METRIC_KEYS = (
     "train/box_loss",
     "train/cls_loss",
     "train/dfl_loss",
+<<<<<<< HEAD
+=======
+    "train/moe_loss",
+    "train/moa_loss",
+    "train/mot_loss",
+)
+
+LOSS_KEYS = (
+    "train/box_loss",
+    "train/cls_loss",
+    "train/dfl_loss",
+    "train/moe_loss",
+    "train/moa_loss",
+    "train/mot_loss",
+>>>>>>> origin/main
 )
 
 
@@ -132,6 +189,7 @@ def count_modules(model: torch.nn.Module, cls: type[torch.nn.Module]) -> int:
     return sum(1 for m in model.modules() if isinstance(m, cls))
 
 
+<<<<<<< HEAD
 def build_model(spec: ModelSpec, device: str = "cpu") -> DetectionModel:
     # 重置 SharedExpertMoE 的 class-level registry, 防止上次构建的 pool 干扰本次
     try:
@@ -150,6 +208,73 @@ def build_row(spec: ModelSpec, device: str = "cpu") -> dict[str, str]:
     model = build_model(spec, device=device)
     params = sum(p.numel() for p in model.parameters())
     return {
+=======
+def normalize_torch_device(device: str) -> str:
+    if not device:
+        return "cpu"
+    if device.isdigit():
+        return f"cuda:{device}" if torch.cuda.is_available() else "cpu"
+    return device
+
+
+def parse_float(value: object) -> float | None:
+    try:
+        parsed = float(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+    return parsed
+
+
+def finite_float(value: object) -> float | None:
+    parsed = parse_float(value)
+    if parsed is None or not math.isfinite(parsed):
+        return None
+    return parsed
+
+
+def percentile(values: list[float], q: float) -> float:
+    """Return a simple linear-interpolated percentile for latency samples."""
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    if len(ordered) == 1:
+        return ordered[0]
+    rank = (len(ordered) - 1) * q
+    lo = math.floor(rank)
+    hi = math.ceil(rank)
+    if lo == hi:
+        return ordered[int(rank)]
+    return ordered[lo] + (ordered[hi] - ordered[lo]) * (rank - lo)
+
+
+def profile_flops(model: torch.nn.Module, imgsz: int, actual: bool = False) -> tuple[float, str]:
+    """Return GFLOPs and method; actual=True uses torch profiler on full input size."""
+    if not actual:
+        return float(get_flops(model, imgsz=imgsz)), "thop_stride_scaled"
+
+    try:
+        model = model.eval()
+        param = next(model.parameters())
+        x = torch.empty((1, 3, imgsz, imgsz), device=param.device)
+        with torch.no_grad(), torch.profiler.profile(with_flops=True) as prof:
+            _ = model(x)
+        return sum(evt.flops for evt in prof.key_averages()) / 1e9, "torch_profile_actual"
+    except Exception:
+        return float(get_flops(model, imgsz=imgsz)), "thop_stride_scaled_fallback"
+
+
+def build_model(spec: ModelSpec, device: str = "cpu") -> DetectionModel:
+    model = DetectionModel(str(spec.cfg), ch=3, nc=80, verbose=False).eval()
+    if device:
+        model.to(torch.device(normalize_torch_device(device)))
+    return model
+
+
+def build_row(spec: ModelSpec, device: str = "cpu", imgsz: int = 640, include_flops: bool = False) -> dict[str, str]:
+    model = build_model(spec, device=device)
+    params = sum(p.numel() for p in model.parameters())
+    row = {
+>>>>>>> origin/main
         "key": spec.key,
         "label": spec.label,
         "cfg": str(spec.cfg.relative_to(ROOT)),
@@ -160,19 +285,45 @@ def build_row(spec: ModelSpec, device: str = "cpu") -> dict[str, str]:
         "motblocks": str(count_modules(model, MoTBlock)),
         "c2fmot": str(count_modules(model, C2fMoT)),
     }
+<<<<<<< HEAD
 
 
 def sync_device(device: str) -> None:
+=======
+    if include_flops:
+        flops, method = profile_flops(model, imgsz=imgsz, actual=False)
+        row.update({"imgsz": str(imgsz), "flops_g": f"{flops:.6f}", "flops_method": method})
+    return row
+
+
+def sync_device(device: str) -> None:
+    device = normalize_torch_device(device)
+>>>>>>> origin/main
     if device.startswith("cuda") and torch.cuda.is_available():
         torch.cuda.synchronize()
     elif device == "mps" and hasattr(torch, "mps"):
         torch.mps.synchronize()
 
 
+<<<<<<< HEAD
 def benchmark_row(spec: ModelSpec, device: str, imgsz: int, warmup: int, reps: int) -> dict[str, str]:
     torch.set_grad_enabled(False)
     model = build_model(spec, device=device)
     x = torch.randn(1, 3, imgsz, imgsz, device=torch.device(device))
+=======
+def benchmark_row(
+    spec: ModelSpec,
+    device: str,
+    imgsz: int,
+    warmup: int,
+    reps: int,
+    actual_flops: bool = False,
+) -> dict[str, str]:
+    torch.set_grad_enabled(False)
+    model = build_model(spec, device=device)
+    device_name = normalize_torch_device(device)
+    x = torch.randn(1, 3, imgsz, imgsz, device=torch.device(device_name))
+>>>>>>> origin/main
 
     with torch.inference_mode():
         for _ in range(warmup):
@@ -186,6 +337,7 @@ def benchmark_row(spec: ModelSpec, device: str, imgsz: int, warmup: int, reps: i
             sync_device(device)
             times.append((time.perf_counter() - t0) * 1000.0)
 
+<<<<<<< HEAD
     base = build_row(spec, device=device)
     base.update(
         {
@@ -194,6 +346,22 @@ def benchmark_row(spec: ModelSpec, device: str, imgsz: int, warmup: int, reps: i
             "latency_ms_mean": f"{sum(times) / len(times):.3f}",
             "latency_ms_min": f"{min(times):.3f}",
             "latency_ms_max": f"{max(times):.3f}",
+=======
+    flops, flops_method = profile_flops(model, imgsz=imgsz, actual=actual_flops)
+    base = build_row(spec, device=device)
+    base.update(
+        {
+            "device": device_name,
+            "imgsz": str(imgsz),
+            "latency_ms_mean": f"{sum(times) / len(times):.3f}",
+            "latency_ms_p50": f"{percentile(times, 0.50):.3f}",
+            "latency_ms_p95": f"{percentile(times, 0.95):.3f}",
+            "latency_ms_p99": f"{percentile(times, 0.99):.3f}",
+            "latency_ms_min": f"{min(times):.3f}",
+            "latency_ms_max": f"{max(times):.3f}",
+            "flops_g": f"{flops:.6f}",
+            "flops_method": flops_method,
+>>>>>>> origin/main
             "reps": str(reps),
         }
     )
@@ -214,6 +382,7 @@ def add_mixture_callbacks(model: YOLO, spec: ModelSpec, args: argparse.Namespace
         model.add_callback("on_train_epoch_end", on_mot_epoch_end)
 
 
+<<<<<<< HEAD
 def read_last_metrics(results_csv: Path) -> dict[str, str]:
     if not results_csv.exists():
         return {}
@@ -226,6 +395,88 @@ def read_last_metrics(results_csv: Path) -> dict[str, str]:
 
 def train_spec(args: argparse.Namespace, spec: ModelSpec, data_yaml: Path, project: Path) -> None:
     model = YOLO(str(spec.cfg))
+=======
+def read_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open(newline="") as f:
+        return [{k.strip(): v for k, v in row.items()} for row in csv.DictReader(f)]
+
+
+def read_last_metrics(results_csv: Path) -> dict[str, str]:
+    rows = read_csv_rows(results_csv)
+    return rows[-1] if rows else {}
+
+
+def row_total_loss(row: dict[str, str]) -> float | None:
+    values = [finite_float(row.get(key)) for key in LOSS_KEYS]
+    values = [v for v in values if v is not None]
+    if not values:
+        return None
+    return sum(values)
+
+
+def stability_from_results(results_csv: Path) -> dict[str, str]:
+    rows = read_csv_rows(results_csv)
+    if not rows:
+        return {
+            "nan_detected": "",
+            "loss_diverged": "",
+            "final_train_total_loss": "",
+            "best_train_total_loss": "",
+        }
+
+    nan_detected = False
+    train_losses = []
+    for row in rows:
+        for value in row.values():
+            parsed = parse_float(value)
+            if parsed is not None and not math.isfinite(parsed):
+                nan_detected = True
+        total = row_total_loss(row)
+        if total is None:
+            continue
+        train_losses.append(total)
+        if not math.isfinite(total):
+            nan_detected = True
+
+    finite_losses = [v for v in train_losses if math.isfinite(v)]
+    if not finite_losses:
+        return {
+            "nan_detected": str(nan_detected),
+            "loss_diverged": str(nan_detected),
+            "final_train_total_loss": "",
+            "best_train_total_loss": "",
+        }
+
+    final_loss = finite_losses[-1]
+    best_loss = min(finite_losses)
+    tail = finite_losses[-5:] if len(finite_losses) >= 5 else finite_losses
+    tail_mean = sum(tail) / len(tail)
+    diverged = nan_detected or (best_loss > 0 and tail_mean > best_loss * 1.5 and final_loss > best_loss * 1.5)
+    return {
+        "nan_detected": str(nan_detected),
+        "loss_diverged": str(diverged),
+        "final_train_total_loss": f"{final_loss:.6f}",
+        "best_train_total_loss": f"{best_loss:.6f}",
+    }
+
+
+def benchmark_rows_by_key(project: Path) -> dict[str, dict[str, str]]:
+    rows_by_key: dict[str, dict[str, str]] = {}
+    for path in sorted(project.glob("latency_*.csv")):
+        for row in read_csv_rows(path):
+            key = row.get("key", "")
+            if key:
+                rows_by_key[key] = row
+    return rows_by_key
+
+
+def train_spec(args: argparse.Namespace, spec: ModelSpec, data_yaml: Path, project: Path) -> None:
+    resume_ckpt = project / spec.key / "weights" / "last.pt"
+    resume = bool(args.resume and resume_ckpt.exists())
+    model = YOLO(str(resume_ckpt if resume else spec.cfg))
+>>>>>>> origin/main
     add_mixture_callbacks(model, spec, args)
     model.train(
         data=str(data_yaml),
@@ -235,7 +486,11 @@ def train_spec(args: argparse.Namespace, spec: ModelSpec, data_yaml: Path, proje
         device=args.device,
         workers=args.workers,
         seed=args.seed,
+<<<<<<< HEAD
         deterministic=True,
+=======
+        deterministic=args.deterministic,
+>>>>>>> origin/main
         project=str(project),
         name=spec.key,
         exist_ok=args.exist_ok,
@@ -245,6 +500,10 @@ def train_spec(args: argparse.Namespace, spec: ModelSpec, data_yaml: Path, proje
         cache=args.cache,
         patience=args.patience,
         amp=args.amp,
+<<<<<<< HEAD
+=======
+        resume=resume,
+>>>>>>> origin/main
         verbose=args.verbose,
     )
 
@@ -260,6 +519,7 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
 
 def write_summary(project: Path, specs: list[ModelSpec]) -> Path:
     rows = []
+<<<<<<< HEAD
     for spec in specs:
         run_dir = project / spec.key
         metrics = read_last_metrics(run_dir / "results.csv")
@@ -272,6 +532,23 @@ def write_summary(project: Path, specs: list[ModelSpec]) -> Path:
         }
         for key in METRIC_KEYS:
             row[key] = metrics.get(key, "")
+=======
+    benchmark_rows = benchmark_rows_by_key(project)
+    for spec in specs:
+        run_dir = project / spec.key
+        metrics = read_last_metrics(run_dir / "results.csv")
+        row = build_row(spec, device="cpu")
+        row.update({
+            "run_dir": str(run_dir.relative_to(ROOT)) if run_dir.is_relative_to(ROOT) else str(run_dir),
+            "epoch": metrics.get("epoch", ""),
+        })
+        for key, value in benchmark_rows.get(spec.key, {}).items():
+            if key not in {"key", "label", "cfg", "params", "params_m", "moablocks", "c2fmoa", "motblocks", "c2fmot"}:
+                row[key] = value
+        for key in METRIC_KEYS:
+            row[key] = metrics.get(key, "")
+        row.update(stability_from_results(run_dir / "results.csv"))
+>>>>>>> origin/main
         rows.append(row)
     out = project / "summary.csv"
     write_csv(out, rows)
@@ -280,13 +557,21 @@ def write_summary(project: Path, specs: list[ModelSpec]) -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+<<<<<<< HEAD
     parser.add_argument("--models", nargs="+", default=["v08", "v08_moa", "v08_mot", "v08_moa_mot"], choices=tuple(SPECS))
+=======
+    parser.add_argument("--models", nargs="+", default=["v10", "v10_mot", "v10_moa"], choices=tuple(SPECS))
+>>>>>>> origin/main
     parser.add_argument("--project", type=Path, default=ROOT / "runs/mot_ablation")
     parser.add_argument("--data", type=Path, default=default_data_yaml())
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--imgsz", type=int, default=640)
     parser.add_argument("--check-build", action="store_true")
     parser.add_argument("--benchmark", action="store_true")
+<<<<<<< HEAD
+=======
+    parser.add_argument("--actual-flops", action="store_true", help="Use torch profiler on the full input size for FLOPs.")
+>>>>>>> origin/main
     parser.add_argument("--warmup", type=int, default=2)
     parser.add_argument("--reps", type=int, default=5)
     parser.add_argument("--train", action="store_true")
@@ -294,6 +579,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--workers", type=int, default=0)
     parser.add_argument("--seed", type=int, default=42)
+<<<<<<< HEAD
+=======
+    parser.add_argument("--deterministic", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--resume", action="store_true", help="Resume each model from PROJECT/<key>/weights/last.pt when present.")
+>>>>>>> origin/main
     parser.add_argument("--patience", type=int, default=0)
     parser.add_argument("--amp", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--cache", action="store_true")
@@ -315,17 +605,26 @@ def main() -> int:
     data_yaml = args.data if args.data.is_absolute() else ROOT / args.data
 
     if args.check_build:
+<<<<<<< HEAD
         rows = [build_row(spec, device=args.device) for spec in specs]
+=======
+        rows = [build_row(spec, device=args.device, imgsz=args.imgsz, include_flops=True) for spec in specs]
+>>>>>>> origin/main
         out = project / "build_summary.csv"
         write_csv(out, rows)
         print(json.dumps(rows, indent=2, ensure_ascii=False))
         print(f"[build] wrote {out}")
 
     if args.benchmark:
+<<<<<<< HEAD
         rows = [benchmark_row(spec, args.device, args.imgsz, args.warmup, args.reps) for spec in specs]
         # Windows 文件名不允许含 ':'，将 'cuda:0' 转为 'cuda_0'
         device_safe = args.device.replace(":", "_") if args.device else "cpu"
         out = project / f"latency_{device_safe}_{args.imgsz}.csv"
+=======
+        rows = [benchmark_row(spec, args.device, args.imgsz, args.warmup, args.reps, args.actual_flops) for spec in specs]
+        out = project / f"latency_{args.device}_{args.imgsz}.csv"
+>>>>>>> origin/main
         write_csv(out, rows)
         print(json.dumps(rows, indent=2, ensure_ascii=False))
         print(f"[benchmark] wrote {out}")

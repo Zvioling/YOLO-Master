@@ -1,7 +1,11 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
 # Tiger Pose dataset by Ultralytics
+<<<<<<< HEAD
 # Documentation: https://docs.ultralytics.com/datasets/pose/tiger-pose/
+=======
+# Documentation: https://docs.ultralytics.com/datasets/pose/tiger-pose
+>>>>>>> origin/main
 # Example usage: yolo train data=tiger-pose.yaml
 # parent
 # ├── ultralytics

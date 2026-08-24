@@ -1,0 +1,71 @@
+# YOLO-Master-EsMoE-N LoRA - Brain Tumor 稀疏医疗检测
+# ============================================================
+# 使用: yolo train cfg=examples/lora_examples/yolo_master_brain_tumor_lora.yaml lora_r=8
+
+task: detect
+mode: train
+device: 0
+
+model: yolo-master-n.pt
+data: brain-tumor.yaml
+epochs: 40
+patience: 20
+batch: 8
+imgsz: 640
+save: True
+workers: 4
+pretrained: True
+optimizer: AdamW
+cos_lr: True
+close_mosaic: 0
+amp: True
+seed: 42
+deterministic: True
+val: True
+max_det: 300
+plots: True
+
+# ---- LoRA 核心参数 ----
+lora_r: 8
+lora_alpha: 16
+lora_use_rslora: True
+lora_include_attention: False
+lora_gradient_checkpointing: True
+
+# ---- 目标模块 ----
+lora_target_modules: [
+  "conv", "fused_conv", "bottleneck.0",
+  "static_net.0", "static_net.3",
+  "shared_feature.0", "shared_feature.3", "proj",
+  "feature_refiner.0",
+  "pool_projections.0.0", "pool_projections.1.0",
+  "expert_projections.0.0","expert_projections.1.0",
+  "expert_projections.2.0","expert_projections.3.0",
+  "expert_projections.4.0","expert_projections.5.0",
+  "expert_projections.6.0","expert_projections.7.0",
+  "expert_projections.8.0","expert_projections.9.0",
+  "expert_projections.10.0","expert_projections.11.0",
+  "expert_projections.12.0","expert_projections.13.0",
+  "expert_projections.14.0","expert_projections.15.0",
+]
+
+# ---- MoE 路由策略 ----
+# 排除路由层: 医疗图像特征分布稳定, 短期微调不应改变 expert 分配动态
+lora_exclude_modules: ["router", "routing"]
+
+# ---- 训练优化参数 ----
+lora_backend: "fallback"
+lora_include_head: True
+lora_freeze_bn: False
+lora_lr_mult: 0.5
+lr0: 0.0005
+warmup_epochs: 5
+lora_dropout: 0.0
+lora_bias: "none"
+lora_variant: "lora"
+lora_only_3x3: False
+lora_use_dora: False
+lora_init_lora_weights: "gaussian"
+lora_only_backbone: False
+lora_include_moe: True
+lora_save_adapters: True

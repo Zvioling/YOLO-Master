@@ -1,0 +1,95 @@
+#include "ncnn_backend.hpp"
+#include <chrono>
+#include <cstring>
+#include <stdexcept>
+#include <filesystem>
+
+namespace yolomaster {
+
+using clk = std::chrono::high_resolution_clock;
+static double ms_since(const clk::time_point& t) {
+    return std::chrono::duration<double, std::milli>(clk::now() - t).count();
+}
+
+NcnnBackend::NcnnBackend(const std::string& param_path, const std::string& bin_path, int threads,
+                         bool use_vulkan)
+    : threads_(threads) {
+    net_.opt.num_threads = threads;
+    net_.opt.use_vulkan_compute = use_vulkan;   // GPU path (the -shared prebuilt is Vulkan-enabled)
+    if (use_vulkan) {                           // fp16 on the GPU: big speedup, negligible accuracy loss
+        net_.opt.use_fp16_packed = true;
+        net_.opt.use_fp16_storage = true;
+        net_.opt.use_fp16_arithmetic = true;
+    }
+    active_ep = use_vulkan ? "ncnn-Vulkan" : "cpu";
+    if (net_.load_param(param_path.c_str()) != 0)
+        throw std::runtime_error("ncnn: failed to load param " + param_path);
+    if (net_.load_model(bin_path.c_str()) != 0)
+        throw std::runtime_error("ncnn: failed to load bin " + bin_path);
+
+    // auto-read ultralytics metadata sidecar (class names + imgsz)
+    const std::string dir = std::filesystem::path(param_path).parent_path().string();
+    std::vector<std::string> nm; int mi = 0;
+    if (meta::read_ncnn_yaml(dir + "/metadata.yaml", nm, mi)) { meta_names = nm; meta_imgsz = mi; }
+    // YOLO-Master ncnn graphs bake the attention token counts at the training size,
+    // so the input size is effectively fixed.
+    fixed_imgsz = meta_imgsz;
+}
+
+std::vector<Detection> NcnnBackend::infer(const cv::Mat& bgr, const Config& cfg) {
+    // ---- preprocess: letterbox -> ncnn RGB /255 ----
+    auto t0 = clk::now();
+    LetterboxInfo lb;
+    cv::Mat padded = preprocess(bgr, cfg.imgsz, cfg.stretch, lb);
+    ncnn::Mat in = ncnn::Mat::from_pixels(padded.data, ncnn::Mat::PIXEL_BGR2RGB,
+                                          padded.cols, padded.rows);
+    const float mean[3] = {0.f, 0.f, 0.f};
+    const float norm[3] = {1 / 255.f, 1 / 255.f, 1 / 255.f};
+    in.substract_mean_normalize(mean, norm);
+    pre_ms = ms_since(t0);
+
+    // ---- inference ----
+    auto t1 = clk::now();
+    ncnn::Extractor ex = net_.create_extractor();  // uses net_.opt.num_threads set in ctor
+    ex.input(in_blob_.c_str(), in);
+    ncnn::Mat out, pm;
+    ex.extract(out_blob_.c_str(), out);
+    ex.extract(out_proto_.c_str(), pm);        // proto (empty on detection models)
+    infer_ms = ms_since(t1);
+
+    // ---- reshape to channel-major [feat_dim x num_anchors] then decode ----
+    // feat << anchors always (e.g. 14/116 vs 8400), so the smaller axis is the feature dim.
+    auto t2 = clk::now();
+    int feat_dim, num_anchors;
+    std::vector<float> buf;
+    if (out.h <= out.w) {                      // rows = features (expected, channel-major)
+        feat_dim = out.h; num_anchors = out.w;
+        buf.resize(static_cast<size_t>(feat_dim) * num_anchors);
+        for (int f = 0; f < feat_dim; ++f)
+            std::memcpy(buf.data() + static_cast<size_t>(f) * num_anchors,
+                        out.row(f), num_anchors * sizeof(float));
+    } else {                                   // rows = anchors -> transpose
+        feat_dim = out.w; num_anchors = out.h;
+        buf.resize(static_cast<size_t>(feat_dim) * num_anchors);
+        for (int a = 0; a < num_anchors; ++a) {
+            const float* r = out.row(a);
+            for (int f = 0; f < feat_dim; ++f)
+                buf[static_cast<size_t>(f) * num_anchors + a] = r[f];
+        }
+    }
+    candidates = decode_candidates(buf.data(), feat_dim, num_anchors, cfg, lb);
+    cand_orig_w = lb.orig_w; cand_orig_h = lb.orig_h; cand_lb = lb;
+    proto.clear(); proto_c = proto_h = proto_w = 0;
+    if (!pm.empty()) {                         // segmentation proto [c=nm, h=mh, w=mw]
+        proto_c = pm.c; proto_h = pm.h; proto_w = pm.w;
+        const size_t plane = static_cast<size_t>(proto_h) * proto_w;
+        proto.resize(static_cast<size_t>(proto_c) * plane);
+        for (int c = 0; c < proto_c; ++c)
+            std::memcpy(proto.data() + c * plane, pm.channel(c), plane * sizeof(float));
+    }
+    auto dets = nms_and_cap(candidates, cfg, lb.orig_w, lb.orig_h);
+    post_ms = ms_since(t2);
+    return dets;
+}
+
+} // namespace yolomaster

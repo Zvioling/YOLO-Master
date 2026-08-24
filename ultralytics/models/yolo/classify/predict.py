@@ -1,5 +1,10 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
+<<<<<<< HEAD
+=======
+from __future__ import annotations
+
+>>>>>>> origin/main
 import cv2
 import torch
 from PIL import Image
@@ -26,7 +31,11 @@ class ClassificationPredictor(BasePredictor):
     Examples:
         >>> from ultralytics.utils import ASSETS
         >>> from ultralytics.models.yolo.classify import ClassificationPredictor
+<<<<<<< HEAD
         >>> args = dict(model="yolo11n-cls.pt", source=ASSETS)
+=======
+        >>> args = dict(model="yolo26n-cls.pt", source=ASSETS)
+>>>>>>> origin/main
         >>> predictor = ClassificationPredictor(overrides=args)
         >>> predictor.predict_cli()
 
@@ -34,7 +43,11 @@ class ClassificationPredictor(BasePredictor):
         - Torchvision classification models can also be passed to the 'model' argument, i.e. model='resnet18'.
     """
 
+<<<<<<< HEAD
     def __init__(self, cfg=DEFAULT_CFG, overrides=None, _callbacks=None):
+=======
+    def __init__(self, cfg=DEFAULT_CFG, overrides=None, _callbacks: dict | None = None):
+>>>>>>> origin/main
         """Initialize the ClassificationPredictor with the specified configuration and set task to 'classify'.
 
         This constructor initializes a ClassificationPredictor instance, which extends BasePredictor for classification
@@ -43,7 +56,11 @@ class ClassificationPredictor(BasePredictor):
         Args:
             cfg (dict): Default configuration dictionary containing prediction settings.
             overrides (dict, optional): Configuration overrides that take precedence over cfg.
+<<<<<<< HEAD
             _callbacks (list, optional): List of callback functions to be executed during prediction.
+=======
+            _callbacks (dict, optional): Dictionary of callback functions to be executed during prediction.
+>>>>>>> origin/main
         """
         super().__init__(cfg, overrides, _callbacks)
         self.args.task = "classify"
@@ -57,7 +74,11 @@ class ClassificationPredictor(BasePredictor):
             else False
         )
         self.transforms = (
+<<<<<<< HEAD
             classify_transforms(self.imgsz) if updated or not self.model.pt else self.model.model.transforms
+=======
+            classify_transforms(self.imgsz) if updated or self.model.format != "pt" else self.model.model.transforms
+>>>>>>> origin/main
         )
 
     def preprocess(self, img):

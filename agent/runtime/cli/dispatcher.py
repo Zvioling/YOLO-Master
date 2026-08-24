@@ -16,6 +16,11 @@ for candidate in (SKILL_ROOT,):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
+<<<<<<< HEAD
+=======
+# Imports intentionally follow path bootstrap so the executable wrapper works from any cwd.
+# ruff: noqa: E402
+>>>>>>> origin/main
 from runtime.cli.contract import (
     finalize_payload,
     plan_response,
@@ -62,6 +67,10 @@ from runtime.cli.model_handlers import ModelDeps, run_model_inspect as run_model
 from runtime.cli.moe_tools import run_moe_diagnose, run_moe_prune
 from runtime.cli.peft_compare import PeftCompareDeps, run_peft_compare as run_peft_compare_impl
 from runtime.cli.pipeline import PipelineDeps, run_experiment_pipeline
+<<<<<<< HEAD
+=======
+from runtime.cli.release import run_release_audit
+>>>>>>> origin/main
 from runtime.cli.sahi_compare import run_sahi_compare
 from runtime.cli.system_handlers import (
     SystemDeps,
@@ -367,6 +376,10 @@ HANDLERS = {
     "yolo.solutions.run": run_solutions,
     "yolo.ui.launch": run_ui_launch,
     "yolo.pipeline.experiment": run_pipeline,
+<<<<<<< HEAD
+=======
+    "yolo.release.audit": run_release_audit,
+>>>>>>> origin/main
     "yolo.job.status": run_job_status,
     "yolo.job.cancel": run_job_cancel,
 }

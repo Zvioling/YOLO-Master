@@ -81,7 +81,11 @@ def _log_confusion_matrix(validator) -> None:
     preds = []
     matrix = validator.confusion_matrix.matrix
     names = list(validator.names.values())
+<<<<<<< HEAD
     if validator.confusion_matrix.task == "detect":
+=======
+    if validator.confusion_matrix.task in {"detect", "obb"}:
+>>>>>>> origin/main
         names += ["background"]
 
     for ti, pred in enumerate(matrix.T.astype(int)):
@@ -114,7 +118,11 @@ def on_train_start(trainer) -> None:
 
 
 def on_train_epoch_start(trainer) -> None:
+<<<<<<< HEAD
     """Set the global variable _training_epoch value to True at the start of training each epoch."""
+=======
+    """Set the global variable _training_epoch value to True at the start of each training epoch."""
+>>>>>>> origin/main
     global _training_epoch
     _training_epoch = True
 

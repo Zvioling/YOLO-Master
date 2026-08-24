@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.sam.build_sam3 API Reference
+>>>>>>> origin/main
 description: Explore the ultralytics.models.sam.build_sam3 module for building SAM3 image models, including backbone and transformer components.
 keywords: Ultralytics, SAM3, SAM, segmentation, transformer, ViTDet, model builder, Python
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, SAM3, SAM, segmentation, transformer, ViTDet, model build
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build_sam3.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build_sam3.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build_sam3.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/build_sam3.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

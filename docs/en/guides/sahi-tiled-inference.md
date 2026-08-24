@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 comments: true
 description: Learn how to implement YOLO11 with SAHI for sliced inference. Optimize memory usage and enhance detection accuracy for large-scale applications.
 keywords: YOLO11, SAHI, Sliced Inference, Object Detection, Ultralytics, High-resolution Images, Computational Efficiency, Integration Guide
@@ -12,6 +13,22 @@ Welcome to the Ultralytics documentation on how to use YOLO11 with [SAHI](https:
 
 <p align="center">
   <img width="1024" src="https://github.com/ultralytics/docs/releases/download/0/sahi-sliced-inference-overview.avif" alt="SAHI Sliced Inference Overview">
+=======
+title: YOLO26 Sliced Inference with SAHI
+comments: true
+description: Learn how to implement YOLO26 with SAHI for sliced inference. Optimize memory usage and enhance detection accuracy for large-scale applications.
+keywords: YOLO26, SAHI, Sliced Inference, Object Detection, Ultralytics, High-resolution Images, Computational Efficiency, Integration Guide
+---
+
+# Ultralytics Docs: Using YOLO26 with SAHI for Sliced Inference
+
+<a href="https://colab.research.google.com/github/ultralytics/notebooks/blob/main/notebooks/how-to-use-ultralytics-yolo-with-sahi.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open SAHI for Sliced Inference In Colab"></a>
+
+Welcome to the Ultralytics documentation on how to use YOLO26 with [SAHI](https://github.com/obss/sahi) (Slicing Aided Hyper Inference). This comprehensive guide aims to furnish you with all the essential knowledge you'll need to implement SAHI alongside YOLO26. We'll deep-dive into what SAHI is, why sliced inference is critical for large-scale applications, and how to integrate these functionalities with YOLO26 for enhanced [object detection](https://www.ultralytics.com/glossary/object-detection) performance.
+
+<p align="center">
+  <img width="1024" src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/sahi-sliced-inference-overview.avif" alt="SAHI tiled inference for small objects">
+>>>>>>> origin/main
 </p>
 
 ## Introduction to SAHI
@@ -20,13 +37,21 @@ SAHI (Slicing Aided Hyper Inference) is an innovative library designed to optimi
 
 <p align="center">
   <br>
+<<<<<<< HEAD
   <iframe loading="lazy" width="720" height="405" src="https://www.youtube.com/embed/ILqMBah5ZvI"
+=======
+  <iframe loading="lazy" width="720" height="405" src="https://www.youtube.com/embed/Kpl6cOUKbb8"
+>>>>>>> origin/main
     title="YouTube video player" frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
   <br>
+<<<<<<< HEAD
   <strong>Watch:</strong> Inference with SAHI (Slicing Aided Hyper Inference) using Ultralytics YOLO11
+=======
+  <strong>Watch:</strong> How to use SAHI with Ultralytics YOLO26 to Detect Small Objects | Slicing Aided Hyper Inference 🚀
+>>>>>>> origin/main
 </p>
 
 ### Key Features of SAHI
@@ -49,12 +74,21 @@ Sliced Inference refers to the practice of subdividing a large or high-resolutio
 
 <table border="0">
   <tr>
+<<<<<<< HEAD
     <th>YOLO11 without SAHI</th>
     <th>YOLO11 with SAHI</th>
   </tr>
   <tr>
     <td><img src="https://github.com/ultralytics/docs/releases/download/0/yolov8-without-sahi.avif" alt="YOLO11 without SAHI" width="640"></td>
     <td><img src="https://github.com/ultralytics/docs/releases/download/0/yolov8-with-sahi.avif" alt="YOLO11 with SAHI" width="640"></td>
+=======
+    <th>YOLO26 without SAHI</th>
+    <th>YOLO26 with SAHI</th>
+  </tr>
+  <tr>
+    <td><img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/yolov8-without-sahi.avif" alt="YOLO26 without SAHI" width="640"></td>
+    <td><img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/yolov8-with-sahi.avif" alt="YOLO26 with SAHI" width="640"></td>
+>>>>>>> origin/main
   </tr>
 </table>
 
@@ -70,6 +104,7 @@ pip install -U ultralytics sahi
 
 ### Import Modules and Download Resources
 
+<<<<<<< HEAD
 Here's how to import the necessary modules and download a YOLO11 model and some test images:
 
 ```python
@@ -79,6 +114,12 @@ from sahi.utils.ultralytics import download_yolo11n_model
 # Download YOLO11 model
 model_path = "models/yolo11n.pt"
 download_yolo11n_model(model_path)
+=======
+Here's how to download some test images:
+
+```python
+from sahi.utils.file import download_from_url
+>>>>>>> origin/main
 
 # Download test images
 download_from_url(
@@ -91,18 +132,30 @@ download_from_url(
 )
 ```
 
+<<<<<<< HEAD
 ## Standard Inference with YOLO11
 
 ### Instantiate the Model
 
 You can instantiate a YOLO11 model for object detection like this:
+=======
+## Standard Inference with YOLO26
+
+### Instantiate the Model
+
+You can instantiate a YOLO26 model for object detection like this:
+>>>>>>> origin/main
 
 ```python
 from sahi import AutoDetectionModel
 
 detection_model = AutoDetectionModel.from_pretrained(
     model_type="ultralytics",
+<<<<<<< HEAD
     model_path=model_path,
+=======
+    model_path="yolo26n.pt",
+>>>>>>> origin/main
     confidence_threshold=0.3,
     device="cpu",  # or 'cuda:0'
 )
@@ -110,6 +163,7 @@ detection_model = AutoDetectionModel.from_pretrained(
 
 ### Perform Standard Prediction
 
+<<<<<<< HEAD
 Perform standard inference using an image path or a numpy image.
 
 ```python
@@ -121,6 +175,16 @@ result = get_prediction("demo_data/small-vehicles1.jpeg", detection_model)
 
 # With a numpy image
 result_with_np_image = get_prediction(read_image("demo_data/small-vehicles1.jpeg"), detection_model)
+=======
+Perform standard inference using an image path.
+
+```python
+from sahi.predict import get_prediction
+
+result = get_prediction("demo_data/small-vehicles1.jpeg", detection_model)
+
+result.export_visuals(export_dir="demo_data/", hide_conf=True)
+>>>>>>> origin/main
 ```
 
 ### Visualize Results
@@ -128,6 +192,7 @@ result_with_np_image = get_prediction(read_image("demo_data/small-vehicles1.jpeg
 Export and visualize the predicted bounding boxes and masks:
 
 ```python
+<<<<<<< HEAD
 from IPython.display import Image
 
 result.export_visuals(export_dir="demo_data/")
@@ -135,10 +200,26 @@ Image("demo_data/prediction_visual.png")
 ```
 
 ## Sliced Inference with YOLO11
+=======
+from PIL import Image
+
+# Open the predicted image
+processed_image = Image.open("demo_data/prediction_visual.png")
+
+# Display the predicted image
+processed_image.show()
+```
+
+## Sliced Inference with YOLO26
+>>>>>>> origin/main
 
 Perform sliced inference by specifying the slice dimensions and overlap ratios:
 
 ```python
+<<<<<<< HEAD
+=======
+from PIL import Image
+>>>>>>> origin/main
 from sahi.predict import get_sliced_prediction
 
 result = get_sliced_prediction(
@@ -149,6 +230,18 @@ result = get_sliced_prediction(
     overlap_height_ratio=0.2,
     overlap_width_ratio=0.2,
 )
+<<<<<<< HEAD
+=======
+
+# Export results
+result.export_visuals(export_dir="demo_data/", hide_conf=True)
+
+# Open the predicted image
+processed_image = Image.open("demo_data/prediction_visual.png")
+
+# Display the predicted image
+processed_image.show()
+>>>>>>> origin/main
 ```
 
 ## Handling Prediction Results
@@ -159,6 +252,7 @@ SAHI provides a `PredictionResult` object, which can be converted into various a
 # Access the object prediction list
 object_prediction_list = result.object_prediction_list
 
+<<<<<<< HEAD
 # Convert to COCO annotation, COCO prediction, imantics, and fiftyone formats
 result.to_coco_annotations()[:3]
 result.to_coco_predictions(image_id=1)[:3]
@@ -166,6 +260,17 @@ result.to_imantics_annotations()[:3]
 result.to_fiftyone_detections()[:3]
 ```
 
+=======
+# Convert to COCO annotation and COCO prediction formats
+result.to_coco_annotations()[:3]
+result.to_coco_predictions(image_id=1)[:3]
+```
+
+!!! tip "Additional export formats"
+
+    `PredictionResult` can also convert detections to [imantics](https://github.com/jsbroks/imantics) and [FiftyOne](https://github.com/voxel51/fiftyone) objects with `result.to_imantics_annotations()` and `result.to_fiftyone_detections()`. These methods require the respective packages, so install them first with `pip install imantics fiftyone`.
+
+>>>>>>> origin/main
 ## Batch Prediction
 
 For batch prediction on a directory of images:
@@ -175,7 +280,11 @@ from sahi.predict import predict
 
 predict(
     model_type="ultralytics",
+<<<<<<< HEAD
     model_path="path/to/yolo11n.pt",
+=======
+    model_path="yolo26n.pt",
+>>>>>>> origin/main
     model_device="cpu",  # or 'cuda:0'
     model_confidence_threshold=0.4,
     source="path/to/dir",
@@ -186,7 +295,11 @@ predict(
 )
 ```
 
+<<<<<<< HEAD
 You are now ready to use YOLO11 with SAHI for both standard and sliced inference.
+=======
+You are now ready to use YOLO26 with SAHI for both standard and sliced inference.
+>>>>>>> origin/main
 
 ## Citations and Acknowledgments
 
@@ -211,14 +324,21 @@ We extend our thanks to the SAHI research group for creating and maintaining thi
 
 ## FAQ
 
+<<<<<<< HEAD
 ### How can I integrate YOLO11 with SAHI for sliced inference in object detection?
 
 Integrating Ultralytics YOLO11 with SAHI (Slicing Aided Hyper Inference) for sliced inference optimizes your object detection tasks on high-resolution images by partitioning them into manageable slices. This approach improves memory usage and ensures high detection accuracy. To get started, you need to install the ultralytics and sahi libraries:
+=======
+### How can I integrate YOLO26 with SAHI for sliced inference in object detection?
+
+Integrating Ultralytics YOLO26 with SAHI (Slicing Aided Hyper Inference) for sliced inference optimizes your object detection tasks on high-resolution images by partitioning them into manageable slices. This approach improves memory usage and ensures high detection accuracy. To get started, you need to install the ultralytics and sahi libraries:
+>>>>>>> origin/main
 
 ```bash
 pip install -U ultralytics sahi
 ```
 
+<<<<<<< HEAD
 Then, download a YOLO11 model and test images:
 
 ```python
@@ -228,12 +348,19 @@ from sahi.utils.ultralytics import download_yolo11n_model
 # Download YOLO11 model
 model_path = "models/yolo11n.pt"
 download_yolo11n_model(model_path)
+=======
+Then, download test images:
+
+```python
+from sahi.utils.file import download_from_url
+>>>>>>> origin/main
 
 # Download test images
 download_from_url(
     "https://raw.githubusercontent.com/obss/sahi/main/demo/demo_data/small-vehicles1.jpeg",
     "demo_data/small-vehicles1.jpeg",
 )
+<<<<<<< HEAD
 ```
 
 For more detailed instructions, refer to our [Sliced Inference guide](#sliced-inference-with-yolo11).
@@ -241,6 +368,19 @@ For more detailed instructions, refer to our [Sliced Inference guide](#sliced-in
 ### Why should I use SAHI with YOLO11 for object detection on large images?
 
 Using SAHI with Ultralytics YOLO11 for object detection on large images offers several benefits:
+=======
+download_from_url(
+    "https://raw.githubusercontent.com/obss/sahi/main/demo/demo_data/terrain2.png",
+    "demo_data/terrain2.png",
+)
+```
+
+For more detailed instructions, refer to our [Sliced Inference guide](#sliced-inference-with-yolo26).
+
+### Why should I use SAHI with YOLO26 for object detection on large images?
+
+Using SAHI with Ultralytics YOLO26 for object detection on large images offers several benefits:
+>>>>>>> origin/main
 
 - **Reduced Computational Burden**: Smaller slices are faster to process and consume less memory, making it feasible to run high-quality detections on hardware with limited resources.
 - **Maintained Detection Accuracy**: SAHI uses intelligent algorithms to merge overlapping boxes, preserving the detection quality.
@@ -248,6 +388,7 @@ Using SAHI with Ultralytics YOLO11 for object detection on large images offers s
 
 Learn more about the [benefits of sliced inference](#benefits-of-sliced-inference) in our documentation.
 
+<<<<<<< HEAD
 ### Can I visualize prediction results when using YOLO11 with SAHI?
 
 Yes, you can visualize prediction results when using YOLO11 with SAHI. Here's how you can export and visualize the results:
@@ -257,13 +398,33 @@ from IPython.display import Image
 
 result.export_visuals(export_dir="demo_data/")
 Image("demo_data/prediction_visual.png")
+=======
+### Can I visualize prediction results when using YOLO26 with SAHI?
+
+Yes, you can visualize prediction results when using YOLO26 with SAHI. Here's how you can export and visualize the results:
+
+```python
+from PIL import Image
+
+result.export_visuals(export_dir="demo_data/", hide_conf=True)
+
+processed_image = Image.open("demo_data/prediction_visual.png")
+
+processed_image.show()
+>>>>>>> origin/main
 ```
 
 This command will save the visualized predictions to the specified directory, and you can then load the image to view it in your notebook or application. For a detailed guide, check out the [Standard Inference section](#visualize-results).
 
+<<<<<<< HEAD
 ### What features does SAHI offer for improving YOLO11 object detection?
 
 SAHI (Slicing Aided Hyper Inference) offers several features that complement Ultralytics YOLO11 for object detection:
+=======
+### What features does SAHI offer for improving YOLO26 object detection?
+
+SAHI (Slicing Aided Hyper Inference) offers several features that complement Ultralytics YOLO26 for object detection:
+>>>>>>> origin/main
 
 - **Seamless Integration**: SAHI easily integrates with YOLO models, requiring minimal code adjustments.
 - **Resource Efficiency**: It partitions large images into smaller slices, which optimizes memory usage and speed.
@@ -271,9 +432,15 @@ SAHI (Slicing Aided Hyper Inference) offers several features that complement Ult
 
 For a deeper understanding, read about SAHI's [key features](#key-features-of-sahi).
 
+<<<<<<< HEAD
 ### How do I handle large-scale inference projects using YOLO11 and SAHI?
 
 To handle large-scale inference projects using YOLO11 and SAHI, follow these best practices:
+=======
+### How do I handle large-scale inference projects using YOLO26 and SAHI?
+
+To handle large-scale inference projects using YOLO26 and SAHI, follow these best practices:
+>>>>>>> origin/main
 
 1. **Install Required Libraries**: Ensure that you have the latest versions of ultralytics and sahi.
 2. **Configure Sliced Inference**: Determine the optimal slice dimensions and overlap ratios for your specific project.
@@ -286,7 +453,11 @@ from sahi.predict import predict
 
 predict(
     model_type="ultralytics",
+<<<<<<< HEAD
     model_path="path/to/yolo11n.pt",
+=======
+    model_path="path/to/yolo26n.pt",
+>>>>>>> origin/main
     model_device="cpu",  # or 'cuda:0'
     model_confidence_threshold=0.4,
     source="path/to/dir",

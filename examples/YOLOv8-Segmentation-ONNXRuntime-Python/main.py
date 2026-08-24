@@ -10,8 +10,12 @@ import onnxruntime as ort
 import torch
 
 from ultralytics.engine.results import Results
+<<<<<<< HEAD
 from ultralytics.utils import ASSETS, YAML, nms, ops
 from ultralytics.utils.checks import check_yaml
+=======
+from ultralytics.utils import ASSETS, ROOT, YAML, nms, ops
+>>>>>>> origin/main
 
 
 class YOLOv8Seg:
@@ -56,7 +60,11 @@ class YOLOv8Seg:
         self.session = ort.InferenceSession(onnx_model, providers=providers or available)
 
         self.imgsz = (imgsz, imgsz) if isinstance(imgsz, int) else imgsz
+<<<<<<< HEAD
         self.classes = YAML.load(check_yaml("coco8.yaml"))["names"]
+=======
+        self.classes = YAML.load(ROOT / "cfg/datasets/coco8.yaml")["names"]
+>>>>>>> origin/main
         self.conf = conf
         self.iou = iou
 

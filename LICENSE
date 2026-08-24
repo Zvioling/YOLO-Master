@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Tencent is pleased to support the community by making YOLO-Master available.
 
 Copyright (C) 2026 Tencent. All rights reserved.
@@ -252,6 +253,8 @@ This component has been modified by Tencent. Please refer to the relevant files 
 Terms of the AGPL-3.0:
 --------------------------------------------------------------------
 
+=======
+>>>>>>> origin/main
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
@@ -913,5 +916,8 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
+<<<<<<< HEAD
    ==================================================
 End of the Attribution Notice of this project.
+=======
+>>>>>>> origin/main

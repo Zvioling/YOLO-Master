@@ -54,6 +54,10 @@ class Bboxes:
         >>> bboxes = Bboxes(np.array([[100, 50, 150, 100]]), format="xywh")
         >>> bboxes.convert("xyxy")
         >>> print(bboxes.areas())
+<<<<<<< HEAD
+=======
+        [15000]
+>>>>>>> origin/main
 
     Notes:
         This class does not handle normalization or denormalization of bounding boxes.
@@ -408,7 +412,11 @@ class Instances:
         good = self.bbox_areas > 0
         if not all(good):
             self._bboxes = self._bboxes[good]
+<<<<<<< HEAD
             if len(self.segments):
+=======
+            if self.segments is not None and len(self.segments):
+>>>>>>> origin/main
                 self.segments = self.segments[good]
             if self.keypoints is not None:
                 self.keypoints = self.keypoints[good]
@@ -482,3 +490,19 @@ class Instances:
     def bboxes(self) -> np.ndarray:
         """Return bounding boxes."""
         return self._bboxes.bboxes
+<<<<<<< HEAD
+=======
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Instances object."""
+        # Map private to public names and include direct attributes
+        attr_map = {"_bboxes": "bboxes"}
+        parts = []
+        for key, value in self.__dict__.items():
+            name = attr_map.get(key, key)
+            if name == "bboxes":
+                value = self.bboxes  # Use the property
+            if value is not None:
+                parts.append(f"{name}={value!r}")
+        return "Instances({})".format("\n".join(parts))
+>>>>>>> origin/main

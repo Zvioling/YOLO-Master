@@ -1,6 +1,18 @@
 ---
+<<<<<<< HEAD
 comments: true
 description: Explore the hand keypoints estimation dataset for advanced pose estimation. Learn about datasets, pretrained models, metrics, and applications for training with YOLO.
+=======
+title: Hand Keypoints Pose Estimation Dataset
+comments: true
+creator:
+    name: Rion Dsilva
+    type: Person
+    url: https://www.linkedin.com/in/rion-dsilva-043464229/
+license:
+    name: CC-BY-NC-SA-4.0
+description: "Explore the Ultralytics Hand Keypoints dataset: 26,768 hand images with 21 keypoints each, for gesture recognition and pose estimation with YOLO26."
+>>>>>>> origin/main
 keywords: Hand KeyPoints, pose estimation, dataset, keypoints, MediaPipe, YOLO, deep learning, computer vision
 ---
 
@@ -8,7 +20,11 @@ keywords: Hand KeyPoints, pose estimation, dataset, keypoints, MediaPipe, YOLO, 
 
 ## Introduction
 
+<<<<<<< HEAD
 The hand-keypoints dataset contains 26,768 images of hands annotated with keypoints, making it suitable for training models like Ultralytics YOLO for pose estimation tasks. The annotations were generated using the Google MediaPipe library, ensuring high [accuracy](https://www.ultralytics.com/glossary/accuracy) and consistency, and the dataset is compatible with [Ultralytics YOLO11](https://github.com/ultralytics/ultralytics) formats.
+=======
+The [Ultralytics](https://www.ultralytics.com/) Hand Keypoints dataset contains 26,768 images of hands annotated with 21 keypoints each, generated using the [Google MediaPipe](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker) library for high [accuracy](https://www.ultralytics.com/glossary/accuracy) and consistency. It's compatible with [Ultralytics YOLO26](../../models/yolo26.md) formats for training pose estimation models.
+>>>>>>> origin/main
 
 <p align="center">
   <br>
@@ -18,6 +34,7 @@ The hand-keypoints dataset contains 26,768 images of hands annotated with keypoi
     allowfullscreen>
   </iframe>
   <br>
+<<<<<<< HEAD
   <strong>Watch:</strong> Hand Keypoints Estimation with Ultralytics YOLO11 | Human Hand Pose Estimation Tutorial
 </p>
 
@@ -28,6 +45,16 @@ The hand-keypoints dataset contains 26,768 images of hands annotated with keypoi
 ## Keypoints
 
 The dataset includes keypoints for hand detection. The keypoints are annotated as follows:
+=======
+  <strong>Watch:</strong> Hand Keypoints Estimation with Ultralytics YOLO | Human Hand Pose Estimation Tutorial
+</p>
+
+## Keypoints
+
+![Hand keypoints landmark diagram with 21 points](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/hand_landmarks.jpg)
+
+Each hand is annotated with 21 keypoints as follows:
+>>>>>>> origin/main
 
 1. Wrist
 2. Thumb (4 points)
@@ -36,6 +63,7 @@ The dataset includes keypoints for hand detection. The keypoints are annotated a
 5. Ring finger (4 points)
 6. Little finger (4 points)
 
+<<<<<<< HEAD
 Each hand has a total of 21 keypoints.
 
 ## Key Features
@@ -58,6 +86,31 @@ Hand keypoints can be used for [gesture recognition](https://www.ultralytics.com
 ## Dataset YAML
 
 A YAML (Yet Another Markup Language) file is used to define the dataset configuration. It contains information about the dataset's paths, classes, and other relevant information. In the case of the Hand Keypoints dataset, the `hand-keypoints.yaml` file is maintained at [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/hand-keypoints.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/hand-keypoints.yaml).
+=======
+## Dataset Structure
+
+- **Total images**: 26,768 (18,776 train / 7,992 val).
+- **Classes**: 1 (hand).
+- **Keypoints**: 21 per hand with `(x, y, visibility)` triplets.
+- **Download size**: ~369 MB.
+
+For a custom gesture vocabulary beyond generic hand landmarks, [Ultralytics Platform](https://platform.ultralytics.com/) handles labeling and training your own dataset from the browser.
+
+## Applications
+
+Hand keypoints support several real-world applications:
+
+- **[Gesture recognition](https://www.ultralytics.com/blog/enhancing-hand-keypoints-estimation-with-ultralytics-yolo11)**: human-computer interaction and touchless control interfaces.
+- **[AR/VR controls](../../tasks/pose.md)**: precise interaction with virtual objects.
+- **Robotic manipulation**: fine-grained control of robotic hands.
+- **Healthcare**: hand movement analysis for medical diagnostics.
+- **Animation**: motion capture for realistic hand movement.
+- **Biometric authentication**: security systems based on hand geometry.
+
+## Dataset YAML
+
+A YAML file is used to define the dataset configuration. It contains information about the dataset's paths, classes, and other relevant information. In the case of the Hand Keypoints dataset, the `hand-keypoints.yaml` file is maintained at [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/hand-keypoints.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/hand-keypoints.yaml).
+>>>>>>> origin/main
 
 !!! example "ultralytics/cfg/datasets/hand-keypoints.yaml"
 
@@ -67,7 +120,11 @@ A YAML (Yet Another Markup Language) file is used to define the dataset configur
 
 ## Usage
 
+<<<<<<< HEAD
 To train a YOLO11n-pose model on the Hand Keypoints dataset for 100 [epochs](https://www.ultralytics.com/glossary/epoch) with an image size of 640, you can use the following code snippets. For a comprehensive list of available arguments, refer to the model [Training](../../modes/train.md) page.
+=======
+To train a YOLO26n-pose model on the Hand Keypoints dataset for 100 [epochs](https://www.ultralytics.com/glossary/epoch) with an image size of 640, you can use the following code snippets. For a comprehensive list of available arguments, refer to the model [Training](../../modes/train.md) page.
+>>>>>>> origin/main
 
 !!! example "Train Example"
 
@@ -77,7 +134,11 @@ To train a YOLO11n-pose model on the Hand Keypoints dataset for 100 [epochs](htt
         from ultralytics import YOLO
 
         # Load a model
+<<<<<<< HEAD
         model = YOLO("yolo11n-pose.pt")  # load a pretrained model (recommended for training)
+=======
+        model = YOLO("yolo26n-pose.pt")  # load a pretrained model (recommended for training)
+>>>>>>> origin/main
 
         # Train the model
         results = model.train(data="hand-keypoints.yaml", epochs=100, imgsz=640)
@@ -87,14 +148,24 @@ To train a YOLO11n-pose model on the Hand Keypoints dataset for 100 [epochs](htt
 
         ```bash
         # Start training from a pretrained *.pt model
+<<<<<<< HEAD
         yolo pose train data=hand-keypoints.yaml model=yolo11n-pose.pt epochs=100 imgsz=640
+=======
+        yolo pose train data=hand-keypoints.yaml model=yolo26n-pose.pt epochs=100 imgsz=640
+>>>>>>> origin/main
         ```
 
 ## Sample Images and Annotations
 
+<<<<<<< HEAD
 The Hand keypoints dataset contains a diverse set of images with human hands annotated with keypoints. Here are some examples of images from the dataset, along with their corresponding annotations:
 
 ![Dataset sample image](https://github.com/ultralytics/docs/releases/download/0/human-hand-pose.avif)
+=======
+The Hand Keypoints dataset contains a diverse set of images with human hands annotated with keypoints. Here are some examples of images from the dataset, along with their corresponding annotations:
+
+![Hand keypoints pose estimation dataset sample](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/human-hand-pose.avif)
+>>>>>>> origin/main
 
 - **Mosaiced Image**: This image demonstrates a training batch composed of mosaiced dataset images. Mosaicing is a technique used during training that combines multiple images into a single image to increase the variety of objects and scenes within each training batch. This helps improve the model's ability to generalize to different object sizes, aspect ratios, and contexts.
 
@@ -102,7 +173,11 @@ The example showcases the variety and complexity of the images in the Hand Keypo
 
 ## Citations and Acknowledgments
 
+<<<<<<< HEAD
 If you use the hand-keypoints dataset in your research or development work, please acknowledge the following sources:
+=======
+If you use the Hand Keypoints dataset in your research or development work, please acknowledge the following sources:
+>>>>>>> origin/main
 
 !!! quote ""
 
@@ -120,6 +195,7 @@ We would also like to acknowledge the creator of this dataset, [Rion Dsilva](htt
 
 ## FAQ
 
+<<<<<<< HEAD
 ### How do I train a YOLO11 model on the Hand Keypoints dataset?
 
 To train a YOLO11 model on the Hand Keypoints dataset, you can use either Python or the command line interface (CLI). Here's an example for training a YOLO11n-pose model for 100 epochs with an image size of 640:
@@ -169,6 +245,19 @@ The Hand Keypoints dataset can be applied in various fields, including:
 - **Biometric Authentication**: Enhancing security systems.
 
 For more information, refer to the [Applications](#applications) section.
+=======
+### How do I train a YOLO26 model on the Hand Keypoints dataset?
+
+Load `yolo26n-pose.pt` and call `model.train(data="hand-keypoints.yaml", epochs=100, imgsz=640)` — see the [Train Example](#usage) above for the full Python and CLI snippets, and the model [Training](../../modes/train.md) page for a comprehensive list of arguments.
+
+### What are the benefits of using the Hand Keypoints dataset?
+
+With 26,768 annotated images and 21 keypoints per hand generated via Google MediaPipe, the Hand Keypoints dataset gives pose estimation models the scale and annotation accuracy needed for [advanced pose estimation](../../tasks/pose.md) tasks. See the [Keypoints](#keypoints) section for the full landmark breakdown.
+
+### What applications can benefit from using the Hand Keypoints dataset?
+
+Hand Keypoints supports gesture recognition, AR/VR controls, robotic manipulation, healthcare movement analysis, animation, and biometric authentication — see the [Applications](#applications) section for details on each.
+>>>>>>> origin/main
 
 ### How is the Hand Keypoints dataset structured?
 

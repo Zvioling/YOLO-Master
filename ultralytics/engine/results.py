@@ -1,6 +1,10 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 """
+<<<<<<< HEAD
 Ultralytics Results, Boxes and Masks classes for handling inference results.
+=======
+Ultralytics Results, Boxes, Masks, SemanticMask, Keypoints, Probs, and OBB classes for handling inference results.
+>>>>>>> origin/main
 
 Usage: See https://docs.ultralytics.com/modes/predict/
 """
@@ -173,12 +177,28 @@ class BaseTensor(SimpleClass):
         return self.__class__(self.data[idx], self.orig_shape)
 
 
+<<<<<<< HEAD
+=======
+class SemanticMask(BaseTensor):
+    """Semantic segmentation class map for one image."""
+
+    def __len__(self) -> int:
+        """Return one semantic segmentation result per image."""
+        return 1
+
+
+>>>>>>> origin/main
 class Results(SimpleClass, DataExportMixin):
     """A class for storing and manipulating inference results.
 
     This class provides comprehensive functionality for handling inference results from various Ultralytics models,
+<<<<<<< HEAD
     including detection, segmentation, classification, and pose estimation. It supports visualization, data export, and
     various coordinate transformations.
+=======
+    including detection, instance segmentation, semantic segmentation, classification, pose estimation, and oriented
+    bounding box detection. It supports visualization, data export, and various coordinate transformations.
+>>>>>>> origin/main
 
     Attributes:
         orig_img (np.ndarray): The original image as a numpy array.
@@ -188,6 +208,10 @@ class Results(SimpleClass, DataExportMixin):
         probs (Probs | None): Classification probabilities.
         keypoints (Keypoints | None): Detected keypoints.
         obb (OBB | None): Oriented bounding boxes.
+<<<<<<< HEAD
+=======
+        semantic_mask (SemanticMask | None): Semantic segmentation class map.
+>>>>>>> origin/main
         speed (dict): Dictionary containing inference speed information.
         names (dict): Dictionary mapping class indices to class names.
         path (str): Path to the input image file.
@@ -217,7 +241,11 @@ class Results(SimpleClass, DataExportMixin):
         >>> boxes = result.boxes  # Get the boxes for the first result
         >>> masks = result.masks  # Get the masks for the first result
         >>> for result in results:
+<<<<<<< HEAD
         >>>     result.plot()  # Plot detection results
+=======
+        ...     result.plot()  # Plot detection results
+>>>>>>> origin/main
     """
 
     def __init__(
@@ -231,6 +259,10 @@ class Results(SimpleClass, DataExportMixin):
         keypoints: torch.Tensor | None = None,
         obb: torch.Tensor | None = None,
         speed: dict[str, float] | None = None,
+<<<<<<< HEAD
+=======
+        semantic_mask: torch.Tensor | None = None,
+>>>>>>> origin/main
     ) -> None:
         """Initialize the Results class for storing and manipulating inference results.
 
@@ -243,6 +275,10 @@ class Results(SimpleClass, DataExportMixin):
             probs (torch.Tensor | None): A 1D tensor of probabilities of each class for classification task.
             keypoints (torch.Tensor | None): A 2D tensor of keypoint coordinates for each detection.
             obb (torch.Tensor | None): A 2D tensor of oriented bounding box coordinates for each detection.
+<<<<<<< HEAD
+=======
+            semantic_mask (torch.Tensor | None): A 2D tensor of class IDs for semantic segmentation results.
+>>>>>>> origin/main
             speed (dict | None): A dictionary containing preprocess, inference, and postprocess speeds (ms/image).
 
         Notes:
@@ -259,11 +295,19 @@ class Results(SimpleClass, DataExportMixin):
         self.probs = Probs(probs) if probs is not None else None
         self.keypoints = Keypoints(keypoints, self.orig_shape) if keypoints is not None else None
         self.obb = OBB(obb, self.orig_shape) if obb is not None else None
+<<<<<<< HEAD
+=======
+        self.semantic_mask = SemanticMask(semantic_mask, self.orig_shape) if semantic_mask is not None else None
+>>>>>>> origin/main
         self.speed = speed if speed is not None else {"preprocess": None, "inference": None, "postprocess": None}
         self.names = names
         self.path = path
         self.save_dir = None
+<<<<<<< HEAD
         self._keys = "boxes", "masks", "probs", "keypoints", "obb"
+=======
+        self._keys = "boxes", "masks", "probs", "keypoints", "obb", "semantic_mask"
+>>>>>>> origin/main
 
     def __getitem__(self, idx):
         """Return a Results object for a specific index of inference results.
@@ -282,6 +326,7 @@ class Results(SimpleClass, DataExportMixin):
         return self._apply("__getitem__", idx)
 
     def __len__(self) -> int:
+<<<<<<< HEAD
         """Return the number of detections in the Results object.
 
         Returns:
@@ -290,6 +335,16 @@ class Results(SimpleClass, DataExportMixin):
 
         Examples:
             >>> results = Results(orig_img, path, names, boxes=torch.rand(5, 4))
+=======
+        """Return the number of results in the Results object.
+
+        Returns:
+            (int): The number of results, determined by the length of the first non-empty attribute in (boxes, masks,
+                probs, keypoints, obb, or semantic_mask). Empty Results objects return 0.
+
+        Examples:
+            >>> results = Results(orig_img, path, names, boxes=torch.rand(5, 6))
+>>>>>>> origin/main
             >>> len(results)
             5
         """
@@ -297,6 +352,10 @@ class Results(SimpleClass, DataExportMixin):
             v = getattr(self, k)
             if v is not None:
                 return len(v)
+<<<<<<< HEAD
+=======
+        return 0
+>>>>>>> origin/main
 
     def update(
         self,
@@ -305,19 +364,35 @@ class Results(SimpleClass, DataExportMixin):
         probs: torch.Tensor | None = None,
         obb: torch.Tensor | None = None,
         keypoints: torch.Tensor | None = None,
+<<<<<<< HEAD
     ):
         """Update the Results object with new detection data.
 
         This method allows updating the boxes, masks, probabilities, and oriented bounding boxes (OBB) of the Results
         object. It ensures that boxes are clipped to the original image shape.
+=======
+        semantic_mask: torch.Tensor | None = None,
+    ):
+        """Update the Results object with new detection data.
+
+        This method allows updating the boxes, masks, keypoints, probabilities, and oriented bounding boxes (OBB) of
+        the Results object. It ensures that boxes are clipped to the original image shape.
+>>>>>>> origin/main
 
         Args:
             boxes (torch.Tensor | None): A tensor of shape (N, 6) containing bounding box coordinates and confidence
                 scores. The format is (x1, y1, x2, y2, conf, class).
             masks (torch.Tensor | None): A tensor of shape (N, H, W) containing segmentation masks.
             probs (torch.Tensor | None): A tensor of shape (num_classes,) containing class probabilities.
+<<<<<<< HEAD
             obb (torch.Tensor | None): A tensor of shape (N, 5) containing oriented bounding box coordinates.
             keypoints (torch.Tensor | None): A tensor of shape (N, 17, 3) containing keypoints.
+=======
+            obb (torch.Tensor | None): A tensor of shape (N, 7) or (N, 8) containing oriented bounding box coordinates.
+            keypoints (torch.Tensor | None): A tensor of shape (N, K, 3) containing keypoints, where K=17 for persons.
+            semantic_mask (torch.Tensor | None): A tensor of shape (H, W) containing class IDs for semantic
+                segmentation.
+>>>>>>> origin/main
 
         Examples:
             >>> results = model("image.jpg")
@@ -329,11 +404,20 @@ class Results(SimpleClass, DataExportMixin):
         if masks is not None:
             self.masks = Masks(masks, self.orig_shape)
         if probs is not None:
+<<<<<<< HEAD
             self.probs = probs
+=======
+            self.probs = Probs(probs)
+>>>>>>> origin/main
         if obb is not None:
             self.obb = OBB(obb, self.orig_shape)
         if keypoints is not None:
             self.keypoints = Keypoints(keypoints, self.orig_shape)
+<<<<<<< HEAD
+=======
+        if semantic_mask is not None:
+            self.semantic_mask = SemanticMask(semantic_mask, self.orig_shape)
+>>>>>>> origin/main
 
     def _apply(self, fn: str, *args, **kwargs):
         """Apply a function to all non-empty attributes and return a new Results object with modified attributes.
@@ -357,8 +441,14 @@ class Results(SimpleClass, DataExportMixin):
         r = self.new()
         for k in self._keys:
             v = getattr(self, k)
+<<<<<<< HEAD
             if v is not None:
                 setattr(r, k, getattr(v, fn)(*args, **kwargs))
+=======
+            if v is None:
+                continue
+            setattr(r, k, getattr(v, fn)(*args, **kwargs))
+>>>>>>> origin/main
         return r
 
     def cpu(self):
@@ -488,8 +578,13 @@ class Results(SimpleClass, DataExportMixin):
         Examples:
             >>> results = model("image.jpg")
             >>> for result in results:
+<<<<<<< HEAD
             >>>     im = result.plot()
             >>>     im.show()
+=======
+            ...     im = result.plot(pil=True)
+            ...     im.show()
+>>>>>>> origin/main
         """
         assert color_mode in {"instance", "class"}, f"Expected color_mode='instance' or 'class', not {color_mode}."
         if img is None and isinstance(self.orig_img, torch.Tensor):
@@ -500,6 +595,11 @@ class Results(SimpleClass, DataExportMixin):
         pred_boxes, show_boxes = self.obb if is_obb else self.boxes, boxes
         pred_masks, show_masks = self.masks, masks
         pred_probs, show_probs = self.probs, probs
+<<<<<<< HEAD
+=======
+        if pred_boxes is not None and (show_boxes or (pred_masks and show_masks)):
+            pred_boxes = pred_boxes.cpu()  # one host transfer avoids per-box GPU syncs in the color and label loops
+>>>>>>> origin/main
         annotator = Annotator(
             deepcopy(self.orig_img if img is None else img),
             line_width,
@@ -522,7 +622,11 @@ class Results(SimpleClass, DataExportMixin):
                 )
             idx = (
                 pred_boxes.id
+<<<<<<< HEAD
                 if pred_boxes.is_track and color_mode == "instance"
+=======
+                if pred_boxes and pred_boxes.is_track and color_mode == "instance"
+>>>>>>> origin/main
                 else pred_boxes.cls
                 if pred_boxes and color_mode == "class"
                 else reversed(range(len(pred_masks)))
@@ -534,7 +638,11 @@ class Results(SimpleClass, DataExportMixin):
             for i, d in enumerate(reversed(pred_boxes)):
                 c, d_conf, id = int(d.cls), float(d.conf) if conf else None, int(d.id.item()) if d.is_track else None
                 name = ("" if id is None else f"id:{id} ") + names[c]
+<<<<<<< HEAD
                 label = (f"{name} {d_conf:.2f}" if conf else name) if labels else None
+=======
+                label = (f"{name} {d_conf:.2f}" if conf else name) if labels else (f"{d_conf:.2f}" if conf else None)
+>>>>>>> origin/main
                 box = d.xyxyxyxy.squeeze() if is_obb else d.xyxy.squeeze()
                 annotator.box_label(
                     box,
@@ -557,9 +665,22 @@ class Results(SimpleClass, DataExportMixin):
             x = round(self.orig_shape[0] * 0.03)
             annotator.text([x, x], text, txt_color=txt_color, box_color=(64, 64, 64, 128))  # RGBA box
 
+<<<<<<< HEAD
         # Plot Pose results
         if self.keypoints is not None:
             for i, k in enumerate(reversed(self.keypoints.data)):
+=======
+        # Plot Semantic Segmentation results
+        if self.semantic_mask is not None and show_masks:
+            sem_mask = self.semantic_mask.data
+            if isinstance(sem_mask, torch.Tensor):
+                sem_mask = sem_mask.cpu().numpy()
+            annotator.semantic_mask(sem_mask, alpha=0.5)
+
+        # Plot Pose results
+        if self.keypoints is not None:
+            for i, k in enumerate(reversed(self.keypoints.cpu().numpy().data)):  # one host transfer, no per-kpt syncs
+>>>>>>> origin/main
                 annotator.kpts(
                     k,
                     self.orig_shape,
@@ -592,7 +713,11 @@ class Results(SimpleClass, DataExportMixin):
             >>> results = model("path/to/image.jpg")
             >>> results[0].show()  # Display the first result
             >>> for result in results:
+<<<<<<< HEAD
             >>>     result.show()  # Display all results
+=======
+            ...     result.show()  # Display all results
+>>>>>>> origin/main
         """
         self.plot(show=True, *args, **kwargs)
 
@@ -603,8 +728,13 @@ class Results(SimpleClass, DataExportMixin):
         utilizes the `plot` method to generate the annotated image and then saves it to the specified filename.
 
         Args:
+<<<<<<< HEAD
             filename (str | Path | None): The filename to save the annotated image. If None, a default filename is
                 generated based on the original image path.
+=======
+            filename (str | None): The filename to save the annotated image. If None, a default filename is generated
+                based on the original image path.
+>>>>>>> origin/main
             *args (Any): Variable length argument list to be passed to the `plot` method.
             **kwargs (Any): Arbitrary keyword arguments to be passed to the `plot` method.
 
@@ -614,6 +744,7 @@ class Results(SimpleClass, DataExportMixin):
         Examples:
             >>> results = model("path/to/image.jpg")
             >>> for result in results:
+<<<<<<< HEAD
             >>>     result.save("annotated_image.jpg")
             >>> # Or with custom plot arguments
             >>> for result in results:
@@ -621,6 +752,18 @@ class Results(SimpleClass, DataExportMixin):
         """
         if not filename:
             filename = f"results_{Path(self.path).name}"
+=======
+            ...     result.save("annotated_image.jpg")
+            >>> # Or with custom plot arguments
+            >>> for result in results:
+            ...     result.save("annotated_image.jpg", conf=False, line_width=2)
+            >>> # Directory will be created automatically if it does not exist
+            >>> result.save("path/to/annotated_image.jpg")
+        """
+        if not filename:
+            filename = f"results_{Path(self.path).name}"
+        Path(filename).absolute().parent.mkdir(parents=True, exist_ok=True)
+>>>>>>> origin/main
         self.plot(save=True, filename=filename, *args, **kwargs)
         return filename
 
@@ -637,7 +780,11 @@ class Results(SimpleClass, DataExportMixin):
         Examples:
             >>> results = model("path/to/image.jpg")
             >>> for result in results:
+<<<<<<< HEAD
             >>>     print(result.verbose())
+=======
+            ...     print(result.verbose())
+>>>>>>> origin/main
             2 persons, 1 car, 3 traffic lights,
             dog 0.92, cat 0.78, horse 0.64,
 
@@ -654,6 +801,11 @@ class Results(SimpleClass, DataExportMixin):
         if boxes:
             counts = boxes.cls.int().bincount()
             return "".join(f"{n} {self.names[i]}{'s' * (n > 1)}, " for i, n in enumerate(counts) if n > 0)
+<<<<<<< HEAD
+=======
+        if self.semantic_mask is not None:
+            return ""
+>>>>>>> origin/main
 
     def save_txt(self, txt_file: str | Path, save_conf: bool = False) -> str:
         """Save detection results to a text file.
@@ -667,6 +819,7 @@ class Results(SimpleClass, DataExportMixin):
 
         Examples:
             >>> from ultralytics import YOLO
+<<<<<<< HEAD
             >>> model = YOLO("yolo11n.pt")
             >>> results = model("path/to/image.jpg")
             >>> for result in results:
@@ -675,12 +828,30 @@ class Results(SimpleClass, DataExportMixin):
         Notes:
             - The file will contain one line per detection or classification with the following structure:
               - For detections: `class confidence x_center y_center width height`
+=======
+            >>> model = YOLO("yolo26n.pt")
+            >>> results = model("path/to/image.jpg")
+            >>> for result in results:
+            ...     result.save_txt("output.txt")
+
+        Notes:
+            - The file will contain one line per detection or classification with the following structure:
+              - For detections: `class x_center y_center width height [confidence] [track_id]`
+>>>>>>> origin/main
               - For classifications: `confidence class_name`
               - For masks and keypoints, the specific formats will vary accordingly.
             - The function will create the output directory if it does not exist.
             - If save_conf is False, the confidence scores will be excluded from the output.
             - Existing contents of the file will not be overwritten; new results will be appended.
+<<<<<<< HEAD
         """
+=======
+            - This method does not support Semantic Segmentation tasks.
+        """
+        if self.semantic_mask is not None:
+            LOGGER.warning("Semantic Segmentation task does not support `save_txt`.")
+            return str(txt_file)
+>>>>>>> origin/main
         is_obb = self.obb is not None
         boxes = self.obb if is_obb else self.boxes
         masks = self.masks
@@ -724,10 +895,17 @@ class Results(SimpleClass, DataExportMixin):
         Examples:
             >>> results = model("path/to/image.jpg")
             >>> for result in results:
+<<<<<<< HEAD
             >>>     result.save_crop(save_dir="path/to/crops", file_name="detection")
 
         Notes:
             - This method does not support Classify or Oriented Bounding Box (OBB) tasks.
+=======
+            ...     result.save_crop(save_dir="path/to/crops", file_name="detection")
+
+        Notes:
+            - This method does not support Classify, Oriented Bounding Box (OBB), or Semantic Segmentation tasks.
+>>>>>>> origin/main
             - Crops are saved as 'save_dir/class_name/file_name.jpg'.
             - The method will create necessary subdirectories if they don't exist.
             - Original image is copied before cropping to avoid modifying the original.
@@ -738,6 +916,12 @@ class Results(SimpleClass, DataExportMixin):
         if self.obb is not None:
             LOGGER.warning("OBB task does not support `save_crop`.")
             return
+<<<<<<< HEAD
+=======
+        if self.semantic_mask is not None:
+            LOGGER.warning("Semantic Segmentation task does not support `save_crop`.")
+            return
+>>>>>>> origin/main
         for d in self.boxes:
             save_one_box(
                 d.xyxy,
@@ -750,8 +934,13 @@ class Results(SimpleClass, DataExportMixin):
         """Convert inference results to a summarized dictionary with optional normalization for box coordinates.
 
         This method creates a list of detection dictionaries, each containing information about a single detection or
+<<<<<<< HEAD
         classification result. For classification tasks, it returns the top class and its
         confidence. For detection tasks, it includes class information, bounding box coordinates, and
+=======
+        classification result. For classification tasks, it returns the top 5 classes and their
+        confidences. For detection tasks, it includes class information, bounding box coordinates, and
+>>>>>>> origin/main
         optionally mask segments and keypoints.
 
         Args:
@@ -766,12 +955,18 @@ class Results(SimpleClass, DataExportMixin):
         Examples:
             >>> results = model("image.jpg")
             >>> for result in results:
+<<<<<<< HEAD
             >>>     summary = result.summary()
             >>>     print(summary)
+=======
+            ...     summary = result.summary()
+            ...     print(summary)
+>>>>>>> origin/main
         """
         # Create list of detection dictionaries
         results = []
         if self.probs is not None:
+<<<<<<< HEAD
             class_id = self.probs.top1
             results.append(
                 {
@@ -780,6 +975,41 @@ class Results(SimpleClass, DataExportMixin):
                     "confidence": round(self.probs.top1conf.item(), decimals),
                 }
             )
+=======
+            # Return top 5 classification results
+            for class_id, conf in zip(self.probs.top5, self.probs.top5conf.tolist()):
+                class_id = int(class_id)
+                results.append(
+                    {
+                        "name": self.names[class_id],
+                        "class": class_id,
+                        "confidence": round(conf, decimals),
+                    }
+                )
+            return results
+
+        if self.semantic_mask is not None:
+            # Return per-class pixel coverage for semantic segmentation
+            mask = self.semantic_mask.data
+            if isinstance(mask, torch.Tensor):
+                mask = mask.cpu().numpy()
+            unique, counts = np.unique(mask, return_counts=True)
+            total = mask.size
+            for class_id, count in zip(unique.tolist(), counts.tolist()):
+                if len(self.names) == 1:
+                    if class_id != 1:  # skip binary background and ignore label
+                        continue
+                    class_id = 0
+                elif class_id not in self.names:  # skip ignore label (e.g., 255)
+                    continue
+                results.append(
+                    {
+                        "name": self.names[class_id],
+                        "class": class_id,
+                        "pixel_ratio": round(count / total, decimals),
+                    }
+                )
+>>>>>>> origin/main
             return results
 
         is_obb = self.obb is not None
@@ -797,6 +1027,7 @@ class Results(SimpleClass, DataExportMixin):
                 result["track_id"] = int(row.id.item())  # track ID
             if self.masks:
                 result["segments"] = {
+<<<<<<< HEAD
                     "x": (self.masks.xy[i][:, 0] / w).round(decimals).tolist(),
                     "y": (self.masks.xy[i][:, 1] / h).round(decimals).tolist(),
                 }
@@ -807,6 +1038,23 @@ class Results(SimpleClass, DataExportMixin):
                     "y": (y / h).numpy().round(decimals).tolist(),
                     "visible": visible.numpy().round(decimals).tolist(),
                 }
+=======
+                    "x": (self.masks.xy[i][:, 0] / w).astype(float).round(decimals).tolist(),
+                    "y": (self.masks.xy[i][:, 1] / h).astype(float).round(decimals).tolist(),
+                }
+            if self.keypoints is not None:
+                kpt = self.keypoints[i]
+                if kpt.has_visible:
+                    x, y, visible = kpt.data[0].cpu().unbind(dim=1)
+                else:
+                    x, y = kpt.data[0].cpu().unbind(dim=1)
+                result["keypoints"] = {
+                    "x": (x / w).numpy().astype(float).round(decimals).tolist(),
+                    "y": (y / h).numpy().astype(float).round(decimals).tolist(),
+                }
+                if kpt.has_visible:
+                    result["keypoints"]["visible"] = visible.numpy().astype(float).round(decimals).tolist()
+>>>>>>> origin/main
             results.append(result)
 
         return results
@@ -921,8 +1169,13 @@ class Boxes(BaseTensor):
         """Return the tracking IDs for each detection box if available.
 
         Returns:
+<<<<<<< HEAD
             (torch.Tensor | None): A tensor containing tracking IDs for each box if tracking is enabled, otherwise None.
                 Shape is (N,) where N is the number of boxes.
+=======
+            (torch.Tensor | np.ndarray | None): A tensor or array containing tracking IDs for each box if tracking is
+                enabled, otherwise None. Shape is (N,) where N is the number of boxes.
+>>>>>>> origin/main
 
         Examples:
             >>> results = model.track("path/to/video.mp4")
@@ -951,11 +1204,21 @@ class Boxes(BaseTensor):
                 bounding box and the shape of the returned tensor is (N, 4), where N is the number of boxes.
 
         Examples:
+<<<<<<< HEAD
             >>> boxes = Boxes(torch.tensor([[100, 50, 150, 100], [200, 150, 300, 250]]), orig_shape=(480, 640))
             >>> xywh = boxes.xywh
             >>> print(xywh)
             tensor([[100.0000,  50.0000,  50.0000,  50.0000],
                     [200.0000, 150.0000, 100.0000, 100.0000]])
+=======
+            >>> boxes = Boxes(
+            ...     torch.tensor([[100, 50, 150, 100, 0.9, 0], [200, 150, 300, 250, 0.8, 1]]), orig_shape=(480, 640)
+            ... )
+            >>> xywh = boxes.xywh
+            >>> print(xywh)
+            tensor([[125.0000,  75.0000,  50.0000,  50.0000],
+                    [250.0000, 200.0000, 100.0000, 100.0000]])
+>>>>>>> origin/main
         """
         return ops.xyxy2xywh(self.xyxy)
 
@@ -1015,7 +1278,11 @@ class Masks(BaseTensor):
 
     Attributes:
         data (torch.Tensor | np.ndarray): The raw tensor or array containing mask data.
+<<<<<<< HEAD
         orig_shape (tuple): Original image shape in (height, width) format.
+=======
+        orig_shape (tuple[int, int]): Original image shape in (height, width) format.
+>>>>>>> origin/main
         xy (list[np.ndarray]): A list of segments in pixel coordinates.
         xyn (list[np.ndarray]): A list of normalized segments.
 
@@ -1038,7 +1305,11 @@ class Masks(BaseTensor):
 
         Args:
             masks (torch.Tensor | np.ndarray): Detection masks with shape (num_masks, height, width).
+<<<<<<< HEAD
             orig_shape (tuple): The original image shape as (height, width). Used for normalization.
+=======
+            orig_shape (tuple[int, int]): The original image shape as (height, width). Used for normalization.
+>>>>>>> origin/main
         """
         if masks.ndim == 2:
             masks = masks[None, :]
@@ -1105,7 +1376,11 @@ class Keypoints(BaseTensor):
         has_visible (bool): Indicates whether visibility information is available for keypoints.
         xy (torch.Tensor): Keypoint coordinates in [x, y] format.
         xyn (torch.Tensor): Normalized keypoint coordinates in [x, y] format, relative to orig_shape.
+<<<<<<< HEAD
         conf (torch.Tensor): Confidence values for each keypoint, if available.
+=======
+        conf (torch.Tensor | None): Confidence values for each keypoint, if available.
+>>>>>>> origin/main
 
     Methods:
         cpu: Return a copy of the keypoints tensor on CPU memory.
@@ -1127,11 +1402,18 @@ class Keypoints(BaseTensor):
     def __init__(self, keypoints: torch.Tensor | np.ndarray, orig_shape: tuple[int, int]) -> None:
         """Initialize the Keypoints object with detection keypoints and original image dimensions.
 
+<<<<<<< HEAD
         This method processes the input keypoints tensor, handling both 2D and 3D formats. For 3D tensors (x, y,
         confidence), it masks out low-confidence keypoints by setting their coordinates to zero.
 
         Args:
             keypoints (torch.Tensor): A tensor containing keypoint data. Shape can be either:
+=======
+        This method processes the input keypoints tensor, handling both 2D and 3D formats.
+
+        Args:
+            keypoints (torch.Tensor | np.ndarray): A tensor or array containing keypoint data. Shape can be either:
+>>>>>>> origin/main
                 - (num_objects, num_keypoints, 2) for x, y coordinates only
                 - (num_objects, num_keypoints, 3) for x, y coordinates and confidence scores
             orig_shape (tuple[int, int]): The original image dimensions (height, width).
@@ -1147,8 +1429,13 @@ class Keypoints(BaseTensor):
         """Return x, y coordinates of keypoints.
 
         Returns:
+<<<<<<< HEAD
             (torch.Tensor): A tensor containing the x, y coordinates of keypoints with shape (N, K, 2), where N is the
                 number of detections and K is the number of keypoints per detection.
+=======
+            (torch.Tensor | np.ndarray): A tensor or array containing the x, y coordinates of keypoints with shape (N,
+                K, 2), where N is the number of detections and K is the number of keypoints per detection.
+>>>>>>> origin/main
 
         Examples:
             >>> results = model("image.jpg")
@@ -1159,7 +1446,10 @@ class Keypoints(BaseTensor):
 
         Notes:
             - The returned coordinates are in pixel units relative to the original image dimensions.
+<<<<<<< HEAD
             - If keypoints were initialized with confidence values, only keypoints with confidence >= 0.5 are returned.
+=======
+>>>>>>> origin/main
             - This property uses LRU caching to improve performance on repeated access.
         """
         return self.data[..., :2]
@@ -1191,8 +1481,14 @@ class Keypoints(BaseTensor):
         """Return confidence values for each keypoint.
 
         Returns:
+<<<<<<< HEAD
             (torch.Tensor | None): A tensor containing confidence scores for each keypoint if available, otherwise None.
                 Shape is (num_detections, num_keypoints) for batched data or (num_keypoints,) for single detection.
+=======
+            (torch.Tensor | np.ndarray | None): A tensor or array containing confidence scores for each keypoint if
+                available, otherwise None. Shape is (num_detections, num_keypoints) for batched data or (num_keypoints,)
+                for single detection.
+>>>>>>> origin/main
 
         Examples:
             >>> keypoints = Keypoints(torch.rand(1, 17, 3), orig_shape=(640, 640))  # 1 detection, 17 keypoints
@@ -1210,7 +1506,11 @@ class Probs(BaseTensor):
 
     Attributes:
         data (torch.Tensor | np.ndarray): The raw tensor or array containing classification probabilities.
+<<<<<<< HEAD
         orig_shape (tuple | None): The original image shape as (height, width). Not used in this class.
+=======
+        orig_shape (tuple[int, int] | None): The original image shape as (height, width). Not used in this class.
+>>>>>>> origin/main
         top1 (int): Index of the class with the highest probability.
         top5 (list[int]): Indices of the top 5 classes by probability.
         top1conf (torch.Tensor | np.ndarray): Confidence score of the top 1 class.
@@ -1243,8 +1543,13 @@ class Probs(BaseTensor):
 
         Args:
             probs (torch.Tensor | np.ndarray): A 1D tensor or array of classification probabilities.
+<<<<<<< HEAD
             orig_shape (tuple | None): The original image shape as (height, width). Not used in this class but kept for
                 consistency with other result classes.
+=======
+            orig_shape (tuple[int, int] | None): The original image shape as (height, width). Not used in this class but
+                kept for consistency with other result classes.
+>>>>>>> origin/main
         """
         super().__init__(probs, orig_shape)
 
@@ -1327,7 +1632,11 @@ class OBB(BaseTensor):
 
     Attributes:
         data (torch.Tensor): The raw OBB tensor containing box coordinates and associated data.
+<<<<<<< HEAD
         orig_shape (tuple): Original image size as (height, width).
+=======
+        orig_shape (tuple[int, int]): Original image size as (height, width).
+>>>>>>> origin/main
         is_track (bool): Indicates whether tracking IDs are included in the box data.
         xywhr (torch.Tensor | np.ndarray): Boxes in [x_center, y_center, width, height, rotation] format.
         conf (torch.Tensor | np.ndarray): Confidence scores for each box.
@@ -1436,7 +1745,11 @@ class OBB(BaseTensor):
                 bounding box. Returns None if tracking IDs are not available.
 
         Examples:
+<<<<<<< HEAD
             >>> results = model("image.jpg", tracker=True)  # Run inference with tracking
+=======
+            >>> results = model.track("path/to/video.mp4")  # Run inference with tracking
+>>>>>>> origin/main
             >>> for result in results:
             ...     if result.obb is not None:
             ...         track_ids = result.obb.id
@@ -1500,7 +1813,11 @@ class OBB(BaseTensor):
         Examples:
             >>> import torch
             >>> from ultralytics import YOLO
+<<<<<<< HEAD
             >>> model = YOLO("yolo11n-obb.pt")
+=======
+            >>> model = YOLO("yolo26n-obb.pt")
+>>>>>>> origin/main
             >>> results = model("path/to/image.jpg")
             >>> for result in results:
             ...     obb = result.obb

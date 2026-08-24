@@ -52,7 +52,11 @@ class SpeedEstimator(BaseSolution):
         self.frame_count = 0  # Global frame counter
         self.trk_frame_ids = {}  # Track ID → first frame index
         self.spd = {}  # Final speed per object (km/h), once locked
+<<<<<<< HEAD
         self.trk_hist = {}  # Track ID → deque of (time, position)
+=======
+        self.trk_hist = {}  # Track ID → deque of position history
+>>>>>>> origin/main
         self.locked_ids = set()  # Track IDs whose speed has been finalized
         self.max_hist = self.CFG["max_hist"]  # Required frame history before computing speed
         self.meter_per_pixel = self.CFG["meter_per_pixel"]  # Scene scale, depends on camera details

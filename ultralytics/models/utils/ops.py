@@ -7,10 +7,16 @@ from typing import Any
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+<<<<<<< HEAD
 from scipy.optimize import linear_sum_assignment
 
 from ultralytics.utils.metrics import bbox_iou
 from ultralytics.utils.ops import xywh2xyxy, xyxy2xywh
+=======
+
+from ultralytics.utils.metrics import bbox_iou
+from ultralytics.utils.ops import linear_sum_assignment, xywh2xyxy, xyxy2xywh
+>>>>>>> origin/main
 
 
 class HungarianMatcher(nn.Module):
@@ -201,9 +207,15 @@ def get_cdn_group(
     boxes and class labels. It generates both positive and negative samples to improve model robustness.
 
     Args:
+<<<<<<< HEAD
         batch (dict[str, Any]): Batch dictionary containing 'gt_cls' (torch.Tensor with shape (num_gts,)), 'gt_bboxes'
             (torch.Tensor with shape (num_gts, 4)), and 'gt_groups' (list[int]) indicating number of ground truths
             per image.
+=======
+        batch (dict[str, Any]): Batch dictionary containing 'cls' (torch.Tensor with shape (num_gts,)), 'bboxes'
+            (torch.Tensor with shape (num_gts, 4)), 'batch_idx' (torch.Tensor), and 'gt_groups' (list[int]) indicating
+            number of ground truths per image.
+>>>>>>> origin/main
         num_classes (int): Total number of object classes.
         num_queries (int): Number of object queries.
         class_embed (torch.Tensor): Class embedding weights to map labels to embedding space.

@@ -11,7 +11,10 @@ from __future__ import annotations
 import numpy as np
 import torch
 from torch import nn
+<<<<<<< HEAD
 from torchvision.ops.roi_align import RoIAlign
+=======
+>>>>>>> origin/main
 
 from ultralytics.nn.modules.transformer import MLP
 from ultralytics.nn.modules.utils import _get_clones, inverse_sigmoid
@@ -92,7 +95,11 @@ class TransformerDecoderLayer(nn.Module):
         # skip inside deformable attn
         **kwargs,  # additional kwargs for compatibility
     ):
+<<<<<<< HEAD
         """Input: - tgt/tgt_query_pos: nq, bs, d_model. -."""
+=======
+        """Forward pass of the TransformerDecoderLayer."""
+>>>>>>> origin/main
         # self attention
         tgt, tgt_query_pos = self._apply_self_attention(
             tgt, tgt_query_pos, dac, dac_use_selfatt_ln, presence_token, self_attn_mask
@@ -265,11 +272,21 @@ class TransformerDecoder(nn.Module):
             self.compilable_stored_size = None
             self.coord_cache = {}
 
+<<<<<<< HEAD
         self.roi_pooler = (
             RoIAlign(output_size=7, spatial_scale=1, sampling_ratio=-1, aligned=True)
             if interaction_layer is not None
             else None
         )
+=======
+        if interaction_layer is not None:
+            # Scoped for import ultralytics speed: ROI align requires optional torchvision ops.
+            from torchvision.ops.roi_align import RoIAlign
+
+            self.roi_pooler = RoIAlign(output_size=7, spatial_scale=1, sampling_ratio=-1, aligned=True)
+        else:
+            self.roi_pooler = None
+>>>>>>> origin/main
         if frozen:
             for p in self.parameters():
                 p.requires_grad_(False)
@@ -330,7 +347,11 @@ class TransformerDecoder(nn.Module):
             # cache miss, will create compilation issue
             # In case we're not compiling, we'll still rely on the dict-based cache
             if feat_size not in self.coord_cache:
+<<<<<<< HEAD
                 self.coord_cache[feat_size] = self._get_coords(H, W, reference_boxes.device)
+=======
+                self.coord_cache[feat_size] = self._get_coords(H, W, reference_boxes.device, reference_boxes.dtype)
+>>>>>>> origin/main
             coords_h, coords_w = self.coord_cache[feat_size]
 
             assert coords_h.shape == (H,)
@@ -522,7 +543,11 @@ class TransformerDecoder(nn.Module):
 
                 # clamp to mitigate numerical issues
                 if self.clamp_presence_logits:
+<<<<<<< HEAD
                     intermediate_layer_presence_logits.clamp(
+=======
+                    intermediate_layer_presence_logits.clamp_(
+>>>>>>> origin/main
                         min=-self.clamp_presence_logit_max_val,
                         max=self.clamp_presence_logit_max_val,
                     )

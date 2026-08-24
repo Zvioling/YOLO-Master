@@ -1,7 +1,20 @@
 ---
+<<<<<<< HEAD
 comments: true
 description: Explore the Ultralytics COCO128 dataset, a versatile and manageable set of 128 images perfect for testing object detection models and training pipelines.
 keywords: COCO128, Ultralytics, dataset, object detection, YOLO11, training, validation, machine learning, computer vision
+=======
+title: COCO128 Detection Dataset
+comments: true
+creator:
+    name: Ultralytics
+    url: https://www.ultralytics.com/
+license:
+    name: CC-BY-4.0
+    url: https://cocodataset.org/#termsofuse
+description: Explore the Ultralytics COCO128 dataset, a versatile and manageable set of 128 images perfect for testing object detection models and training pipelines.
+keywords: COCO128, Ultralytics, dataset, object detection, YOLO26, training, validation, machine learning, computer vision
+>>>>>>> origin/main
 ---
 
 # COCO128 Dataset
@@ -21,11 +34,31 @@ keywords: COCO128, Ultralytics, dataset, object detection, YOLO11, training, val
   <strong>Watch:</strong> Ultralytics COCO Dataset Overview
 </p>
 
+<<<<<<< HEAD
 This dataset is intended for use with Ultralytics [HUB](https://hub.ultralytics.com/) and [YOLO11](https://github.com/ultralytics/ultralytics).
 
 ## Dataset YAML
 
 A YAML (Yet Another Markup Language) file is used to define the dataset configuration. It contains information about the dataset's paths, classes, and other relevant information. In the case of the COCO128 dataset, the `coco128.yaml` file is maintained at [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco128.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco128.yaml).
+=======
+This dataset is intended for use with [Ultralytics Platform](https://platform.ultralytics.com/) and [YOLO26](../../models/yolo26.md).
+
+## Dataset Structure
+
+COCO128 contains the first 128 images from the COCO train 2017 set, covering all 80 COCO object classes in [YOLO label format](../index.md). The same 128 images serve as both the training and validation split, keeping it lightweight for quick sanity checks:
+
+```text
+coco128/
+├── images/
+│   └── train2017/   # 128 images (used for both train and val)
+└── labels/
+    └── train2017/
+```
+
+## Dataset YAML
+
+A YAML file is used to define the dataset configuration. It contains information about the dataset's paths, classes, and other relevant information. In the case of the COCO128 dataset, the `coco128.yaml` file is maintained at [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco128.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco128.yaml).
+>>>>>>> origin/main
 
 !!! example "ultralytics/cfg/datasets/coco128.yaml"
 
@@ -35,7 +68,11 @@ A YAML (Yet Another Markup Language) file is used to define the dataset configur
 
 ## Usage
 
+<<<<<<< HEAD
 To train a YOLO11n model on the COCO128 dataset for 100 [epochs](https://www.ultralytics.com/glossary/epoch) with an image size of 640, you can use the following code snippets. For a comprehensive list of available arguments, refer to the model [Training](../../modes/train.md) page.
+=======
+The COCO128 dataset (7 MB) downloads automatically the first time you start training. To train a YOLO26n model on COCO128 for 100 [epochs](https://www.ultralytics.com/glossary/epoch) with an image size of 640, you can use the following code snippets. For a comprehensive list of available arguments, refer to the model [Training](../../modes/train.md) page.
+>>>>>>> origin/main
 
 !!! example "Train Example"
 
@@ -45,7 +82,11 @@ To train a YOLO11n model on the COCO128 dataset for 100 [epochs](https://www.ult
         from ultralytics import YOLO
 
         # Load a model
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")  # load a pretrained model (recommended for training)
+=======
+        model = YOLO("yolo26n.pt")  # load a pretrained model (recommended for training)
+>>>>>>> origin/main
 
         # Train the model
         results = model.train(data="coco128.yaml", epochs=100, imgsz=640)
@@ -55,14 +96,22 @@ To train a YOLO11n model on the COCO128 dataset for 100 [epochs](https://www.ult
 
         ```bash
         # Start training from a pretrained *.pt model
+<<<<<<< HEAD
         yolo detect train data=coco128.yaml model=yolo11n.pt epochs=100 imgsz=640
+=======
+        yolo detect train data=coco128.yaml model=yolo26n.pt epochs=100 imgsz=640
+>>>>>>> origin/main
         ```
 
 ## Sample Images and Annotations
 
 Here are some examples of images from the COCO128 dataset, along with their corresponding annotations:
 
+<<<<<<< HEAD
 <img src="https://github.com/ultralytics/docs/releases/download/0/mosaiced-training-batch-1.avif" alt="Dataset sample image" width="800">
+=======
+<img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/mosaiced-training-batch-1.avif" alt="COCO128 object detection dataset mosaic training batch" width="800">
+>>>>>>> origin/main
 
 - **Mosaiced Image**: This image demonstrates a training batch composed of mosaiced dataset images. Mosaicing is a technique used during training that combines multiple images into a single image to increase the variety of objects and scenes within each training batch. This helps improve the model's ability to generalize to different object sizes, aspect ratios, and contexts.
 
@@ -95,9 +144,15 @@ We would like to acknowledge the COCO Consortium for creating and maintaining th
 
 The Ultralytics COCO128 dataset is a compact subset containing the first 128 images from the COCO train 2017 dataset. It's primarily used for testing and debugging [object detection](https://www.ultralytics.com/glossary/object-detection) models, experimenting with new detection approaches, and validating training pipelines before scaling to larger datasets. Its manageable size makes it perfect for quick iterations while still providing enough diversity to be a meaningful test case.
 
+<<<<<<< HEAD
 ### How do I train a YOLO11 model using the COCO128 dataset?
 
 To train a YOLO11 model on the COCO128 dataset, you can use either Python or CLI commands. Here's how:
+=======
+### How do I train a YOLO26 model using the COCO128 dataset?
+
+To train a YOLO26 model on the COCO128 dataset, you can use either Python or CLI commands. Here's how:
+>>>>>>> origin/main
 
 !!! example "Train Example"
 
@@ -107,7 +162,11 @@ To train a YOLO11 model on the COCO128 dataset, you can use either Python or CLI
         from ultralytics import YOLO
 
         # Load a pretrained model
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")
+=======
+        model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
 
         # Train the model
         results = model.train(data="coco128.yaml", epochs=100, imgsz=640)
@@ -117,7 +176,11 @@ To train a YOLO11 model on the COCO128 dataset, you can use either Python or CLI
     === "CLI"
 
         ```bash
+<<<<<<< HEAD
         yolo detect train data=coco128.yaml model=yolo11n.pt epochs=100 imgsz=640
+=======
+        yolo detect train data=coco128.yaml model=yolo26n.pt epochs=100 imgsz=640
+>>>>>>> origin/main
         ```
 
 For more training options and parameters, refer to the [Training](../../modes/train.md) documentation.
@@ -135,7 +198,11 @@ This technique is particularly valuable for smaller datasets like COCO128, helpi
 
 ### How does COCO128 compare to other COCO dataset variants?
 
+<<<<<<< HEAD
 COCO128 (128 images) sits between [COCO8](../detect/coco8.md) (8 images) and the full [COCO](../detect/coco.md) dataset (118K+ images) in terms of size:
+=======
+COCO128 (128 images) sits between [COCO8](coco8.md) (8 images) and the full [COCO](coco.md) dataset (118K+ images) in terms of size:
+>>>>>>> origin/main
 
 - **COCO8**: Contains just 8 images (4 train, 4 val) - ideal for quick tests and debugging
 - **COCO128**: Contains 128 images - balanced between size and diversity

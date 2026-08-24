@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: nn.modules.utils API Reference
+>>>>>>> origin/main
 description: Explore the detailed reference of utility functions in the Ultralytics PyTorch modules. Learn about initialization, inverse sigmoid, and multiscale deformable attention.
 keywords: Ultralytics, PyTorch, utils, initialization, inverse sigmoid, multiscale deformable attention, deep learning, neural networks
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, PyTorch, utils, initialization, inverse sigmoid, multisca
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/utils.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/utils.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/utils.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/nn/modules/utils.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

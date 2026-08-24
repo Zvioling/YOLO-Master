@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: utils.patches API Reference
+>>>>>>> origin/main
 description: Explore and contribute to Ultralytics' utils/patches.py. Learn about the imread, imwrite, imshow, and torch_save functions.
 keywords: Ultralytics, utils, patches, imread, imwrite, imshow, torch_save, OpenCV, PyTorch, GitHub
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, utils, patches, imread, imwrite, imshow, torch_save, Open
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/patches.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/patches.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/patches.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/patches.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 
@@ -15,6 +23,17 @@ keywords: Ultralytics, utils, patches, imread, imwrite, imshow, torch_save, Open
 
 <br><br><hr><br>
 
+<<<<<<< HEAD
+=======
+## ::: ultralytics.utils.patches.image_open
+
+<br><br><hr><br>
+
+## ::: ultralytics.utils.patches._imread_pil
+
+<br><br><hr><br>
+
+>>>>>>> origin/main
 ## ::: ultralytics.utils.patches.imwrite
 
 <br><br><hr><br>

@@ -2,12 +2,22 @@
 import json
 import sys
 from pathlib import Path
+<<<<<<< HEAD
 from typing import Union
+=======
+from typing import TYPE_CHECKING, Union
+>>>>>>> origin/main
 
 import torch
 
 from ultralytics.utils import LOGGER
 
+<<<<<<< HEAD
+=======
+if TYPE_CHECKING:
+    from ultralytics.nn.tasks import DetectionModel
+
+>>>>>>> origin/main
 
 def _lora_pkg():
     """Return the public lora package module so monkeypatches on package attrs remain effective."""
@@ -15,7 +25,11 @@ def _lora_pkg():
 
 def save_lora_adapters(model: "DetectionModel", path: Union[str, Path]) -> bool:
     """
+<<<<<<< HEAD
     Saves only the LoRA Adapter weights.
+=======
+    Save active LoRA or MoLoRA adapter weights without the frozen base model.
+>>>>>>> origin/main
     
     Args:
         model: LoRADetectionModel instance.
@@ -25,6 +39,16 @@ def save_lora_adapters(model: "DetectionModel", path: Union[str, Path]) -> bool:
     if hasattr(model, 'module'):
         model = model.module
 
+<<<<<<< HEAD
+=======
+    if getattr(model, "molora_enabled", False) or any(
+        module.__class__.__name__ == "MoLoRALayer" for module in model.modules()
+    ):
+        from .backend import MoLoRABackend
+
+        return MoLoRABackend().save(model, path)
+
+>>>>>>> origin/main
     if not getattr(model, 'lora_enabled', False):
         LOGGER.debug("[LoRA] Save skipped: LoRA not enabled.")
         return False
@@ -49,7 +73,11 @@ def save_lora_adapters(model: "DetectionModel", path: Union[str, Path]) -> bool:
                 "target_audit": getattr(model, "lora_target_audit", {}),
                 "runtime_metadata": getattr(model, "lora_runtime_metadata", {}),
             }
+<<<<<<< HEAD
             # P0 FIX: write fallback metadata to a dedicated filename so it does
+=======
+            # FIX: write fallback metadata to a dedicated filename so it does
+>>>>>>> origin/main
             # not collide with PEFT's own `adapter_config.json` when both
             # backends save into the same directory (e.g. successive
             # save_lora_adapters calls). Keep an `adapter_config.json` symlink
@@ -109,7 +137,11 @@ def load_lora_adapters(
         LOGGER.error(f"[LoRA] Adapter path not found: {path}")
         return False
 
+<<<<<<< HEAD
     # P0 FIX: prefer dedicated fallback metadata file to avoid mis-classifying
+=======
+    # FIX: prefer dedicated fallback metadata file to avoid mis-classifying
+>>>>>>> origin/main
     # a PEFT-saved `adapter_config.json` as a fallback config.
     fallback_meta_path = path / "fallback_meta.json"
     config_path = path / "adapter_config.json"

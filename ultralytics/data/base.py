@@ -27,7 +27,11 @@ class BaseDataset(Dataset):
     object detection tasks.
 
     Attributes:
+<<<<<<< HEAD
         img_path (str): Path to the folder containing images.
+=======
+        img_path (str | list[str]): Path to the folder containing images.
+>>>>>>> origin/main
         imgsz (int): Target image size for resizing.
         augment (bool): Whether to apply data augmentation.
         single_cls (bool): Whether to treat all objects as a single class.
@@ -49,7 +53,11 @@ class BaseDataset(Dataset):
         im_hw0 (list): List of original image dimensions (h, w).
         im_hw (list): List of resized image dimensions (h, w).
         npy_files (list[Path]): List of numpy file paths.
+<<<<<<< HEAD
         cache (str): Cache images to RAM or disk during training.
+=======
+        cache (str | None): Cache setting ('ram', 'disk', or None for no caching).
+>>>>>>> origin/main
         transforms (callable): Image transformation function.
         batch_shapes (np.ndarray): Batch shapes for rectangular training.
         batch (np.ndarray): Batch index of each image.
@@ -62,7 +70,11 @@ class BaseDataset(Dataset):
         cache_images_to_disk: Save an image as an *.npy file for faster loading.
         check_cache_disk: Check image caching requirements vs available disk space.
         check_cache_ram: Check image caching requirements vs available memory.
+<<<<<<< HEAD
         set_rectangle: Set the shape of bounding boxes as rectangles.
+=======
+        set_rectangle: Sort images by aspect ratio and set batch shapes for rectangular training.
+>>>>>>> origin/main
         get_image_and_label: Get and return label information from the dataset.
         update_labels_info: Custom label format method to be implemented by subclasses.
         build_transforms: Build transformation pipeline to be implemented by subclasses.
@@ -164,14 +176,23 @@ class BaseDataset(Dataset):
             for p in img_path if isinstance(img_path, list) else [img_path]:
                 p = Path(p)  # os-agnostic
                 if p.is_dir():  # dir
+<<<<<<< HEAD
                     f += glob.glob(str(p / "**" / "*.*"), recursive=True)
+=======
+                    f += glob.glob(str(Path(glob.escape(p)) / "**" / "*.*"), recursive=True)
+>>>>>>> origin/main
                     # F = list(p.rglob('*.*'))  # pathlib
                 elif p.is_file():  # file
                     with open(p, encoding="utf-8") as t:
                         t = t.read().strip().splitlines()
                         parent = str(p.parent) + os.sep
+<<<<<<< HEAD
                         f += [x.replace("./", parent) if x.startswith("./") else x for x in t]  # local to global path
                         # F += [p.parent / x.lstrip(os.sep) for x in t]  # local to global path (pathlib)
+=======
+                        f += [x.replace("./", parent, 1) if x.startswith("./") else x for x in t]  # local to global
+                        # F += [p.parent / x.lstrip(os.sep) for x in t]  # local to global (pathlib)
+>>>>>>> origin/main
                 else:
                     raise FileNotFoundError(f"{self.prefix}{p} does not exist")
             im_files = sorted(x.replace("/", os.sep) for x in f if x.rpartition(".")[-1].lower() in IMG_FORMATS)
@@ -196,7 +217,11 @@ class BaseDataset(Dataset):
                 cls = self.labels[i]["cls"]
                 bboxes = self.labels[i]["bboxes"]
                 segments = self.labels[i]["segments"]
+<<<<<<< HEAD
                 keypoints = self.labels[i]["keypoints"]
+=======
+                keypoints = self.labels[i].get("keypoints")
+>>>>>>> origin/main
                 j = (cls == include_class_array).any(1)
                 self.labels[i]["cls"] = cls[j]
                 self.labels[i]["bboxes"] = bboxes[j]
@@ -207,12 +232,24 @@ class BaseDataset(Dataset):
             if self.single_cls:
                 self.labels[i]["cls"][:, 0] = 0
 
+<<<<<<< HEAD
     def load_image(self, i: int, rect_mode: bool = True) -> tuple[np.ndarray, tuple[int, int], tuple[int, int]]:
+=======
+    def load_image(
+        self, i: int, rect_mode: bool = True, resize_short: bool = False
+    ) -> tuple[np.ndarray, tuple[int, int], tuple[int, int]]:
+>>>>>>> origin/main
         """Load an image from dataset index 'i'.
 
         Args:
             i (int): Index of the image to load.
+<<<<<<< HEAD
             rect_mode (bool): Whether to use rectangular resizing.
+=======
+            rect_mode (bool): Whether to use rectangular resizing (long side to imgsz).
+            resize_short (bool): Whether to resize the shorter side to imgsz while maintaining aspect ratio. Overrides
+                rect_mode when True.
+>>>>>>> origin/main
 
         Returns:
             im (np.ndarray): Loaded image as a NumPy array.
@@ -227,6 +264,16 @@ class BaseDataset(Dataset):
             if fn.exists():  # load npy
                 try:
                     im = np.load(fn)
+<<<<<<< HEAD
+=======
+                    npy_channels = im.shape[-1] if im.ndim >= 3 else 1
+                    if npy_channels != self.channels:
+                        LOGGER.warning(
+                            f"{self.prefix}Removing stale *.npy image file {fn} with {npy_channels} channels, expected {self.channels}"
+                        )
+                        Path(fn).unlink(missing_ok=True)
+                        im = imread(f, flags=self.cv2_flag)
+>>>>>>> origin/main
                 except Exception as e:
                     LOGGER.warning(f"{self.prefix}Removing corrupt *.npy image file {fn} due to: {e}")
                     Path(fn).unlink(missing_ok=True)
@@ -238,10 +285,23 @@ class BaseDataset(Dataset):
 
             h0, w0 = im.shape[:2]  # orig hw
             if rect_mode:  # resize long side to imgsz while maintaining aspect ratio
+<<<<<<< HEAD
                 r = self.imgsz / max(h0, w0)  # ratio
                 if r != 1:  # if sizes are not equal
                     w, h = (min(math.ceil(w0 * r), self.imgsz), min(math.ceil(h0 * r), self.imgsz))
                     im = cv2.resize(im, (w, h), interpolation=cv2.INTER_LINEAR)
+=======
+                if resize_short:  # resize short side to imgsz while maintaining aspect ratio
+                    r = self.imgsz / min(h0, w0)  # ratio
+                    if r != 1:  # if sizes are not equal
+                        w, h = (math.ceil(w0 * r), self.imgsz) if h0 < w0 else (self.imgsz, math.ceil(h0 * r))
+                        im = cv2.resize(im, (w, h), interpolation=cv2.INTER_LINEAR)
+                else:
+                    r = self.imgsz / max(h0, w0)  # ratio
+                    if r != 1:  # if sizes are not equal
+                        w, h = (min(math.ceil(w0 * r), self.imgsz), min(math.ceil(h0 * r), self.imgsz))
+                        im = cv2.resize(im, (w, h), interpolation=cv2.INTER_LINEAR)
+>>>>>>> origin/main
             elif not (h0 == w0 == self.imgsz):  # resize by stretching image to square imgsz
                 im = cv2.resize(im, (self.imgsz, self.imgsz), interpolation=cv2.INTER_LINEAR)
             if im.ndim == 2:
@@ -280,7 +340,15 @@ class BaseDataset(Dataset):
         """Save an image as an *.npy file for faster loading."""
         f = self.npy_files[i]
         if not f.exists():
+<<<<<<< HEAD
             np.save(f.as_posix(), imread(self.im_files[i]), allow_pickle=False)
+=======
+            try:
+                np.save(f.as_posix(), imread(self.im_files[i], flags=self.cv2_flag), allow_pickle=False)
+            except Exception as e:
+                f.unlink(missing_ok=True)
+                LOGGER.warning(f"{self.prefix}WARNING ⚠️ Failed to cache image {f}: {e}")
+>>>>>>> origin/main
 
     def check_cache_disk(self, safety_margin: float = 0.5) -> bool:
         """Check if there's enough disk space for caching images.
@@ -347,7 +415,11 @@ class BaseDataset(Dataset):
         return True
 
     def set_rectangle(self) -> None:
+<<<<<<< HEAD
         """Set the shape of bounding boxes for YOLO detections as rectangles."""
+=======
+        """Sort images by aspect ratio and set batch shapes for rectangular training."""
+>>>>>>> origin/main
         bi = np.floor(np.arange(self.ni) / self.batch_size).astype(int)  # batch index
         nb = bi[-1] + 1  # number of batches
 
@@ -400,7 +472,11 @@ class BaseDataset(Dataset):
         return len(self.labels)
 
     def update_labels_info(self, label: dict[str, Any]) -> dict[str, Any]:
+<<<<<<< HEAD
         """Custom your label format here."""
+=======
+        """Customize your label format here."""
+>>>>>>> origin/main
         return label
 
     def build_transforms(self, hyp: dict[str, Any] | None = None):

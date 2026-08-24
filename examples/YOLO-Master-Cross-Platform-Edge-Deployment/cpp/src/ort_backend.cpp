@@ -1,0 +1,167 @@
+#include "ort_backend.hpp"
+#include <chrono>
+#include <cstdlib>
+#include <iostream>
+#include <unordered_map>
+
+namespace yolomaster {
+
+using clk = std::chrono::high_resolution_clock;
+static double ms_since(const clk::time_point& t) {
+    return std::chrono::duration<double, std::milli>(clk::now() - t).count();
+}
+
+// ORT takes the model path as wchar_t* on Windows, char* elsewhere (ORTCHAR_T).
+#ifdef _WIN32
+static std::wstring ort_path(const std::string& s) { return std::wstring(s.begin(), s.end()); }
+#else
+static const std::string& ort_path(const std::string& s) { return s; }
+#endif
+
+OrtBackend::OrtBackend(const std::string& model_path, int threads, const std::string& device)
+    : env_(ORT_LOGGING_LEVEL_WARNING, "yolomaster") {
+    opts_.SetIntraOpNumThreads(threads);
+    opts_.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
+
+    if (device == "trt" || device == "tensorrt") {
+        // ONNXRuntime TensorRT EP: builds+caches a TRT engine internally (near-native TRT),
+        // honors QDQ nodes for INT8 + FP16 elsewhere, and auto-falls-back to CUDA/CPU for
+        // unsupported subgraphs. Portable: ship the .onnx; the engine cache builds on first run.
+        try {
+            OrtTensorRTProviderOptionsV2* trt = nullptr;
+            Ort::ThrowOnError(Ort::GetApi().CreateTensorRTProviderOptions(&trt));
+            const char* keys[] = {"trt_fp16_enable", "trt_int8_enable",
+                                  "trt_engine_cache_enable", "trt_engine_cache_path"};
+            const char* vals[] = {"1", "1", "1", "trt_engine_cache"};
+            Ort::ThrowOnError(Ort::GetApi().UpdateTensorRTProviderOptions(trt, keys, vals, 4));
+            opts_.AppendExecutionProvider_TensorRT_V2(*trt);
+            Ort::GetApi().ReleaseTensorRTProviderOptions(trt);
+            active_ep = "TensorRT-EP";
+        } catch (const std::exception& e) {
+            std::cerr << "[ort] TensorRT EP unavailable (" << e.what() << "); trying CUDA\n";
+        }
+        // CUDA fallback for TRT-unsupported nodes (and if the TRT EP failed to load)
+        try {
+            OrtCUDAProviderOptions cuda{}; cuda.device_id = 0;
+            opts_.AppendExecutionProvider_CUDA(cuda);
+            if (active_ep != "TensorRT-EP") active_ep = "CUDA";
+        } catch (const std::exception& e) {
+            if (active_ep != "TensorRT-EP") { std::cerr << "[ort] CUDA EP unavailable; using CPU\n"; active_ep = "CPU"; }
+        }
+    } else if (device == "cuda") {
+        try {                                    // graceful fallback if CUDA EP can't load
+            OrtCUDAProviderOptions cuda{};
+            cuda.device_id = 0;
+            opts_.AppendExecutionProvider_CUDA(cuda);
+            active_ep = "CUDA";
+        } catch (const std::exception& e) {
+            std::cerr << "[ort] CUDA EP unavailable (" << e.what() << "); using CPU\n";
+            active_ep = "CPU";
+            ep_note = std::string("CUDA EP failed: ") + e.what();
+        }
+    } else if (device == "coreml") {
+        // Apple CoreML EP (macOS): ORT partitions the graph, runs supported subgraphs on ANE/GPU
+        // and the rest on CPU. MLComputeUnits=CPUAndGPU because the GPU tolerates the graph
+        // fragmentation of this MoE+attention model far better than the ANE. Falls back to CPU.
+        try {
+            std::unordered_map<std::string, std::string> co = {
+                {"MLComputeUnits", "CPUAndGPU"},
+                {"ModelFormat", "MLProgram"},
+                {"RequireStaticInputShapes", "1"},
+            };
+            opts_.AppendExecutionProvider("CoreML", co);
+            active_ep = "CoreML";
+        } catch (const std::exception& e) {
+            std::cerr << "[ort] CoreML EP unavailable (" << e.what() << "); using CPU\n";
+            active_ep = "CPU";
+        }
+    }
+    session_ = std::make_unique<Ort::Session>(env_, ort_path(model_path).c_str(), opts_);
+
+    const size_t n_in = session_->GetInputCount();
+    const size_t n_out = session_->GetOutputCount();
+    for (size_t i = 0; i < n_in; ++i)
+        in_names_s_.push_back(session_->GetInputNameAllocated(i, alloc_).get());
+    for (size_t i = 0; i < n_out; ++i)
+        out_names_s_.push_back(session_->GetOutputNameAllocated(i, alloc_).get());
+    for (auto& s : in_names_s_) in_names_.push_back(s.c_str());
+    for (auto& s : out_names_s_) out_names_.push_back(s.c_str());
+
+    // detect a static input size (H==W>0) -> hard constraint
+    {
+        auto shape = session_->GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
+        if (shape.size() == 4 && shape[2] > 0 && shape[2] == shape[3]) {
+            fixed_imgsz = static_cast<int>(shape[2]);
+            meta_imgsz = fixed_imgsz;   // authoritative over the metadata string
+        }
+    }
+
+    // auto-read ultralytics-embedded metadata (class names + imgsz)
+    Ort::ModelMetadata md = session_->GetModelMetadata();
+    if (auto v = md.LookupCustomMetadataMapAllocated("names", alloc_))
+        meta_names = meta::parse_names_dict(v.get());
+    if (auto v = md.LookupCustomMetadataMapAllocated("imgsz", alloc_)) {
+        const std::string s = v.get();
+        const size_t p = s.find_first_of("0123456789");
+        if (p != std::string::npos) meta_imgsz = std::atoi(s.c_str() + p);
+    }
+}
+
+std::vector<Detection> OrtBackend::infer(const cv::Mat& bgr, const Config& cfg) {
+    // ---- preprocess: letterbox -> NCHW float RGB /255 ----
+    auto t0 = clk::now();
+    LetterboxInfo lb;
+    cv::Mat padded = preprocess(bgr, cfg.imgsz, cfg.stretch, lb);   // imgsz x imgsz, CV_8UC3 BGR
+    // NCHW float RGB /255 (replaces cv::dnn::blobFromImage with swapRB=true)
+    const int sz = cfg.imgsz, hw = sz * sz;
+    std::vector<float> blob(3 * hw);
+    for (int y = 0; y < sz; ++y) {
+        const uint8_t* row = padded.ptr<uint8_t>(y);
+        for (int x = 0; x < sz; ++x) {
+            const uint8_t* px = row + x * 3;          // BGR
+            const int idx = y * sz + x;
+            blob[idx]          = px[2] * (1.0f / 255); // R
+            blob[hw + idx]     = px[1] * (1.0f / 255); // G
+            blob[2 * hw + idx] = px[0] * (1.0f / 255); // B
+        }
+    }
+    pre_ms = ms_since(t0);
+
+    // ---- inference ----
+    auto t1 = clk::now();
+    std::array<int64_t, 4> in_shape{1, 3, cfg.imgsz, cfg.imgsz};
+    Ort::MemoryInfo mem = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
+    Ort::Value in_tensor = Ort::Value::CreateTensor<float>(
+        mem, blob.data(), blob.size(),
+        in_shape.data(), in_shape.size());
+    auto outs = session_->Run(Ort::RunOptions{nullptr}, in_names_.data(), &in_tensor, 1,
+                              out_names_.data(), out_names_.size());
+    infer_ms = ms_since(t1);
+
+    // ---- postprocess: detection is the rank-3 output [1,feat,anchors]; proto (seg) is rank-4 ----
+    auto t2 = clk::now();
+    int det_i = 0, proto_i = -1;
+    for (size_t i = 0; i < outs.size(); ++i) {
+        const size_t r = outs[i].GetTensorTypeAndShapeInfo().GetShape().size();
+        if (r == 4) proto_i = static_cast<int>(i);
+        else if (r == 3) det_i = static_cast<int>(i);
+    }
+    auto shape = outs[det_i].GetTensorTypeAndShapeInfo().GetShape();   // {1, feat, anchors}
+    const int feat_dim = static_cast<int>(shape[1]);
+    const int num_anchors = static_cast<int>(shape[2]);
+    const float* out = outs[det_i].GetTensorMutableData<float>();
+    candidates = decode_candidates(out, feat_dim, num_anchors, cfg, lb);
+    cand_orig_w = lb.orig_w; cand_orig_h = lb.orig_h; cand_lb = lb;
+    proto.clear(); proto_c = proto_h = proto_w = 0;
+    if (proto_i >= 0) {                                                // segmentation model
+        auto ps = outs[proto_i].GetTensorTypeAndShapeInfo().GetShape();  // {1, nm, mh, mw}
+        proto_c = (int)ps[1]; proto_h = (int)ps[2]; proto_w = (int)ps[3];
+        const float* pd = outs[proto_i].GetTensorMutableData<float>();
+        proto.assign(pd, pd + (size_t)proto_c * proto_h * proto_w);
+    }
+    auto dets = nms_and_cap(candidates, cfg, lb.orig_w, lb.orig_h);
+    post_ms = ms_since(t2);
+    return dets;
+}
+
+} // namespace yolomaster

@@ -18,8 +18,13 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # Avoid OpenMP conflict on some sys
 
 
 class VisualAISearch:
+<<<<<<< HEAD
     """A semantic image search system that leverages OpenCLIP for generating high-quality image and text embeddings and
     FAISS for fast similarity-based retrieval.
+=======
+    """A semantic image search system that leverages OpenAI's CLIP for generating high-quality image and text embeddings
+    and NumPy cosine similarity for fast similarity-based retrieval.
+>>>>>>> origin/main
 
     This class aligns image and text embeddings in a shared semantic space, enabling users to search large collections
     of images using natural language queries with high accuracy and speed.
@@ -27,17 +32,29 @@ class VisualAISearch:
     Attributes:
         data (str): Directory containing images.
         device (str): Computation device, e.g., 'cpu' or 'cuda'.
+<<<<<<< HEAD
         faiss_index (str): Path to the FAISS index file.
         data_path_npy (str): Path to the numpy file storing image paths.
         data_dir (Path): Path object for the data directory.
         model: Loaded CLIP model.
         index: FAISS index for similarity search.
+=======
+        index_path (str): Path to the numpy file storing image embeddings.
+        data_path_npy (str): Path to the numpy file storing image paths.
+        data_dir (Path): Path object for the data directory.
+        model: Loaded CLIP model.
+        index (np.ndarray): L2-normalized image embeddings used for cosine similarity search.
+>>>>>>> origin/main
         image_paths (list[str]): List of image file paths.
 
     Methods:
         extract_image_feature: Extract CLIP embedding from an image.
         extract_text_feature: Extract CLIP embedding from text.
+<<<<<<< HEAD
         load_or_build_index: Load existing FAISS index or build new one.
+=======
+        load_or_build_index: Load existing embeddings or build them from images.
+>>>>>>> origin/main
         search: Perform semantic search for similar images.
 
     Examples:
@@ -47,6 +64,7 @@ class VisualAISearch:
     """
 
     def __init__(self, **kwargs: Any) -> None:
+<<<<<<< HEAD
         """Initialize the VisualAISearch class with FAISS index and CLIP model."""
         assert TORCH_2_4, f"VisualAISearch requires torch>=2.4 (found torch=={TORCH_VERSION})"
         from ultralytics.nn.text_model import build_text_model
@@ -55,6 +73,13 @@ class VisualAISearch:
 
         self.faiss = __import__("faiss")
         self.faiss_index = "faiss.index"
+=======
+        """Initialize the VisualAISearch class with the embedding index and CLIP model."""
+        assert TORCH_2_4, f"VisualAISearch requires torch>=2.4 (found torch=={TORCH_VERSION})"
+        from ultralytics.nn.text_model import build_text_model
+
+        self.index_path = "embeddings.npy"
+>>>>>>> origin/main
         self.data_path_npy = "paths.npy"
         self.data_dir = Path(kwargs.get("data", "images"))
         self.device = select_device(kwargs.get("device", "cpu"))
@@ -83,6 +108,7 @@ class VisualAISearch:
         """Extract CLIP text embedding from the given text query."""
         return self.model.encode_text(self.model.tokenize([text])).detach().cpu().numpy()
 
+<<<<<<< HEAD
     def load_or_build_index(self) -> None:
         """Load existing FAISS index or build a new one from image features.
 
@@ -99,6 +125,36 @@ class VisualAISearch:
 
         # If the index doesn't exist, start building it from scratch
         LOGGER.info("Building FAISS index from images...")
+=======
+    @staticmethod
+    def _normalize(x: np.ndarray) -> np.ndarray:
+        """L2-normalize each row of `x` so inner products equal cosine similarity.
+
+        Args:
+            x (np.ndarray): Feature array of shape (N, D).
+
+        Returns:
+            (np.ndarray): Row-wise L2-normalized array with the same shape as the input.
+        """
+        return x / np.maximum(np.linalg.norm(x, axis=1, keepdims=True), 1e-12)
+
+    def load_or_build_index(self) -> None:
+        """Load existing image embeddings or build them from the image directory.
+
+        Checks if the embeddings and image paths exist on disk. If found, loads them directly. Otherwise, builds the
+        index by extracting features from all images in the data directory, L2-normalizes them, and saves both the
+        embeddings and image paths for future use.
+        """
+        # Check if the embeddings and corresponding image paths already exist
+        if Path(self.index_path).exists() and Path(self.data_path_npy).exists():
+            LOGGER.info("Loading existing embeddings...")
+            self.index = np.load(self.index_path)  # Load the L2-normalized embeddings from disk
+            self.image_paths = np.load(self.data_path_npy)  # Load the saved image path list
+            return  # Exit the function as the index is successfully loaded
+
+        # If the embeddings don't exist, start building them from scratch
+        LOGGER.info("Building embeddings from images...")
+>>>>>>> origin/main
         vectors = []  # List to store feature vectors of images
 
         # Iterate over all image files in the data directory
@@ -118,11 +174,16 @@ class VisualAISearch:
             raise RuntimeError("No image embeddings could be generated.")
 
         vectors = np.vstack(vectors).astype("float32")  # Stack all vectors into a NumPy array and convert to float32
+<<<<<<< HEAD
         self.faiss.normalize_L2(vectors)  # Normalize vectors to unit length for cosine similarity
 
         self.index = self.faiss.IndexFlatIP(vectors.shape[1])  # Create a new FAISS index using inner product
         self.index.add(vectors)  # Add the normalized vectors to the FAISS index
         self.faiss.write_index(self.index, self.faiss_index)  # Save the newly built FAISS index to disk
+=======
+        self.index = self._normalize(vectors)  # L2-normalize so inner product equals cosine similarity
+        np.save(self.index_path, self.index)  # Save the embeddings to disk
+>>>>>>> origin/main
         np.save(self.data_path_npy, np.array(self.image_paths))  # Save the list of image paths to disk
 
         LOGGER.info(f"Indexed {len(self.image_paths)} images.")
@@ -143,6 +204,7 @@ class VisualAISearch:
             >>> searcher = VisualAISearch(data="images")
             >>> results = searcher.search("red car", k=5, similarity_thresh=0.2)
         """
+<<<<<<< HEAD
         text_feat = self.extract_text_feature(query).astype("float32")
         self.faiss.normalize_L2(text_feat)
 
@@ -150,6 +212,12 @@ class VisualAISearch:
         results = [
             (self.image_paths[i], float(D[0][idx])) for idx, i in enumerate(index[0]) if D[0][idx] >= similarity_thresh
         ]
+=======
+        text_feat = self._normalize(self.extract_text_feature(query).astype("float32"))
+        scores = self.index @ text_feat[0]  # cosine similarity (embeddings are L2-normalized)
+        top_k = np.argsort(scores)[::-1][: max(k, 0)]
+        results = [(self.image_paths[i], float(scores[i])) for i in top_k if scores[i] >= similarity_thresh]
+>>>>>>> origin/main
         results.sort(key=lambda x: x[1], reverse=True)
 
         LOGGER.info("\nRanked Results:")

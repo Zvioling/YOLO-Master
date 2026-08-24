@@ -21,6 +21,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
+<<<<<<< HEAD
+=======
+from ultralytics.utils import LOGGER
+>>>>>>> origin/main
 from ultralytics.utils.tqdm import TQDM
 
 # Constants
@@ -85,6 +89,10 @@ class ParsedDocstring:
     raises: list[ParameterDoc] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
     examples: list[str] = field(default_factory=list)
+<<<<<<< HEAD
+=======
+    references: list[str] = field(default_factory=list)
+>>>>>>> origin/main
 
 
 @dataclass
@@ -116,7 +124,11 @@ class DocumentedModule:
 
 
 # --------------------------------------------------------------------------------------------- #
+<<<<<<< HEAD
 # Placeholder (legacy) generation for mkdocstrings-style stubs
+=======
+# Placeholder (legacy) generation for reference stubs
+>>>>>>> origin/main
 # --------------------------------------------------------------------------------------------- #
 
 
@@ -128,8 +140,26 @@ def extract_classes_and_functions(filepath: Path) -> tuple[list[str], list[str]]
     return classes, functions
 
 
+<<<<<<< HEAD
 def create_placeholder_markdown(py_filepath: Path, module_path: str, classes: list[str], functions: list[str]) -> Path:
     """Create a minimal Markdown stub used by mkdocstrings."""
+=======
+def _with_reference_title(header_content: str, module_path: str) -> str:
+    """Inject a concise, front-loaded `title:` into reference frontmatter (idempotent).
+
+    The H1 keeps the full module path; the `<title>` uses `{module} API Reference` (with the redundant package prefix
+    dropped) to fit the 60-char SEO target once the docs renderer appends its ` | Ultralytics` brand suffix — a few of
+    the deepest module paths still rely on the renderer's truncation backstop. Curated description/keywords are kept.
+    """
+    if re.search(r"(?m)^title\s*:", header_content):  # line-anchored: ignore `title:` inside a description
+        return header_content
+    title = f"{module_path.removeprefix(f'{PACKAGE_DIR.name}.')} API Reference"
+    return header_content.replace("---\n", f"---\ntitle: {title}\n", 1)
+
+
+def create_placeholder_markdown(py_filepath: Path, module_path: str, classes: list[str], functions: list[str]) -> Path:
+    """Create a minimal Markdown reference stub."""
+>>>>>>> origin/main
     md_filepath = REFERENCE_DIR / py_filepath.relative_to(PACKAGE_DIR).with_suffix(".md")
     exists = md_filepath.exists()
 
@@ -141,6 +171,7 @@ def create_placeholder_markdown(py_filepath: Path, module_path: str, classes: li
             if len(parts) > 2:
                 header_content = f"---{parts[1]}---\n\n"
     if not header_content:
+<<<<<<< HEAD
         # Add a default header with placeholders for developers to fill in
         header_content = (
             "---\n"
@@ -149,6 +180,13 @@ def create_placeholder_markdown(py_filepath: Path, module_path: str, classes: li
             "keywords: YOLO-Master, reference, API\n"
             "---\n\n"
         )
+=======
+        header_content = (
+            f"---\ndescription: Reference for `{module_path}` in the Ultralytics package.\n"
+            f"keywords: Ultralytics, {module_path}, API reference, YOLO, Python\n---\n\n"
+        )
+    header_content = _with_reference_title(header_content, module_path)
+>>>>>>> origin/main
 
     module_path_dots = module_path
     module_path_fs = module_path.replace(".", "/")
@@ -411,17 +449,31 @@ SECTION_ALIASES = {
     "example": "examples",
     "notes": "notes",
     "note": "notes",
+<<<<<<< HEAD
+=======
+    "references": "references",
+    "reference": "references",
+>>>>>>> origin/main
     "methods": "methods",
 }
 
 
 def _normalize_text(text: str) -> str:
+<<<<<<< HEAD
     """Normalize text while preserving markdown structures like tables, admonitions, and code blocks."""
     if not text:
         return ""
     # Check if text contains markdown structures that need line preservation
     if any(marker in text for marker in ("|", "!!!", "```", "\n#", "\n- ", "\n* ", "\n1. ", "\n    ")):
         # Preserve markdown formatting - just strip trailing whitespace from lines
+=======
+    """Normalize text while preserving Markdown structures like tables, admonitions, and code blocks."""
+    if not text:
+        return ""
+    # Check if text contains Markdown structures that need line preservation
+    if any(marker in text for marker in ("|", "!!!", "```", "\n#", "\n- ", "\n* ", "\n1. ", "\n    ")):
+        # Preserve Markdown formatting - just strip trailing whitespace from lines
+>>>>>>> origin/main
         return "\n".join(line.rstrip() for line in text.splitlines()).strip()
     # Simple text - collapse single newlines within paragraphs
     paragraphs: list[str] = []
@@ -477,6 +529,10 @@ def parse_google_docstring(docstring: str | None) -> ParsedDocstring:
         raises=_parse_named_entries(sections.get("raises", [])),
         notes=[textwrap.dedent("\n".join(sections.get("notes", []))).strip()] if sections.get("notes") else [],
         examples=[textwrap.dedent("\n".join(sections.get("examples", []))).strip()] if sections.get("examples") else [],
+<<<<<<< HEAD
+=======
+        references=[line.strip() for line in sections.get("references", []) if line.strip()],
+>>>>>>> origin/main
     )
 
 
@@ -500,6 +556,10 @@ def merge_docstrings(base: ParsedDocstring, extra: ParsedDocstring, ignore_summa
     _merge_unique(base.raises, extra.raises, lambda r: (r.name, r.type, r.description, r.default))
     _merge_unique(base.notes, extra.notes, lambda n: n.strip())
     _merge_unique(base.examples, extra.examples, lambda e: e.strip())
+<<<<<<< HEAD
+=======
+    _merge_unique(base.references, extra.references, lambda r: r.strip())
+>>>>>>> origin/main
     return base
 
 
@@ -711,8 +771,14 @@ def _merge_params(doc_params: list[ParameterDoc], signature_params: list[Paramet
     return merged
 
 
+<<<<<<< HEAD
 DEFAULT_SECTION_ORDER = ["args", "returns", "examples", "notes", "attributes", "yields", "raises"]
 SUMMARY_BADGE_MAP = {"Classes": "class", "Properties": "property", "Methods": "method", "Functions": "function"}
+=======
+DEFAULT_SECTION_ORDER = ["args", "returns", "examples", "notes", "references", "attributes", "yields", "raises"]
+SUMMARY_BADGE_MAP = {"Classes": "class", "Properties": "property", "Methods": "method", "Functions": "function"}
+_missing_type_warnings: list[str] = []
+>>>>>>> origin/main
 
 
 def contribution_admonition(pretty: str, url: str, *, kind: str = "note", title: str | None = None) -> str:
@@ -720,7 +786,11 @@ def contribution_admonition(pretty: str, url: str, *, kind: str = "note", title:
     label = f' "{title}"' if title else ""
     body = (
         f"This page is sourced from [{pretty}]({url}). Have an improvement or example to add? "
+<<<<<<< HEAD
         f"Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏"
+=======
+        f"Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏"
+>>>>>>> origin/main
     )
     return f"!!! {kind}{label}\n\n    {body}\n\n"
 
@@ -823,6 +893,13 @@ def render_docstring(
         table = _render_table(["Type", "Description"], rows, level, title=None)
         sections["raises"] = f"**Raises**\n\n{table}"
 
+<<<<<<< HEAD
+=======
+    if doc.references:
+        links = "\n".join(ref if ref.startswith("- ") else f"- {ref}" for ref in doc.references)
+        sections["references"] = f"**References**\n\n{links}\n\n"
+
+>>>>>>> origin/main
     if extra_sections:
         sections.update({k: v for k, v in extra_sections.items() if v})
     # Ensure section order contains unique entries to avoid duplicate renders (e.g., classes injecting "examples")
@@ -915,6 +992,16 @@ def render_item(item: DocItem, module_url: str, module_path: str, level: int = 2
         bases = ", ".join(f"`{b}`" for b in item.bases)
         parts.append(f"**Bases:** {bases}\n")
 
+<<<<<<< HEAD
+=======
+    # Check for parameters missing type annotations in both signature and docstring
+    if item.signature_params and item.doc.params:
+        merged = _merge_params(item.doc.params, item.signature_params)
+        missing = [p.name for p in merged if not p.type]
+        if missing:
+            _missing_type_warnings.append(f"{item.qualname}: {', '.join(missing)}")
+
+>>>>>>> origin/main
     if item.kind == "class":
         method_section = None
         if item.children:
@@ -1000,6 +1087,7 @@ def create_markdown(module: DocumentedModule) -> Path:
             if "description:" in part or "comments:" in part:
                 header_content += f"---{part}---\n\n"
     if not header_content:
+<<<<<<< HEAD
         # Add a default header with helpful description for module documentation
         header_content = (
             "---\n"
@@ -1008,6 +1096,13 @@ def create_markdown(module: DocumentedModule) -> Path:
             "keywords: YOLO-Master, reference, API\n"
             "---\n\n"
         )
+=======
+        header_content = (
+            f"---\ndescription: Reference for `{module.module_path}` in the Ultralytics package.\n"
+            f"keywords: Ultralytics, {module.module_path}, API reference, YOLO, Python\n---\n\n"
+        )
+    header_content = _with_reference_title(header_content, module.module_path)
+>>>>>>> origin/main
 
     module_path_fs = module.module_path.replace(".", "/")
     url = f"https://github.com/{GITHUB_REPO}/blob/main/{module_path_fs}.py"
@@ -1060,13 +1155,18 @@ def create_nav_menu_yaml(nav_items: list[str]) -> str:
         return yaml_str
 
     reference_yaml = _dict_to_yaml(sort_nested_dict(nav_tree))
+<<<<<<< HEAD
     print(f"Scan complete, generated reference section with {len(reference_yaml.splitlines())} lines")
+=======
+    LOGGER.info(f"Scan complete, generated reference section with {len(reference_yaml.splitlines())} lines")
+>>>>>>> origin/main
     return reference_yaml
 
 
 def extract_document_paths(yaml_section: str) -> list[str]:
     """Extract document paths from a YAML section, ignoring formatting and structure."""
     paths = []
+<<<<<<< HEAD
     # Match all paths that appear after a colon in the YAML
     path_matches = re.findall(r":\s*([^\s][^:\n]*?)(?:\n|$)", yaml_section)
     for path in path_matches:
@@ -1074,6 +1174,16 @@ def extract_document_paths(yaml_section: str) -> list[str]:
         path = path.strip()
         if path and not path.startswith("-") and not path.endswith(":"):
             paths.append(path)
+=======
+    # Match `key: path` entries
+    path_matches = re.findall(r":\s*([^\s][^:\n]*?)(?:\n|$)", yaml_section)
+    for path in path_matches:
+        path = path.strip()
+        if path and not path.startswith("-") and not path.endswith(":"):
+            paths.append(path)
+    # Also match bare `- path.md` entries (e.g. `- reference/index.md`)
+    paths.extend(re.findall(r"^\s*-\s+([^\s:][^:\n]*\.md)\s*$", yaml_section, re.MULTILINE))
+>>>>>>> origin/main
     return sorted(paths)
 
 
@@ -1085,6 +1195,7 @@ def update_mkdocs_file(reference_yaml: str) -> None:
     ref_pattern = r"(\n  - Reference:[\s\S]*?)(?=\n  - \w|$)"
     ref_match = re.search(ref_pattern, mkdocs_content)
 
+<<<<<<< HEAD
     # Build new section with proper indentation
     new_section_lines = ["\n  - Reference:"]
     new_section_lines.extend(
@@ -1092,12 +1203,26 @@ def update_mkdocs_file(reference_yaml: str) -> None:
         for line in reference_yaml.splitlines()
         if line.strip() != "- reference:"  # Skip redundant header
     )
+=======
+    # Build new section with proper indentation. The hand-written `reference/index.md`
+    # overview is pinned to the top so the Reference section has a landing page (matching
+    # the convention used by Modes, Tasks, Datasets, Help, etc.). It must share the same
+    # 4-space inner indent as the auto-generated sibling entries below so the resulting
+    # YAML is parseable (otherwise siblings nest under it as children of a string scalar).
+    inner_lines = [line for line in reference_yaml.splitlines() if line.strip() != "- reference:"]
+    inner_lines.insert(0, "    - reference/index.md")
+    new_section_lines = ["\n  - Reference:", *(f"    {line}" for line in inner_lines)]
+>>>>>>> origin/main
     new_ref_section = "\n".join(new_section_lines) + "\n"
 
     if ref_match:
         # We found an existing Reference section
         ref_section = ref_match.group(1)
+<<<<<<< HEAD
         print(f"Found existing top-level Reference section ({len(ref_section)} chars)")
+=======
+        LOGGER.info(f"Found existing top-level Reference section ({len(ref_section)} chars)")
+>>>>>>> origin/main
 
         # Compare only document paths
         existing_paths = extract_document_paths(ref_section)
@@ -1105,25 +1230,50 @@ def update_mkdocs_file(reference_yaml: str) -> None:
 
         # Check if the document paths are the same (ignoring structure or formatting differences)
         if len(existing_paths) == len(new_paths) and set(existing_paths) == set(new_paths):
+<<<<<<< HEAD
             print(f"No changes detected in document paths ({len(existing_paths)} items). Skipping update.")
             return
 
         print(f"Changes detected: {len(new_paths)} document paths vs {len(existing_paths)} existing")
+=======
+            LOGGER.info(f"No changes detected in document paths ({len(existing_paths)} items). Skipping update.")
+            return
+
+        LOGGER.info(f"Changes detected: {len(new_paths)} document paths vs {len(existing_paths)} existing")
+>>>>>>> origin/main
 
         # Update content
         new_content = mkdocs_content.replace(ref_section, new_ref_section)
         MKDOCS_YAML.write_text(new_content)
+<<<<<<< HEAD
         subprocess.run(["npx", "prettier", "--write", str(MKDOCS_YAML)], check=False, cwd=PACKAGE_DIR.parent)
         print(f"Updated Reference section in {MKDOCS_YAML}")
+=======
+        try:
+            result = subprocess.run(
+                ["npx", "prettier", "--write", str(MKDOCS_YAML)], capture_output=True, text=True, cwd=PACKAGE_DIR.parent
+            )
+            if result.returncode != 0:
+                LOGGER.warning(f"prettier formatting failed: {result.stderr.strip()}")
+        except FileNotFoundError:
+            LOGGER.warning("prettier not found (install Node.js or run 'npm i -g prettier'), skipping YAML formatting")
+        LOGGER.info(f"Updated Reference section in {MKDOCS_YAML}")
+>>>>>>> origin/main
     elif help_match := re.search(r"(\n  - Help:)", mkdocs_content):
         # No existing Reference section, we need to add it
         help_section = help_match.group(1)
         # Insert before Help section
         new_content = mkdocs_content.replace(help_section, f"{new_ref_section}{help_section}")
         MKDOCS_YAML.write_text(new_content)
+<<<<<<< HEAD
         print(f"Added new Reference section before Help in {MKDOCS_YAML}")
     else:
         print("Could not find a suitable location to add Reference section")
+=======
+        LOGGER.info(f"Added new Reference section before Help in {MKDOCS_YAML}")
+    else:
+        LOGGER.warning("Could not find a suitable location to add Reference section")
+>>>>>>> origin/main
 
 
 def _finalize_reference(nav_items: list[str], update_nav: bool, created: int, created_label: str) -> list[str]:
@@ -1131,19 +1281,35 @@ def _finalize_reference(nav_items: list[str], update_nav: bool, created: int, cr
     if update_nav:
         update_mkdocs_file(create_nav_menu_yaml(nav_items))
     if created:
+<<<<<<< HEAD
         print(f"Created {created} new {created_label}")
+=======
+        LOGGER.info(f"Created {created} new {created_label}")
+>>>>>>> origin/main
     return nav_items
 
 
 def build_reference(update_nav: bool = True) -> list[str]:
+<<<<<<< HEAD
     """Create placeholder reference files (legacy mkdocstrings flow)."""
+=======
+    """Create placeholder reference files for the legacy stub flow."""
+>>>>>>> origin/main
     return build_reference_placeholders(update_nav=update_nav)
 
 
 def build_reference_placeholders(update_nav: bool = True) -> list[str]:
+<<<<<<< HEAD
     """Create minimal placeholder reference files (mkdocstrings-style) and optionally update nav."""
     nav_items: list[str] = []
     created = 0
+=======
+    """Create minimal placeholder reference files and optionally update nav."""
+    nav_items: list[str] = []
+    created = 0
+    orphans = set(REFERENCE_DIR.rglob("*.md"))
+    orphans.discard(REFERENCE_DIR / "index.md")  # Preserve hand-written overview page
+>>>>>>> origin/main
 
     for py_filepath in TQDM(list(PACKAGE_DIR.rglob("*.py")), desc="Building reference stubs", unit="file"):
         classes, functions = extract_classes_and_functions(py_filepath)
@@ -1152,20 +1318,39 @@ def build_reference_placeholders(update_nav: bool = True) -> list[str]:
         module_path = (
             f"{PACKAGE_DIR.name}.{py_filepath.relative_to(PACKAGE_DIR).with_suffix('').as_posix().replace('/', '.')}"
         )
+<<<<<<< HEAD
         exists = (REFERENCE_DIR / py_filepath.relative_to(PACKAGE_DIR).with_suffix(".md")).exists()
+=======
+        md_filepath = REFERENCE_DIR / py_filepath.relative_to(PACKAGE_DIR).with_suffix(".md")
+        exists = md_filepath.exists()
+        orphans.discard(md_filepath)
+>>>>>>> origin/main
         md_rel = create_placeholder_markdown(py_filepath, module_path, classes, functions)
         nav_items.append(str(md_rel))
         if not exists:
             created += 1
+<<<<<<< HEAD
     if update_nav:
         update_mkdocs_file(create_nav_menu_yaml(nav_items))
     if created:
         print(f"Created {created} new reference stub files")
+=======
+    for orphan in orphans:
+        orphan.unlink()
+    if update_nav:
+        update_mkdocs_file(create_nav_menu_yaml(nav_items))
+    if created:
+        LOGGER.info(f"Created {created} new reference stub files")
+>>>>>>> origin/main
     return nav_items
 
 
 def build_reference_docs(update_nav: bool = False) -> list[str]:
     """Render full docstring-based reference content."""
+<<<<<<< HEAD
+=======
+    _missing_type_warnings.clear()
+>>>>>>> origin/main
     nav_items: list[str] = []
     created = 0
 
@@ -1184,7 +1369,19 @@ def build_reference_docs(update_nav: bool = False) -> list[str]:
     if update_nav:
         update_mkdocs_file(create_nav_menu_yaml(nav_items))
     if created:
+<<<<<<< HEAD
         print(f"Created {created} new reference files")
+=======
+        LOGGER.info(f"Created {created} new reference files")
+    if _missing_type_warnings:
+        LOGGER.warning(f"{len(_missing_type_warnings)} functions/methods have parameters missing type annotations:")
+        for warning in _missing_type_warnings:
+            LOGGER.warning(f"  - {warning}")
+        raise ValueError(
+            f"{len(_missing_type_warnings)} parameters missing types in both signature and docstring. "
+            f"Add type annotations to the function signature or (type) in the docstring Args section."
+        )
+>>>>>>> origin/main
     return nav_items
 
 

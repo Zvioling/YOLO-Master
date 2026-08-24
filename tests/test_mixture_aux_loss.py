@@ -3,7 +3,11 @@ import torch
 from ultralytics.nn.modules.moa import C2fMoA
 from ultralytics.nn.modules.moe.modules import UltraOptimizedMoE
 from ultralytics.nn.modules.mot import C2fMoT
+<<<<<<< HEAD
 from ultralytics.utils.loss import _collect_mixture_aux_loss
+=======
+from ultralytics.utils.loss import _collect_mixture_aux_loss, _get_mixture_loss_ema
+>>>>>>> origin/main
 
 
 def test_mixture_aux_loss_uses_ema_scales():
@@ -20,13 +24,50 @@ def test_mixture_aux_loss_uses_ema_scales():
 
     loss1 = _collect_mixture_aux_loss(model, torch.device("cpu"))
     assert loss1.requires_grad and torch.isfinite(loss1)
+<<<<<<< HEAD
     assert hasattr(model, "_mixture_loss_ema")
+=======
+    # EMA state is now a persistent buffer (_mixture_loss_ema_buf, shape [3])
+    # rather than a plain dict attribute, so it survives state_dict() round-trips.
+    assert hasattr(model, "_mixture_loss_ema_buf")
+>>>>>>> origin/main
 
     loss2 = _collect_mixture_aux_loss(model, torch.device("cpu"))
     assert torch.isfinite(loss2)
     # EMA scales should stay positive and stable across steps
+<<<<<<< HEAD
     ema = model._mixture_loss_ema
     assert all(v >= 1e-4 for v in ema.values())
+=======
+    ema_buf = model._mixture_loss_ema_buf
+    assert all(float(ema_buf[i]) >= 1e-4 for i in range(ema_buf.numel()))
+    diagnostics = model._mixture_aux_diagnostics
+    assert diagnostics["counts_by_kind"]["moa"] == 1
+    assert diagnostics["counts_by_kind"]["mot"] == 1
+    assert diagnostics["counts_by_kind"]["moe"] == 1
+
+
+def test_mixture_loss_ema_initializes_for_parameterized_model_without_tensor_bool():
+    model = torch.nn.Linear(2, 2).train()
+
+    ema = _get_mixture_loss_ema(model)
+
+    assert ema["moe"] == 1.0
+    assert abs(ema["mot"] - 0.1) < 1e-6
+    assert abs(ema["moa"] - 0.1) < 1e-6
+    assert model._mixture_loss_ema_buf.device == model.weight.device
+
+
+def test_mixture_loss_ema_initializes_for_parameter_free_model():
+    model = torch.nn.ReLU().train()
+
+    ema = _get_mixture_loss_ema(model)
+
+    assert ema["moe"] == 1.0
+    assert abs(ema["mot"] - 0.1) < 1e-6
+    assert abs(ema["moa"] - 0.1) < 1e-6
+    assert model._mixture_loss_ema_buf.device.type == "cpu"
+>>>>>>> origin/main
 
 
 def test_moa_linear_attn_fp16_stable():

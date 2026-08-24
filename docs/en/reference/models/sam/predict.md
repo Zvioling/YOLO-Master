@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+title: models.sam.predict API Reference
+>>>>>>> origin/main
 description: Explore Ultralytics SAM and SAM 2 Predictor for advanced, real-time image segmentation using the Segment Anything Model (SAM and SAM 2). Complete implementation details and auxiliary utilities.
 keywords: Ultralytics, SAM, Segment Anything Model, SAM 2, Segment Anything Model 2, image segmentation, real-time, prediction, AI, machine learning, Python, torch, inference
 ---
@@ -7,7 +11,11 @@ keywords: Ultralytics, SAM, Segment Anything Model, SAM 2, Segment Anything Mode
 
 !!! success "Improvements"
 
+<<<<<<< HEAD
     This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/predict.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/predict.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing/) — thank you! 🙏
+=======
+    This page is sourced from [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/predict.py](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/models/sam/predict.py). Have an improvement or example to add? Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏
+>>>>>>> origin/main
 
 <br>
 

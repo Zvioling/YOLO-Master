@@ -1,7 +1,12 @@
 ---
 comments: true
+<<<<<<< HEAD
 description: Integrate Neptune with Ultralytics YOLO11 to track experiments, visualize metrics, log model checkpoints, and organize training metadata.
 keywords: Neptune, YOLO11, Ultralytics, experiment tracking, MLOps, model registry, visualization, computer vision
+=======
+description: Integrate Neptune with Ultralytics YOLO26 to track experiments, visualize metrics, log model checkpoints, and organize training metadata.
+keywords: Neptune, YOLO26, Ultralytics, experiment tracking, MLOps, model registry, visualization, computer vision
+>>>>>>> origin/main
 ---
 
 !!! warning "Neptune acquisition and SaaS deprecation"
@@ -12,10 +17,17 @@ keywords: Neptune, YOLO11, Ultralytics, experiment tracking, MLOps, model regist
 
 [Neptune](https://neptune.ai/) is a metadata store for MLOps, built for teams that run a lot of experiments. It gives you a single place to log, store, display, organize, compare, and query all your model building metadata.
 
+<<<<<<< HEAD
 Ultralytics YOLO11 integrates with Neptune to streamline [experiment tracking](https://www.ultralytics.com/glossary/experiment-tracking). This integration allows you to automatically log training metrics, visualize model predictions, and store model artifacts without writing custom logging code.
 
 <p align="center">
   <img width="800" src="https://docs.neptune.ai/img/app/app_preview.png" alt="Neptune.ai Dashboard Overview">
+=======
+Ultralytics YOLO26 integrates with Neptune to streamline [experiment tracking](https://www.ultralytics.com/glossary/experiment-tracking). This integration allows you to automatically log training metrics, visualize model predictions, and store model artifacts without writing custom logging code.
+
+<p align="center">
+  <img width="800" src="https://docs.neptune.ai/img/app/app_preview.png" alt="Neptune.ai ML experiment tracking dashboard">
+>>>>>>> origin/main
 </p>
 
 ## Key Features
@@ -74,16 +86,27 @@ The securest way to handle credentials is via environment variables. Note that t
     import os
 
     os.environ["NEPTUNE_API_TOKEN"] = "your_long_api_token_here"
+<<<<<<< HEAD
     os.environ["NEPTUNE_PROJECT"] = "your_workspace/your_project"
+=======
+>>>>>>> origin/main
     ```
 
 ## Usage
 
+<<<<<<< HEAD
 Once configured, you can start training your YOLO11 models. The Neptune integration works automatically when the `neptune` package is installed and the integration is enabled in settings.
 
 ### Training Example
 
 !!! example "Train YOLO11 with Neptune Logging"
+=======
+Once configured, you can start training your YOLO26 models. The Neptune integration works automatically when the `neptune` package is installed and the integration is enabled in settings.
+
+### Training Example
+
+!!! example "Train YOLO26 with Neptune Logging"
+>>>>>>> origin/main
 
     === "Python"
 
@@ -91,7 +114,11 @@ Once configured, you can start training your YOLO11 models. The Neptune integrat
         from ultralytics import YOLO
 
         # Load a model
+<<<<<<< HEAD
         model = YOLO("yolo11n.pt")
+=======
+        model = YOLO("yolo26n.pt")
+>>>>>>> origin/main
 
         # Train the model
         # Pass the Neptune project slug as the 'project' argument (workspace/name)
@@ -112,6 +139,7 @@ The following diagram illustrates how the Ultralytics Training pipeline interact
 
 ```mermaid
 graph LR
+<<<<<<< HEAD
     A[YOLO Training Loop] --> B{Neptune Callback}
     B -->|Log Scalars| C[Loss, mAP, LR]
     B -->|Log Images| D[Mosaics, Preds]
@@ -119,11 +147,30 @@ graph LR
     B -->|Log Metadata| F[Hyperparameters]
 
     C --> G[Neptune Server]
+=======
+    A[YOLO Training Loop]:::start --> B{Neptune Callback}:::decide
+    B -->|Log Scalars| C[Loss, mAP, LR]:::proc
+    B -->|Log Images| D[Mosaics, Preds]:::proc
+    B -->|Log Artifacts| E[Model Weights]:::proc
+    B -->|Log Metadata| F[Hyperparameters]:::proc
+
+    C --> G[Neptune Server]:::extern
+>>>>>>> origin/main
     D --> G
     E --> G
     F --> G
 
+<<<<<<< HEAD
     G --> H[Neptune Web Dashboard]
+=======
+    G --> H[Neptune Web Dashboard]:::out
+
+    classDef start fill:#4CAF50,color:#fff
+    classDef proc fill:#2196F3,color:#fff
+    classDef decide fill:#FF9800,color:#fff
+    classDef out fill:#9C27B0,color:#fff
+    classDef extern fill:#607D8B,color:#fff
+>>>>>>> origin/main
 ```
 
 ### What is Logged?

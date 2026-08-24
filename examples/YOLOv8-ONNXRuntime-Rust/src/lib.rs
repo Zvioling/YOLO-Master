@@ -94,6 +94,7 @@ pub fn check_font(font: &str) -> rusttype::Font<'static> {
             .call()
             .unwrap_or_else(|err| panic!("> Failed to download font: {source_url}: {err:?}"));
 
+<<<<<<< HEAD
         // read to buffer
         let mut buffer = vec![];
         let total_size = resp
@@ -103,6 +104,13 @@ pub fn check_font(font: &str) -> rusttype::Font<'static> {
         let _reader = resp
             .into_reader()
             .take(total_size)
+=======
+        // read to buffer with size limit (10MB max for font file)
+        const MAX_FONT_SIZE: u64 = 10 * 1024 * 1024;
+        let mut buffer = vec![];
+        resp.into_reader()
+            .take(MAX_FONT_SIZE)
+>>>>>>> origin/main
             .read_to_end(&mut buffer)
             .unwrap();
 
@@ -137,6 +145,7 @@ pub fn load_font() -> FontArc {
                 .call()
                 .unwrap_or_else(|err| panic!("> Failed to download font: {source_url}: {err:?}"));
 
+<<<<<<< HEAD
             // read to buffer
             let mut buffer = vec![];
             let total_size = resp
@@ -146,6 +155,13 @@ pub fn load_font() -> FontArc {
             let _reader = resp
                 .into_reader()
                 .take(total_size)
+=======
+            // read to buffer with size limit (10MB max for font file)
+            const MAX_FONT_SIZE: u64 = 10 * 1024 * 1024;
+            let mut buffer = vec![];
+            resp.into_reader()
+                .take(MAX_FONT_SIZE)
+>>>>>>> origin/main
                 .read_to_end(&mut buffer)
                 .unwrap();
             // save

@@ -27,7 +27,11 @@ sys.path.insert(0, str(ROOT))
 import torch  # noqa: E402
 
 from ultralytics import YOLO  # noqa: E402
+<<<<<<< HEAD
 from ultralytics.nn.modules.moa import C2fMoA, MoABlock, anneal_moa_temperature  # noqa: E402
+=======
+from ultralytics.nn.modules.moa import C2fMoA, MoABlock  # noqa: E402
+>>>>>>> origin/main
 from ultralytics.nn.tasks import DetectionModel  # noqa: E402
 
 
@@ -165,6 +169,7 @@ def sync_device(device: str) -> None:
         torch.mps.synchronize()
 
 
+<<<<<<< HEAD
 def add_moa_callbacks(model: YOLO, factor: float, min_temp: float) -> None:
     def on_train_epoch_end(trainer):
         anneal_moa_temperature(trainer.model, factor=factor, min_temp=min_temp)
@@ -172,6 +177,8 @@ def add_moa_callbacks(model: YOLO, factor: float, min_temp: float) -> None:
     model.add_callback("on_train_epoch_end", on_train_epoch_end)
 
 
+=======
+>>>>>>> origin/main
 def read_last_metrics(results_csv: Path) -> dict[str, str]:
     if not results_csv.exists():
         return {}
@@ -184,8 +191,11 @@ def read_last_metrics(results_csv: Path) -> dict[str, str]:
 
 def train_spec(args: argparse.Namespace, spec: ModelSpec, data_yaml: Path, project: Path) -> None:
     model = YOLO(str(spec.cfg))
+<<<<<<< HEAD
     if "moa" in spec.key:
         add_moa_callbacks(model, factor=args.moa_temp_factor, min_temp=args.moa_min_temp)
+=======
+>>>>>>> origin/main
     model.train(
         data=str(data_yaml),
         epochs=args.epochs,

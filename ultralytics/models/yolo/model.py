@@ -7,6 +7,10 @@ from typing import Any
 
 import torch
 
+<<<<<<< HEAD
+=======
+from ultralytics.cfg import get_cfg
+>>>>>>> origin/main
 from ultralytics.data.build import load_inference_source
 from ultralytics.engine.model import Model
 from ultralytics.models import yolo
@@ -16,6 +20,10 @@ from ultralytics.nn.tasks import (
     OBBModel,
     PoseModel,
     SegmentationModel,
+<<<<<<< HEAD
+=======
+    SemanticSegmentationModel,
+>>>>>>> origin/main
     WorldModel,
     YOLOEModel,
     YOLOESegModel,
@@ -28,11 +36,20 @@ class YOLO(Model):
 
     This class provides a unified interface for YOLO models, automatically switching to specialized model types
     (YOLOWorld or YOLOE) based on the model filename. It supports various computer vision tasks including object
+<<<<<<< HEAD
     detection, segmentation, classification, pose estimation, and oriented bounding box detection.
 
     Attributes:
         model: The loaded YOLO model instance.
         task: The task type (detect, segment, classify, pose, obb).
+=======
+    detection, instance segmentation, semantic segmentation, classification, pose estimation, and oriented bounding box
+    detection.
+
+    Attributes:
+        model: The loaded YOLO model instance.
+        task: The task type (detect, segment, semantic, classify, pose, obb).
+>>>>>>> origin/main
         overrides: Configuration overrides for the model.
 
     Methods:
@@ -40,6 +57,7 @@ class YOLO(Model):
         task_map: Map tasks to their corresponding model, trainer, validator, and predictor classes.
 
     Examples:
+<<<<<<< HEAD
         Load a pretrained YOLO11n detection model
         >>> model = YOLO("yolo11n.pt")
 
@@ -51,13 +69,30 @@ class YOLO(Model):
     """
 
     def __init__(self, model: str | Path = "yolo11n.pt", task: str | None = None, verbose: bool = False):
+=======
+        Load a pretrained YOLO26n detection model
+        >>> model = YOLO("yolo26n.pt")
+
+        Load a pretrained YOLO26n segmentation model
+        >>> model = YOLO("yolo26n-seg.pt")
+
+        Initialize from a YAML configuration
+        >>> model = YOLO("yolo26n.yaml")
+    """
+
+    def __init__(self, model: str | Path = "yolo26n.pt", task: str | None = None, verbose: bool = False):
+>>>>>>> origin/main
         """Initialize a YOLO model.
 
         This constructor initializes a YOLO model, automatically switching to specialized model types (YOLOWorld or
         YOLOE) based on the model filename.
 
         Args:
+<<<<<<< HEAD
             model (str | Path): Model name or path to model file, i.e. 'yolo11n.pt', 'yolo11n.yaml'.
+=======
+            model (str | Path): Model name or path to model file, i.e. 'yolo26n.pt', 'yolo26n.yaml'.
+>>>>>>> origin/main
             task (str, optional): YOLO task specification, i.e. 'detect', 'segment', 'classify', 'pose', 'obb'. Defaults
                 to auto-detection based on model.
             verbose (bool): Display model info on load.
@@ -115,6 +150,15 @@ class YOLO(Model):
                 "validator": yolo.obb.OBBValidator,
                 "predictor": yolo.obb.OBBPredictor,
             },
+<<<<<<< HEAD
+=======
+            "semantic": {
+                "model": SemanticSegmentationModel,
+                "trainer": yolo.semantic.SemanticSegmentationTrainer,
+                "validator": yolo.semantic.SemanticSegmentationValidator,
+                "predictor": yolo.semantic.SemanticSegmentationPredictor,
+            },
+>>>>>>> origin/main
         }
 
 
@@ -161,11 +205,19 @@ class YOLOWorld(Model):
 
     @property
     def task_map(self) -> dict[str, dict[str, Any]]:
+<<<<<<< HEAD
         """Map head to model, validator, and predictor classes."""
         return {
             "detect": {
                 "model": WorldModel,
                 "validator": yolo.detect.DetectionValidator,
+=======
+        """Map head to model, trainer, validator, and predictor classes."""
+        return {
+            "detect": {
+                "model": WorldModel,
+                "validator": yolo.world.WorldValidator,
+>>>>>>> origin/main
                 "predictor": yolo.detect.DetectionPredictor,
                 "trainer": yolo.world.WorldTrainer,
             }
@@ -212,7 +264,11 @@ class YOLOE(Model):
         predict: Run prediction on images, videos, directories, streams, etc.
 
     Examples:
+<<<<<<< HEAD
         Load a YOLOE detection model
+=======
+        Load a YOLOE segmentation model
+>>>>>>> origin/main
         >>> model = YOLOE("yoloe-11s-seg.pt")
 
         Set vocabulary and class names
@@ -235,7 +291,11 @@ class YOLOE(Model):
 
     @property
     def task_map(self) -> dict[str, dict[str, Any]]:
+<<<<<<< HEAD
         """Map head to model, validator, and predictor classes."""
+=======
+        """Map head to model, trainer, validator, and predictor classes."""
+>>>>>>> origin/main
         return {
             "detect": {
                 "model": YOLOEModel,
@@ -308,6 +368,7 @@ class YOLOE(Model):
 
         Args:
             classes (list[str]): A list of categories i.e. ["person"].
+<<<<<<< HEAD
             embeddings (torch.Tensor): Embeddings corresponding to the classes.
         """
         assert isinstance(self.model, YOLOEModel)
@@ -321,6 +382,21 @@ class YOLOE(Model):
         # Reset method class names
         if self.predictor:
             self.predictor.model.names = classes
+=======
+            embeddings (torch.Tensor, optional): Embeddings corresponding to the classes.
+        """
+        # Verify no background class is present
+        assert " " not in classes
+        assert isinstance(self.model, YOLOEModel)
+        if sorted(list(self.model.names.values())) != sorted(classes):
+            if embeddings is None:
+                embeddings = self.get_text_pe(classes)  # generate text embeddings if not provided
+            self.model.set_classes(classes, embeddings)
+
+        # Reset method class names
+        if self.predictor:
+            self.predictor.model.names = self.model.names
+>>>>>>> origin/main
 
     def val(
         self,
@@ -352,7 +428,11 @@ class YOLOE(Model):
         self,
         source=None,
         stream: bool = False,
+<<<<<<< HEAD
         visual_prompts: dict[str, list] = {},
+=======
+        visual_prompts: dict[str, list] | None = None,
+>>>>>>> origin/main
         refer_image=None,
         predictor=yolo.yoloe.YOLOEVPDetectPredictor,
         **kwargs,
@@ -367,8 +447,13 @@ class YOLOE(Model):
             visual_prompts (dict[str, list]): Dictionary containing visual prompts for the model. Must include 'bboxes'
                 and 'cls' keys when non-empty.
             refer_image (str | PIL.Image | np.ndarray, optional): Reference image for visual prompts.
+<<<<<<< HEAD
             predictor (callable, optional): Custom predictor function. If None, a predictor is automatically loaded
                 based on the task.
+=======
+            predictor (callable): Custom predictor class for visual prompt predictions. Defaults to
+                YOLOEVPDetectPredictor.
+>>>>>>> origin/main
             **kwargs (Any): Additional keyword arguments passed to the predictor.
 
         Returns:
@@ -381,6 +466,10 @@ class YOLOE(Model):
             >>> prompts = {"bboxes": [[10, 20, 100, 200]], "cls": ["person"]}
             >>> results = model.predict("path/to/image.jpg", visual_prompts=prompts)
         """
+<<<<<<< HEAD
+=======
+        visual_prompts = visual_prompts if visual_prompts is not None else {}
+>>>>>>> origin/main
         if len(visual_prompts):
             assert "bboxes" in visual_prompts and "cls" in visual_prompts, (
                 f"Expected 'bboxes' and 'cls' in visual prompts, but got {visual_prompts.keys()}"
@@ -390,16 +479,28 @@ class YOLOE(Model):
                 f"{len(visual_prompts['cls'])} respectively"
             )
             if type(self.predictor) is not predictor:
+<<<<<<< HEAD
+=======
+                args = get_cfg(overrides={**self.overrides, **kwargs})
+>>>>>>> origin/main
                 self.predictor = predictor(
                     overrides={
                         "task": self.model.task,
                         "mode": "predict",
                         "save": False,
+<<<<<<< HEAD
                         "verbose": refer_image is None,
                         "batch": 1,
                         "device": kwargs.get("device", None),
                         "half": kwargs.get("half", False),
                         "imgsz": kwargs.get("imgsz", self.overrides["imgsz"]),
+=======
+                        "verbose": kwargs.get("verbose", self.overrides.get("verbose", refer_image is None)),
+                        "batch": 1,
+                        "device": args.device,
+                        "quantize": args.quantize,
+                        "imgsz": args.imgsz,
+>>>>>>> origin/main
                     },
                     _callbacks=self.callbacks,
                 )
@@ -412,7 +513,11 @@ class YOLOE(Model):
             self.model.model[-1].nc = num_cls
             self.model.names = [f"object{i}" for i in range(num_cls)]
             self.predictor.set_prompts(visual_prompts.copy())
+<<<<<<< HEAD
             self.predictor.setup_model(model=self.model)
+=======
+            self.predictor.setup_model(model=self.model, verbose=self.predictor.args.verbose)
+>>>>>>> origin/main
 
             if refer_image is None and source is not None:
                 dataset = load_inference_source(source)
@@ -426,5 +531,9 @@ class YOLOE(Model):
                 self.predictor = None  # reset predictor
         elif isinstance(self.predictor, yolo.yoloe.YOLOEVPDetectPredictor):
             self.predictor = None  # reset predictor if no visual prompts
+<<<<<<< HEAD
+=======
+        self.overrides["agnostic_nms"] = True  # use agnostic nms for YOLOE default
+>>>>>>> origin/main
 
         return super().predict(source, stream, **kwargs)

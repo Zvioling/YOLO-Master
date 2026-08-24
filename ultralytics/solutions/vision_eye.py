@@ -58,7 +58,11 @@ class VisionEye(BaseSolution):
         for cls, t_id, box, conf in zip(self.clss, self.track_ids, self.boxes, self.confs):
             # Annotate the image with bounding boxes, labels, and vision mapping
             annotator.box_label(box, label=self.adjust_box_label(cls, conf, t_id), color=colors(int(t_id), True))
+<<<<<<< HEAD
             annotator.visioneye(box, self.vision_point)
+=======
+            annotator.visioneye(self.get_enclosing_box(box), self.vision_point)
+>>>>>>> origin/main
 
         plot_im = annotator.result()
         self.display_output(plot_im)  # Display the annotated output using the base class function
