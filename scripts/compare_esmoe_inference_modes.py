@@ -24,7 +24,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from ultralytics import YOLO
-from ultralytics.nn.modules.moe.modules import ES_MOE
+from ultralytics.nn.modules.moe import ES_MOE
 
 
 def measure(model, x, warmup, reps, device):

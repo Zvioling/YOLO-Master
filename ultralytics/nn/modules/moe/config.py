@@ -22,6 +22,9 @@ MIXTURE_DEFAULTS: dict[str, dict[str, Any]] = {
         "weight_threshold": 0.01,
         "aux_gain": 1.0,
         "aux_budget": 3.0,
+        # FIX 2026-08-12: 默认值（防止 moe_top_k/moe_num_experts 缺失报错）
+        "top_k": 2,
+        "num_experts": 4,
     },
     "moa": {
         "temperature": 1.0,
@@ -73,6 +76,9 @@ CLI_FIELDS: dict[str, dict[str, str]] = {
         "weight_threshold": "moe_weight_threshold",
         "aux_gain": "moe_aux_gain",
         "aux_budget": "mixture_aux_budget",
+        # FIX 2026-08-12: 让 moe_top_k 和 moe_num_experts 真正传递到 ES_MOE 模块
+        "top_k": "moe_top_k",
+        "num_experts": "moe_num_experts",
     },
     "moa": {
         "temperature": "moa_temperature",
@@ -318,6 +324,23 @@ def apply_mixture_config(model: nn.Module, resolved: ResolvedMixtureConfig) -> i
                     continue
                 setattr(target, attr, config[key])
                 applied += 1
+            # FIX 2026-08-12: 修复 moe_top_k 和 moe_num_experts 不传递到 ES_MOE 模块的 bug
+            if "top_k" not in inherited_explicit and hasattr(module, "top_k"):
+                new_top_k = max(1, min(int(config.get("top_k", module.top_k)), int(getattr(module, "num_experts", config.get("top_k", module.top_k)))))
+                if new_top_k != module.top_k:
+                    module.top_k = new_top_k
+                    routing = getattr(module, "routing", None)
+                    if routing is not None and hasattr(routing, "top_k"):
+                        routing.top_k = new_top_k
+                    applied += 1
+            if "num_experts" not in inherited_explicit and hasattr(module, "num_experts"):
+                new_num_experts = max(int(module.top_k), int(config.get("num_experts", module.num_experts)))
+                if new_num_experts != module.num_experts:
+                    module.num_experts = new_num_experts
+                    routing = getattr(module, "routing", None)
+                    if routing is not None and hasattr(routing, "num_experts"):
+                        routing.num_experts = new_num_experts
+                    applied += 1
             loss_fn = getattr(module, "moe_loss_fn", None)
             if loss_fn is not None and "balance_loss_coeff" not in inherited_explicit:
                 loss_fn.balance_loss_coeff = config["balance_loss_coeff"]

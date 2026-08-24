@@ -45,7 +45,7 @@ from pathlib import Path
 import torch
 from ultralytics import YOLO
 
-from ultralytics.nn.modules.moe.modules import ES_MOE
+from ultralytics.nn.modules.moe import ES_MOE
 from ultralytics.nn.modules.moe.shared_expert_esmoe import SharedExpertESMoE
 
 
@@ -137,11 +137,24 @@ def main():
 
     results = []
     for key in args.models:
-        # 查找权重
-        ckpt = Path(args.project) / key / "weights" / "best.pt"
-        if not ckpt.exists():
-            ckpt = Path(args.project) / f"{key}2" / "weights" / "best.pt"
-        if not ckpt.exists():
+        # 查找权重：优先显式路径，其次自动匹配（支持 runs/detect/ 前缀与数字后缀目录）
+        candidates = [
+            Path(args.project) / key / "weights" / "best.pt",
+            Path(args.project) / f"{key}2" / "weights" / "best.pt",
+            Path("runs/detect") / args.project / key / "weights" / "best.pt",
+            Path("runs/detect") / args.project / f"{key}2" / "weights" / "best.pt",
+        ]
+        ckpt = next((c for c in candidates if c.exists()), None)
+        if ckpt is None:
+            # 兜底：自动匹配带数字后缀的目录（如 esmoe_v0_k1 -> esmoe_v0_k1-3）
+            for base in (Path(args.project), Path("runs/detect") / args.project):
+                if not base.exists():
+                    continue
+                matched = sorted(base.glob(f"{key}*/weights/best.pt"))
+                if matched:
+                    ckpt = matched[0]
+                    break
+        if ckpt is None:
             print(f"  [WARN] No checkpoint for {key}, skipping")
             continue
 

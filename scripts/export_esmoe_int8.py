@@ -123,14 +123,22 @@ def export_int8_static(
             self.index = 0
 
     try:
+        import onnx
         from onnxruntime.quantization import quantize_static, CalibrationDataReader, QuantType
 
-        class CalibReaderWrapper(CalibDataReader):
+        # 读取 ONNX 输入名（校准 reader 必须返回 {input_name: ndarray}）
+        onnx_model = onnx.load(str(onnx_fp32))
+        input_name = onnx_model.graph.input[0].name
+
+        class CalibReaderWrapper(CalibrationDataReader):
             def __init__(self, reader):
                 self.reader = reader
 
             def get_next(self):
-                return self.reader.get_next()
+                arr = self.reader.get_next()
+                if arr is None:
+                    return None
+                return {input_name: arr}
 
             def rewind(self):
                 self.reader.rewind()

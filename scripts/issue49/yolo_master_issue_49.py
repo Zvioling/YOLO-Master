@@ -289,7 +289,7 @@ def _log_plots(run, wandb, plots, step, processed_plots):
 
 def make_dense_eval_callback():
     """Build a callback that forces dense inference for ES-MoE evaluation."""
-    from ultralytics.nn.modules.moe.modules import ES_MOE
+    from ultralytics.nn.modules.moe import ES_MOE
     from ultralytics.utils import LOGGER
 
     state = {"logged": False}

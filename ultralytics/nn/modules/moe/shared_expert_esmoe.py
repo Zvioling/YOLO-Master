@@ -72,14 +72,18 @@ class SharedExpertESMoE(ES_MOE):
     def __init__(
         self,
         in_channels: int,
+        out_channels: int | None = None,
         num_experts: int = 4,
         top_k: int = 2,
         pool_id: str = "shared",
         **kwargs,
     ):
         # 先初始化基类（创建本地 experts / routing 等）
+        # out_channels 必须显式透传给 ES_MOE（默认 = in_channels），
+        # 否则与 parse_model 的 [c1, c2, ...] 展开顺序错位。
         super().__init__(
             in_channels=in_channels,
+            out_channels=out_channels,
             num_experts=num_experts,
             top_k=top_k,
             **kwargs,
@@ -99,6 +103,7 @@ class SharedExpertESMoE(ES_MOE):
         pool_key = self.pool_id
         pool_signature = {
             "in_channels": self.in_channels if hasattr(self, "in_channels") else None,
+            "out_channels": self.out_channels if hasattr(self, "out_channels") else None,
             "num_experts": self.num_experts,
             "top_k": self.top_k,
         }

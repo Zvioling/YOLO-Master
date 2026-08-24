@@ -26,7 +26,7 @@ DATASET = DatasetSpec("VisDrone", "VisDrone.yaml", "")  # project 由命令行�
 
 def _make_sparse_topk_callback():
     """确保 ES_MOE 使用 top_k=2 的稀疏路由（论文设计）。"""
-    from ultralytics.nn.modules.moe.modules import ES_MOE
+    from ultralytics.nn.modules.moe import ES_MOE
     from ultralytics.utils import LOGGER
 
     state = {"applied": False}
@@ -56,7 +56,7 @@ def _make_sparse_topk_callback():
 
 def _make_routing_diag_callback(every_n_epochs: int = 5):
     """每 N 个 epoch 在验证后收集路由诊断指标，记录到 W&B 及训练日志。"""
-    from ultralytics.nn.modules.moe.modules import ES_MOE
+    from ultralytics.nn.modules.moe import ES_MOE
     from ultralytics.utils import LOGGER
 
     def _on_val_end(trainer):

@@ -46,7 +46,7 @@ import torch
 import numpy as np
 
 from ultralytics import YOLO
-from ultralytics.nn.modules.moe.modules import ES_MOE
+from ultralytics.nn.modules.moe import ES_MOE
 from ultralytics.nn.modules.moe.shared_expert_esmoe import (
     SharedExpertESMoE,
     reset_shared_esmoe_pools,

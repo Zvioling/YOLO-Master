@@ -41,6 +41,8 @@ SharedExpertESMoE（ES-MoE 端侧轻量化模块）的边界测试。
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import torch
 import torch.nn as nn
@@ -107,8 +109,8 @@ def test_shared_pool_expert_params_identical():
 
     # 修改 owner 参数，验证 reuser 同步
     with torch.no_grad():
-        first_param = next(block_a.experts.parameters())
-        first_param.fill_(99.0)
+        for p in block_a.experts.parameters():
+            p.fill_(99.0)
 
     for p_b in block_b.experts.parameters():
         assert (p_b == 99.0).all(), "Reuser's expert parameters should sync with owner"
@@ -222,8 +224,8 @@ def test_different_pool_id_isolated():
     assert block_a.experts is not block_b.experts
 
     # Pool 注册表有两条
-    assert "pool_a" in _SHARED_EXMOE_POOLS
-    assert "pool_b" in _SHARED_EXMOE_POOLS
+    assert "pool_a" in _SHARED_ESMOE_POOLS
+    assert "pool_b" in _SHARED_ESMOE_POOLS
 
     print("[PASS] Different pool_ids are isolated")
 
@@ -255,14 +257,24 @@ def test_yaml_loads_shared_esmoe():
     model = YOLO(yaml_path)
     # 验证模型中包含 SharedExpertESMoE 模块
     from ultralytics.nn.modules.moe.shared_expert_esmoe import SharedExpertESMoE
-    shared_count = sum(
-        1 for m in model.model.modules() if isinstance(m, SharedExpertESMoE)
-    )
-    assert shared_count >= 2, f"Expected at least 2 SharedExpertESMoE, found {shared_count}"
+    shared_blocks = [
+        m for m in model.model.modules() if isinstance(m, SharedExpertESMoE)
+    ]
+    assert len(shared_blocks) >= 2, f"Expected at least 2 SharedExpertESMoE, found {len(shared_blocks)}"
 
-    # 验证 pool 注册表
-    pool_ids = list(_SHARED_ESMOE_POOLS.keys())
-    assert "esmoe_p3_p4" in pool_ids or len(pool_ids) >= 1, \
-        f"Expected esmoe_p3_p4 pool, got {pool_ids}"
+    # 验证同一 pool_id 的实例共享 experts（跨尺度共享生效）
+    pool_to_experts = {}
+    for block in shared_blocks:
+        pool_id = block.pool_id
+        if pool_id in pool_to_experts:
+            assert block.experts is pool_to_experts[pool_id], \
+                f"pool '{pool_id}' blocks should share experts"
+        else:
+            pool_to_experts[pool_id] = block.experts
+    # 期望 3 个独立 pool（esmoe_p3 / esmoe_p4_p5 / esmoe_p6），且 esmoe_p4_p5 有 2 个实例
+    assert "esmoe_p4_p5" in pool_to_experts, \
+        f"Expected esmoe_p4_p5 pool, got {list(pool_to_experts)}"
+    reused = sum(1 for b in shared_blocks if b.pool_id == "esmoe_p4_p5")
+    assert reused == 2, f"esmoe_p4_p5 should have 2 blocks, got {reused}"
 
-    print(f"[PASS] YAML loads with {shared_count} SharedExpertESMoE blocks, pools={pool_ids}")
+    print(f"[PASS] YAML loads with {len(shared_blocks)} SharedExpertESMoE blocks, pools={sorted(pool_to_experts)}")

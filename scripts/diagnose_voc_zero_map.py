@@ -23,7 +23,7 @@ import torch
 from torch import nn
 
 from ultralytics.nn.modules.head import Detect
-from ultralytics.nn.modules.moe.modules import ES_MOE
+from ultralytics.nn.modules.moe import ES_MOE
 from ultralytics.utils import YAML
 from ultralytics.utils.patches import torch_load
 from ultralytics.utils.torch_utils import unwrap_model

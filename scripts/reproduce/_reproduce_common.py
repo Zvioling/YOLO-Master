@@ -106,7 +106,7 @@ def _make_dense_inference_callback():
     (which runs on the EMA), the EMA-derived checkpoints, and the final eval all
     take the dense forward path that matches training.
     """
-    from ultralytics.nn.modules.moe.modules import ES_MOE
+    from ultralytics.nn.modules.moe import ES_MOE
     from ultralytics.utils import LOGGER
 
     state = {"logged": False}

@@ -104,7 +104,7 @@ def set_esmoe_top_k(model: torch.nn.Module, top_k: int) -> int:
     Returns:
         成功修改的 ES_MOE 模块数
     """
-    from ultralytics.nn.modules.moe.modules import ES_MOE
+    from ultralytics.nn.modules.moe import ES_MOE
 
     count = 0
     for module in model.modules():
@@ -133,11 +133,12 @@ class DynamicBatchPredictor:
         self._stats = {"total": 0, "top_k_distribution": {1: 0, 2: 0, 3: 0, 4: 0}}
 
     def _load_image_tensor(self, image_path: str) -> torch.Tensor:
-        """加载图像为 [3, H, W] 张量（[0, 1] 范围）。"""
+        """加载图像为 [3, H, W] 张量（[0, 1] 范围，避免 numpy）。"""
         from PIL import Image
-        img = Image.open(image_path).convert("RGB")
-        arr = np.asarray(img, dtype=np.float32) / 255.0
-        tensor = torch.from_numpy(arr).permute(2, 0, 1)
+        img = Image.open(image_path).convert("RGB").resize((640, 640))
+        # 用 torchvision.io.read_image 替代 numpy
+        import torchvision.transforms.functional as TF
+        tensor = TF.to_tensor(img)  # PIL -> tensor [0, 1]
         return tensor
 
     def predict_single(self, image_path: str):
@@ -287,9 +288,11 @@ def main():
                 base_complexity = i / args.num_samples
                 noise = torch.randn(3, 320, 320) * (0.05 + base_complexity * 0.3)
                 img_tensor = (noise + 0.5).clamp(0, 1)
-                path = Path(args.output) / f"synthetic_{i:04d}.pt"
+                path = Path(args.output) / f"synthetic_{i:04d}.jpg"
                 path.parent.mkdir(parents=True, exist_ok=True)
-                torch.save(img_tensor, path)
+                # 用 torchvision.utils.save_image（不依赖 numpy）
+                import torchvision.utils as tv_utils
+                tv_utils.save_image(img_tensor, str(path))
                 image_paths.append(str(path))
 
         output_csv = Path(args.output) / "dynamic_topk_per_image.csv"

@@ -25,6 +25,7 @@ from ultralytics.nn.modules.moe import (
     MultiHeadRouterMoE,
     OptimalHybridGateMoE,
     RefinedLowRankHybridAdaptiveGateMoE,
+    SharedExpertESMoE,  # ES-MoE Cross-Scale Expert Sharing (端侧轻量化)
     SharedExpertMoE,  # Issue #54: Cross-Scale Expert Pool Sharing
     UltimateOptimizedMoE,
     UltraOptimizedMoE,
@@ -56,6 +57,7 @@ MIXTURE_MODULES = {
     "MultiHeadRouterMoE": MultiHeadRouterMoE,
     "OptimalHybridGateMoE": OptimalHybridGateMoE,
     "RefinedLowRankHybridAdaptiveGateMoE": RefinedLowRankHybridAdaptiveGateMoE,
+    "SharedExpertESMoE": SharedExpertESMoE,  # ES-MoE Cross-Scale Expert Sharing (端侧轻量化)
     "SharedExpertMoE": SharedExpertMoE,  # Issue #54: Cross-Scale Expert Pool Sharing
     "UltimateOptimizedMoE": UltimateOptimizedMoE,
     "UltraOptimizedMoE": UltraOptimizedMoE,
@@ -169,6 +171,21 @@ def finalize_mixture_module(instance, module, yaml_args: list[Any], model_config
             child.balance_loss_coeff = moe_config["balance_loss_coeff"]
         if hasattr(child, "router_z_loss_coeff") and "router_z_loss_coeff" in moe_config:
             child.router_z_loss_coeff = moe_config["router_z_loss_coeff"]
+        # FIX 2026-08-12: 让 moe_top_k 和 moe_num_experts 真正传递到 ES_MOE 模块
+        if hasattr(child, "top_k") and "top_k" in moe_config:
+            new_top_k = int(moe_config["top_k"])
+            if new_top_k > 0 and new_top_k <= getattr(child, "num_experts", new_top_k):
+                child.top_k = new_top_k
+                routing = getattr(child, "routing", None)
+                if routing is not None and hasattr(routing, "top_k"):
+                    routing.top_k = new_top_k
+        if hasattr(child, "num_experts") and "num_experts" in moe_config:
+            new_num_experts = int(moe_config["num_experts"])
+            if new_num_experts >= getattr(child, "top_k", 2):
+                child.num_experts = new_num_experts
+                routing = getattr(child, "routing", None)
+                if routing is not None and hasattr(routing, "num_experts"):
+                    routing.num_experts = new_num_experts
         routing = getattr(child, "routing", None)
         if routing is not None and hasattr(routing, "noise_std") and "noise_std" in moe_config:
             routing.noise_std = moe_config["noise_std"]

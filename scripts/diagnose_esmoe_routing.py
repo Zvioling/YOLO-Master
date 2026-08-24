@@ -41,7 +41,7 @@ import numpy as np
 import torch
 from ultralytics import YOLO
 
-from ultralytics.nn.modules.moe.modules import ES_MOE
+from ultralytics.nn.modules.moe import ES_MOE
 
 
 def collect_routing(model: torch.nn.Module) -> tuple[list[dict], list]:
@@ -222,7 +222,6 @@ def main():
         inputs = [torch.randn(1, 3, 640, 640, device=args.device)]
     elif args.image_dir:
         from PIL import Image
-        import numpy as np
         image_dir = Path(args.image_dir)
         if not image_dir.exists():
             raise FileNotFoundError(f"Image dir not found: {image_dir}")

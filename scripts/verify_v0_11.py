@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT))
 
 import torch
 from ultralytics.nn.modules.moe import HybridAdaptiveGateMoEv2, HybridAdaptiveGateMoE
-from ultralytics.nn.modules.moe.modules import MOE_LOSS_REGISTRY
+from ultralytics.nn.modules.moe import MOE_LOSS_REGISTRY
 from ultralytics.nn.tasks import DetectionModel
 
 

@@ -91,7 +91,7 @@ def _cb_es_moe_dense_eval(trainer):
     ``--no-sparse-eval``; runs on ``on_pretrain_routine_end`` and ``on_train_start`` in every rank.
     """
     try:
-        from ultralytics.nn.modules.moe.modules import ES_MOE
+        from ultralytics.nn.modules.moe import ES_MOE
     except Exception:  # noqa: BLE001
         return
     for tgt in (getattr(trainer, "model", None), getattr(getattr(trainer, "ema", None), "ema", None)):

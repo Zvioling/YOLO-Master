@@ -1348,7 +1348,7 @@ class BaseTrainer:
                     if not adapter_active:
                         raise
                     LOGGER.warning("[PEFT] Resume optimizer state is incompatible; using the initialized optimizer.")
-        if ckpt.get("scaler") is not None:
+        if ckpt.get("scaler") is not None and len(ckpt["scaler"]) > 0:
             self.scaler.load_state_dict(ckpt["scaler"])
         self.optimizer_steps = int(ckpt.get("optimizer_steps", getattr(self, "optimizer_steps", 0)))
         if self.ema and ckpt.get("ema"):
