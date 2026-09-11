@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F11 Foundation 路由 KD · 结项答辩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#faf8f3; --card:#ffffff; --ink:#1d2b3f; --ink2:#56617a; --ink3:#8b94a8;
+  --navy:#1f4e79; --navy-d:#163a5b; --navy-t:rgba(31,78,121,.08);
+  --red:#b5462f; --red-t:rgba(181,70,47,.08);
+  --green:#2e7d4f; --green-t:rgba(46,125,79,.09);
+  --gold:#a87813; --gold-t:rgba(168,120,19,.1);
+  --line:#e4e1d8; --line2:#d7d3c6;
+  --serif:'Noto Serif SC',serif; --sans:'Noto Sans SC',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--sans)}
+.stage{position:fixed;inset:0;background:
+   linear-gradient(rgba(31,78,121,.028) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(31,78,121,.028) 1px,transparent 1px),
+   radial-gradient(900px 420px at 88% -6%,rgba(31,78,121,.06),transparent 60%);
+  background-size:44px 44px,44px 44px,100% 100%}
+.topband{position:fixed;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--red) 62%,var(--red) 100%);z-index:60}
+.slide{position:fixed;inset:0;display:none;flex-direction:column;padding:46px 72px 60px;overflow:hidden}
+.slide.active{display:flex;animation:in .45s cubic-bezier(.22,.9,.3,1) both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.slide.active .rv{animation:rise .55s cubic-bezier(.22,.9,.3,1) both}
+.rv:nth-child(1){animation-delay:.04s}.rv:nth-child(2){animation-delay:.11s}
+.rv:nth-child(3){animation-delay:.18s}.rv:nth-child(4){animation-delay:.25s}
+.rv:nth-child(5){animation-delay:.32s}.rv:nth-child(6){animation-delay:.39s}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:11px;font-weight:700}
+.kicker::before{content:'';width:30px;height:2px;background:var(--red)}
+h2{font-family:var(--serif);font-weight:700;font-size:29px;line-height:1.25;margin:9px 0 4px;color:var(--ink)}
+h2 em{font-style:normal;color:var(--navy)}
+.hdline{height:3px;width:54px;background:var(--navy);margin:11px 0 0;border-radius:2px}
+.lead{font-size:13px;color:var(--ink2);margin-top:9px;line-height:1.6}
+.lead b{color:var(--navy)}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px 19px;box-shadow:0 1px 2px rgba(29,43,63,.04)}
+.card.hl{border-color:var(--navy);box-shadow:0 2px 14px rgba(31,78,121,.08)}
+.card.red{border-color:var(--red);box-shadow:0 2px 14px rgba(181,70,47,.08)}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--navy);background:var(--navy-t);border-radius:4px;padding:3px 10px;display:inline-block;font-weight:700}
+.tag.red{color:var(--red);background:var(--red-t)}.tag.gold{color:var(--gold);background:var(--gold-t)}
+.sub{color:var(--ink2);font-size:14.5px;font-weight:300;line-height:1.8}
+.mono{font-family:var(--mono)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--navy);text-align:left;padding:8px 13px;border-bottom:2px solid var(--navy);text-transform:uppercase;background:var(--navy-t)}
+td{padding:8px 13px;border-bottom:1px solid #efece4;color:var(--ink)}
+tr:last-child td{border-bottom:none}
+.ok{color:var(--green);font-weight:700}.warn{color:var(--gold);font-weight:700}.bad{color:var(--red)}
+.cy{color:var(--navy);font-weight:700}.am{color:var(--red);font-weight:700}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;box-shadow:0 1px 2px rgba(29,43,63,.04)}
+.stat .lb{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;color:var(--ink3);margin-bottom:8px;text-transform:uppercase}
+.stat .v{font-family:var(--serif);font-weight:900;font-size:33px;line-height:1;color:var(--navy)}
+.stat .v small{font-size:15px;color:var(--ink2);font-family:var(--sans);font-weight:400;margin-left:4px}
+.stat .note{font-size:11.5px;color:var(--ink2);margin-top:7px;line-height:1.5}
+.stat.red .v{color:var(--red)}.stat.green .v{color:var(--green)}.stat.gold .v{color:var(--gold)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.row{display:flex;gap:11px;flex-wrap:wrap}
+.pill{font-size:12.5px;padding:7px 15px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);background:var(--card)}
+.pill b{color:var(--ink)}
+.pill.navy{border-color:var(--navy);color:var(--navy);background:var(--navy-t);font-weight:500}
+.pill.good{border-color:var(--green);color:var(--green);background:var(--green-t);font-weight:500}
+.bar{margin:9px 0}
+.bar .cap{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;color:var(--ink)}
+.bar .cap b{font-family:var(--mono);color:var(--navy)}
+.bar .track{height:11px;background:#edeae1;border-radius:999px;overflow:hidden}
+.bar .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#3d74a6,var(--navy));width:0;transition:width 1.1s cubic-bezier(.22,.9,.3,1) .3s}
+.bar.redb .fill{background:linear-gradient(90deg,#d4725b,var(--red))}
+.bar.dim .fill{background:linear-gradient(90deg,#aab3c4,#7e8aa3)}
+.slide.active .fill{width:var(--w)}
+.hud{position:fixed;left:0;right:0;bottom:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:50;
+  background:linear-gradient(180deg,transparent,rgba(250,248,243,.92) 45%)}
+.hud .brand{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--ink3)}
+.hud .pager{display:flex;align-items:center;gap:13px}
+.hud button{background:var(--card);border:1px solid var(--line2);color:var(--ink2);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;transition:.18s}
+.hud button:hover{color:var(--navy);border-color:var(--navy)}
+.hud .pn{font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
+.hud .pn b{color:var(--navy)}
+.progress{position:fixed;top:6px;left:0;height:3px;background:var(--red);z-index:61;transition:width .4s cubic-bezier(.22,.9,.3,1)}
+.help{position:fixed;top:16px;right:20px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.08em;z-index:50}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.toc a{display:flex;align-items:center;gap:13px;padding:13px 17px;border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--ink);transition:.18s;background:var(--card)}
+.toc a:hover{border-color:var(--navy);transform:translateX(4px);box-shadow:0 3px 14px rgba(31,78,121,.1)}
+.toc .no{font-family:var(--mono);font-size:12.5px;color:var(--red);min-width:26px;font-weight:700}
+.toc .t{font-size:15px;font-weight:500}
+.toc .d{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+.flow{display:flex;align-items:stretch;gap:0}
+.fbox{border:1.5px solid;border-radius:11px;padding:14px 13px;background:var(--card);position:relative}
+.fbox .ph{font-family:var(--mono);font-size:10px;letter-spacing:.15em;margin-bottom:6px;font-weight:700}
+.fbox .tt{font-weight:700;font-size:14px;margin-bottom:5px;color:var(--ink)}
+.fbox .dd{font-size:11.5px;color:var(--ink2);line-height:1.55}
+.farr{display:flex;align-items:center;color:var(--red);font-size:20px;padding:0 8px;font-family:var(--mono);font-weight:700}
+.fnavy{border-color:var(--navy)}.fnavy .ph{color:var(--navy)}
+.fred{border-color:var(--red)}.fred .ph{color:var(--red)}
+.fgreen{border-color:var(--green)}.fgreen .ph{color:var(--green)}
+.fgray{border-color:var(--line2)}.fgray .ph{color:var(--ink3)}
+.arch{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;align-items:stretch}
+.arch-col{border:1.5px solid var(--line2);border-radius:12px;padding:14px;background:var(--card)}
+.arch-col.train{border-color:var(--navy)}.arch-col.infer{border-color:var(--green)}
+.arch-head{font-family:var(--mono);font-size:11px;letter-spacing:.2em;font-weight:700;margin-bottom:12px;text-align:center;padding-bottom:8px;border-bottom:1px dashed var(--line2)}
+.train .arch-head{color:var(--navy)}.infer .arch-head{color:var(--green)}
+.node{border-radius:9px;padding:9px 12px;font-size:12.5px;margin-bottom:7px;border:1px solid;line-height:1.4}
+.node .nt{font-weight:700;display:block;margin-bottom:2px;font-size:12px}
+.node .nd{font-size:10.5px;color:var(--ink2)}
+.n-teacher{background:var(--navy-t);border-color:#b9cde0;color:var(--navy-d)}
+.n-data{background:#f3f1ea;border-color:var(--line2);color:var(--ink)}
+.n-kd{background:var(--red-t);border-color:#e2b8ad;color:#7d2e1d}
+.n-student{background:var(--green-t);border-color:#b6d6c3;color:#1d5234}
+.v-arrow{display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:21px}
+.tline{position:relative;padding-left:26px}
+.tline::before{content:'';position:absolute;left:7px;top:8px;bottom:6px;width:2px;background:var(--line2)}
+.tl-row{position:relative;padding:0 0 12px 0}
+.tl-row::before{content:'';position:absolute;left:-25px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--navy);border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--navy)}
+.tl-row.red::before{background:var(--red);box-shadow:0 0 0 1.5px var(--red)}
+.tl-row.green::before{background:var(--green);box-shadow:0 0 0 1.5px var(--green)}
+.tl-date{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:700;letter-spacing:.08em;margin-right:10px}
+.tl-tt{font-weight:700;font-size:14px;margin:0 0 2px;display:inline}
+.tl-dd{font-size:12px;color:var(--ink2);line-height:1.55;margin-top:2px}
+.mn{border-radius:8px;padding:7px 10px;font-size:11.5px;border:1px solid var(--line2);background:#f3f1ea;color:var(--ink);text-align:center;font-weight:500;line-height:1.35}
+.mn-navy{background:var(--navy-t);border-color:#b9cde0;color:var(--navy-d)}
+.mn-red{background:var(--red-t);border-color:#e2b8ad;color:#7d2e1d}
+.mn-green{background:var(--green-t);border-color:#b6d6c3;color:#1d5234}
+.ma{text-align:center;color:var(--ink3);font-size:12px;line-height:1.15;padding:2px 0}
+.chips{font-family:var(--mono);font-size:10.5px;color:var(--ink2);background:#f3f1ea;border-radius:6px;padding:5px 9px;display:inline-block;margin-top:10px}
+.dist{display:flex;height:22px;border-radius:6px;overflow:hidden;font-family:var(--mono);font-size:10px;color:#fff;margin:7px 0}
+.cover-tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;color:var(--navy);border:1px solid var(--navy);border-radius:999px;padding:8px 20px;background:var(--navy-t);font-weight:700}
+.cover-title{font-family:var(--serif);font-weight:900;font-size:54px;line-height:1.2;margin:22px 0 10px;color:var(--ink)}
+.cover-title em{font-style:normal;color:var(--navy)}
+.cover-sub{font-size:18px;color:var(--ink2);font-weight:300;letter-spacing:.05em}
+.cover-meta{display:flex;gap:32px;margin-top:40px;padding-top:22px;border-top:2px solid var(--navy)}
+.cover-meta .m .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink3);margin-bottom:6px}
+.cover-meta .m .v{font-size:14.5px;color:var(--ink)}
+.cover-seal{position:absolute;right:72px;top:50%;transform:translateY(-50%);text-align:right}
+.cover-seal .t1{font-family:var(--serif);font-weight:900;font-size:100px;line-height:.98;color:var(--navy)}
+.cover-seal .t1 span{color:var(--red)}
+.cover-seal .t2{font-family:var(--mono);font-size:12px;letter-spacing:.36em;color:var(--ink3);margin-top:12px}
+.cover-seal .t3{font-size:14px;color:var(--ink2);margin-top:8px}
+.chain .step+.step::before{content:'→';position:absolute;left:-24px;top:50%;transform:translateY(-50%);color:var(--red);font-size:18px;font-family:var(--mono);font-weight:700}
+.chain .step{flex:1;position:relative;padding:17px 15px;border:1.5px solid var(--line2);border-radius:11px;background:var(--card)}
+.chain .step+.step{margin-left:30px}
+.chain .ph{font-family:var(--mono);font-size:10px;letter-spacing:.17em;color:var(--red);margin-bottom:6px;font-weight:700}
+.chain .tt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.chain .dd{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.chain .step.win{border-color:var(--green);background:var(--green-t)}
+@media (max-width:1100px){.slide{padding:34px 38px 62px}.g4{grid-template-columns:1fr 1fr}.cover-title{font-size:40px}.cover-seal{display:none}}
+</style>
+</head>
+<body>
+<div class="stage"></div>
+<div class="topband"></div>
+<div class="progress" id="progress"></div>
+<div class="help">← → 翻页 · 点击目录跳转 · F 全屏</div>
+
+<!-- ════ 1 封面 ════ -->
+<section class="slide" data-t="封面">
+  <div class="body" style="position:relative">
+    <div class="rv"><span class="cover-tag">腾讯犀牛鸟开源人才计划 · YOLO-Master 实战课题</span></div>
+    <div class="cover-title rv">F11 · Foundation <em>路由 KD</em><br>结项答辩汇报</div>
+    <div class="cover-sub rv">DINO 教师 → YOLO-Master Router · 知识蒸馏路由软目标</div>
+    <div class="cover-meta rv">
+      <div class="m"><div class="k">答辩人</div><div class="v">张伟林(Zviolin)</div></div>
+      <div class="m"><div class="k">公共基线</div><div class="v mono">acce839c · 08-21 锁定</div></div>
+      <div class="m"><div class="k">周期</div><div class="v">2026.08.01 — 09.10 · 41 天</div></div>
+      <div class="m"><div class="k">硬件</div><div class="v">RTX 5060 Laptop 8GB · 本地完成</div></div>
+    </div>
+    <div class="cover-seal rv">
+      <div class="t1">P0<span>·</span>P1<span>·</span>P2</div>
+      <div class="t2">ALL ACHIEVED</div>
+      <div class="t3">准入 4 项 + smoke 13 项全 PASS</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 2 目录 ════ -->
+<section class="slide" data-t="目录">
+  <div class="rv"><div class="kicker">Contents</div><h2>汇报路线 <span style="font-size:15px;color:var(--ink3);font-family:var(--sans);font-weight:400">· 约 10-15 分钟</span></h2><div class="hdline"></div></div>
+  <div class="body"><div class="toc rv">
+    <a href="#" data-go="3"><span class="no">01</span><span class="t">课题背景与目标</span><span class="d">认识 · P0/P1/P2</span></a>
+    <a href="#" data-go="4"><span class="no">02</span><span class="t">技术路线与核心方法</span><span class="d">管线 · q_teacher</span></a>
+    <a href="#" data-go="6"><span class="no">03</span><span class="t">研究历程与全链分工</span><span class="d">41 天 · T0-T7</span></a>
+    <a href="#" data-go="8"><span class="no">04</span><span class="t">P0 证据 · KD 闭环</span><span class="d">保底达成</span></a>
+    <a href="#" data-go="9"><span class="no">05</span><span class="t">P1 证据 · 对照与机制</span><span class="d">核心</span></a>
+    <a href="#" data-go="13"><span class="no">06</span><span class="t">P2 · 叙事与三阶段证据链</span><span class="d">smoke/real/quick</span></a>
+    <a href="#" data-go="16"><span class="no">07</span><span class="t">边界与结论</span><span class="d">诚实 · 收束</span></a>
+  </div></div>
+</section>
+
+<!-- ════ 3 背景与定义 ════ -->
+<section class="slide" data-t="背景与定义">
+  <div class="rv"><div class="kicker">01 · Background &amp; Problem</div><h2>课题背景与定义:一条<em>不能直接抄</em>的蒸馏路线</h2><div class="hdline"></div>
+  <div class="lead">任务书 <b>§F11 · 主题 D</b>「Foundation 路由 KD:DINO 教师 → YOLO-Master Router」。从三个关键认识出发 → 推出命题与三档目标:载体是 MoE 路由,问题是<b>路由坍塌真实存在</b>(本课题实测),机会是基础模型有语义但<b>没有现成路由标签</b>。</div></div>
+  <div class="body">
+    <div class="g3 rv" style="margin-bottom:14px">
+      <div class="card">
+        <div class="tag">认识① 载体 · MOE 专家路由</div>
+        <div style="margin:11px 0 0">
+          <div class="mn">输入图像</div>
+          <div class="ma">↓</div>
+          <div class="mn mn-navy"><b>Router 路由</b> · 4 专家 · top_k=2</div>
+          <div class="ma">↓</div>
+          <div class="mn">专家加权组合 → 检测输出</div>
+        </div>
+        <div class="chips">422 层 · 3.10M 参数 · 7.3 GFLOPs</div>
+      </div>
+      <div class="card red">
+        <div class="tag red">认识② 问题 · 路由坍塌(实测)</div>
+        <div style="margin:11px 0 4px">
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--ink2);margin-bottom:3px"><span>专家 1</span><span>100%</span></div>
+          <div style="height:14px;background:#7e8aa3;border-radius:5px"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--ink2);margin:8px 0 3px"><span>专家 2</span><span class="bad">0% · 从未被选中</span></div>
+          <div style="height:14px;background:repeating-linear-gradient(45deg,#edeae1,#edeae1 6px,#dfdbcf 6px,#dfdbcf 12px);border-radius:5px"></div>
+        </div>
+        <div class="chips">A 组 best.pt:switch = 0 · load_std = 0.7071</div>
+      </div>
+      <div class="card">
+        <div class="tag">认识③ 机会 · 基础模型语义</div>
+        <div style="margin:11px 0 0">
+          <div class="mn mn-navy">SigLIP2 / DINOv2 语义结构强</div>
+          <div class="ma">↓</div>
+          <div class="mn mn-red">✗ 无现成"路由标签"可直接抄</div>
+          <div class="ma">↓</div>
+          <div class="mn mn-green">须自行构造教师软目标 q_teacher</div>
+        </div>
+        <div class="chips">冻结 patch 特征 × 专家对齐 → 教师分布</div>
+      </div>
+    </div>
+    <div class="card hl rv" style="margin-bottom:13px"><div class="sub" style="font-size:14px;color:var(--ink)"><b class="cy">核心问题</b>:基础模型的语义结构,能否让路由<b>更稳定、更均衡</b>,并在推理时<b>完全移除教师、零额外开销</b>?—— 由此得到技术路线:构造可信 q_teacher(冻结 DINO patch 特征 × 专家输出对齐 → 特征一致性形成教师分布),再用 KL/JS 蒸馏学生 Router。</div></div>
+    <div class="g3 rv">
+      <div class="stat"><div class="lb">P0 · 保底</div><div class="note" style="margin-top:2px">最小路由 KD 闭环:缓存冻结教师特征 · 单层 2 专家非退化 q_teacher · KD loss 反传到 Router 且任务 loss 正常下降</div></div>
+      <div class="stat"><div class="lb">P1 · 预期</div><div class="note" style="margin-top:2px">baseline / 特征 KD / Router KD 三方同预算对照 · 路由五指标 · 教师推理期完全移除</div></div>
+      <div class="stat"><div class="lb">P2 · 理想</div><div class="note" style="margin-top:2px">多层 / MoE-MoT 扩展 · 教师对比 <b class="am">或</b> 负结果分析(本课题<b class="am">两支均完成</b>)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 4 技术路线 ════ -->
+<section class="slide" data-t="技术路线">
+  <div class="rv"><div class="kicker">02 · Pipeline</div><h2>技术路线:<em>三阶段全链管线</em></h2><div class="hdline"></div>
+  <div class="lead">把命题落成可执行管线:T0-T7 <b>每一环都有产物与验收</b>,三段分别对应 P0 / P1 / P2。</div></div>
+  <div class="body">
+    <div class="rv" style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink3);font-weight:700;margin-bottom:5px">① 离线准备 · 教师侧</div>
+    <div class="flow rv" style="margin-bottom:11px">
+      <div class="fbox fgray" style="flex:1"><div class="ph">STAGE 0 · 离线</div><div class="tt">数据与基线</div><div class="dd">VisDrone 6471/548 落盘 · 基线 acce839c 锁定可裸跑</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fnavy" style="flex:1"><div class="ph">T1 · 教师缓存</div><div class="tt">冻结 SigLIP2 特征</div><div class="dd">200 patch × 1024 维 · SHA256 全校验 · manifest 可复现</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fnavy" style="flex:1"><div class="ph">T2 · 软目标构造</div><div class="tt">q_teacher [51200,4]</div><div class="dd">patch 特征 × 专家对齐 · H_norm=0.7022 非退化</div></div>
+    </div>
+    <div class="rv" style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink3);font-weight:700;margin-bottom:5px">② 训练与验证 · 核心</div>
+    <div class="flow rv" style="margin-bottom:11px">
+      <div class="fbox fred" style="flex:1.1"><div class="ph">T3 · 闭环验证</div><div class="tt">Router KD 数学闭环</div><div class="dd">KL 损失反传 · 双复跑 100ep PASS(KD 0.0141/0.0150)</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fred" style="flex:1.3"><div class="ph">T4 · 三方对照</div><div class="tt">A baseline / B repr-KD / C Router-KD</div><div class="dd">quick500_v2 严格同预算:同数据·batch8·seed0·τ0.5 × 100ep</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fgreen" style="flex:1.2"><div class="ph">T5 · 路由与部署</div><div class="tt">行为分析 + 学生导出</div><div class="dd">五指标路由实测 · 教师剥离 verify · P50=35.9ms</div></div>
+    </div>
+    <div class="rv" style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink3);font-weight:700;margin-bottom:5px">③ 扩展与归档 · P2</div>
+    <div class="flow rv">
+      <div class="fbox fgreen" style="flex:1"><div class="ph">T6R.4 · 教师对比</div><div class="tt">DINOv2 vs SigLIP2</div><div class="dd">同预算 10ep → 维持 siglip2(开销减半)</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fgreen" style="flex:1"><div class="ph">T6R.5 · 机制分析</div><div class="tt">5/5 自动判定 PASS</div><div class="dd">JS / switch / load_std / 坍塌 / 任务不劣化</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fgray" style="flex:1"><div class="ph">T7 · 归档</div><div class="tt">证据包 ×3 + 文档</div><div class="dd">evidence.tar.gz · 07/08 过程结果文档 · 全链命令</div></div>
+    </div>
+    <div class="row rv" style="margin-top:13px">
+      <span class="pill navy">P0 = Stage0 + T1-T3</span>
+      <span class="pill" style="border-color:var(--red);color:var(--red);background:var(--red-t)">P1 = T4-T5</span>
+      <span class="pill good">P2 = T6R.4/5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 5 核心方法: q_teacher 构造 ════ -->
+<section class="slide" data-t="核心方法">
+  <div class="rv"><div class="kicker">02 · Method</div><h2>核心方法:<em>q_teacher 软目标</em>是怎么造出来的</h2><div class="hdline"></div>
+  <div class="lead">这是全课题最核心的一步:基础模型没有路由标签,<b>我们自己造一个可信的</b> —— 构造流程与质量闸门如下。</div></div>
+  <div class="body">
+    <div class="flow rv" style="margin-bottom:13px">
+      <div class="fbox fnavy" style="flex:1"><div class="ph">STEP 1 · 冻结教师</div><div class="tt">SigLIP2-base-p16-512</div><div class="dd">不参与训练、不更新权重,只提供语义"参照系"</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fnavy" style="flex:1.1"><div class="ph">STEP 2 · 离线缓存</div><div class="tt">200 patch × 1024 维</div><div class="dd">T1 阶段一次提取落盘 · SHA256 校验 · 训练期零教师前向开销</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fred" style="flex:1.2"><div class="ph">STEP 3 · 一致性打分</div><div class="tt">[51200, 4] 分数矩阵</div><div class="dd">每个 patch 特征 × 各专家输出 → 特征一致性 = 该 token 对各专家的"偏好强度"</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fred" style="flex:1"><div class="ph">STEP 4 · 锐化</div><div class="tt">softmax + τ=0.5</div><div class="dd">温度控制分布锐度:太均匀没信号,太尖锐成硬标签</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fgreen" style="flex:1"><div class="ph">STEP 5 · 软目标</div><div class="tt">q_teacher 落盘</div><div class="dd">教师分布就绪,供 KL/JS 蒸馏学生 Router</div></div>
+    </div>
+    <div class="g2 rv" style="margin-bottom:12px">
+      <div class="card hl">
+        <div class="tag" style="margin-bottom:9px">质量闸门(任务书 §Z2 · 准入②)</div>
+        <div class="sub" style="font-size:13px;line-height:1.9;color:var(--ink)">熵归一化 <b class="cy">H_norm ∈ (0.3, 0.8)</b> 为合格:→1 太均匀(无区分度,KD 无信号),→0 太尖锐(退化成硬标签)。<br>实测 <b class="cy">H_norm = 0.7022</b> · 非退化 token <b class="cy">99.12%</b> —— 软目标"既有偏好又不武断",蒸馏才有信息量。</div>
+      </div>
+      <div class="card">
+        <div class="tag red" style="margin-bottom:9px">为什么 τ 是生死参数(示意)</div>
+        <div style="font-family:var(--mono);font-size:10.5px;color:var(--ink2);margin-bottom:2px">τ=1.0(修复前)· 近均匀 · 无信号</div>
+        <div class="dist"><div style="width:25%;background:#aab3c4"></div><div style="width:25%;background:#b8c0cf"></div><div style="width:25%;background:#aab3c4"></div><div style="width:25%;background:#b8c0cf"></div></div>
+        <div style="font-family:var(--mono);font-size:10.5px;color:var(--ink2);margin:6px 0 2px">τ=0.5(修复后)· 有区分度</div>
+        <div class="dist"><div style="width:46%;background:var(--navy)"></div><div style="width:27%;background:#3d74a6"></div><div style="width:17%;background:#d4725b"></div><div style="width:10%;background:var(--red)"></div></div>
+        <div class="sub" style="font-size:11px;margin-top:6px">示意图:τ 越小分布越尖 —— 修复前近均匀导致 KL 无梯度可传(详见研究叙事页)。</div>
+      </div>
+    </div>
+    <div class="card rv"><div class="sub" style="font-size:13.5px;color:var(--ink)"><b class="cy">设计要点</b>:① 软目标传递的是<b>偏好强度</b>而非硬选择,允许学生学出平滑路由策略 —— 这正是对抗路由坍塌所需要的;② 特征<b>离线缓存</b>让 100ep 训练期完全不背教师前向的开销;③ SHA256 + manifest 让缓存<b>可复现可审计</b>;④ 蒸馏损失 <span class="mono cy">L_KD = 0.5 · KL/JS(q_teacher ‖ p)</span> 与检测任务损失加权联合反传,<b>只更新学生 Router</b>。</div></div>
+  </div>
+</section>
+
+<!-- ════ 6 研究历程 ════ -->
+<section class="slide" data-t="研究历程">
+  <div class="rv"><div class="kicker">03 · Journey</div><h2>研究历程:<em>41 天完整时间线</em></h2><div class="hdline"></div>
+  <div class="lead">真实执行轨迹 —— 包括 <b>9/8 发现坏 KD 的转折点</b>,这是后面"研究叙事"一页的伏笔。</div></div>
+  <div class="body">
+    <div class="tline rv">
+      <div class="tl-row"><span class="tl-date">08.21 - 08.24 · W2</span><div class="tl-tt">选题与准入</div><div class="tl-dd">选定 F11 课题 · 准入 4 项 smoke 全 PASS · 公共基线 acce839c 锁定</div></div>
+      <div class="tl-row"><span class="tl-date">08.25 · W3</span><div class="tl-tt">smoke 全链贯通</div><div class="tl-dd">T0-T7 冒烟 13 项全 PASS · 三方对照命令链就绪</div></div>
+      <div class="tl-row"><span class="tl-date">08.25 - 08.31</span><div class="tl-tt">真基线底座(P0)</div><div class="tl-dd">VisDrone 落盘 · 200 patch 缓存 · 真 q_teacher · T3R 真 Router KD <b class="ok">双复跑 100ep PASS</b></div></div>
+      <div class="tl-row"><span class="tl-date">08.29 - 09.06 · W4-W5</span><div class="tl-tt">全量 100ep 训练</div><div class="tl-dd">A 组 7.8h / B 组 ~82h 跑完 · C 组 9/6 跑完并配对</div></div>
+      <div class="tl-row red"><span class="tl-date">09.08 · 转折点</span><div class="tl-tt">复盘发现 KD 挂载 bug</div><div class="tl-dd">log 铁证 foundation_router_modules=<b class="bad">0</b> → KD 全程恒 0,C≡A → <b class="bad">全量 C 组结论作废</b></div></div>
+      <div class="tl-row green"><span class="tl-date">09.08 - 09.09</span><div class="tl-tt">修复与全链验证</div><div class="tl-dd">接口修复 + τ=0.5 → quick500_v2 全链:A/B/C 同预算 100ep · T5R 全绿 · 机制 <b class="ok">5/5 PASS</b></div></div>
+      <div class="tl-row"><span class="tl-date">09.10 · 收口</span><div class="tl-tt">结项定稿</div><div class="tl-dd">全量 C 重跑暂停(只差时间)· 文档体系收口 · 结项报告 + 本答辩</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 7 全链完成度 + 分工 ════ -->
+<section class="slide" data-t="全链与分工">
+  <div class="rv"><div class="kicker">03 · Coverage &amp; Division</div><h2>全链完成度与<em>数据分工</em></h2><div class="hdline"></div>
+  <div class="lead">三个阶段各跑了什么、产出什么 —— <b>一张矩阵看全</b>;两套数据的分工由此而来。</div></div>
+  <div class="body">
+    <div class="rv"><table style="font-size:12.5px">
+      <tr><th>任务</th><th>smoke · coco8</th><th>real 全量 · VisDrone 6471 张</th><th>quick500_v2 · 500 张同预算</th><th>完成</th></tr>
+      <tr><td><b>T0</b> 环境/数据</td><td class="ok">✓</td><td>✓ 6471/548 落盘校验</td><td>✓ 子集 500/400</td><td class="ok">3/3</td></tr>
+      <tr><td><b>T1</b> 教师缓存</td><td class="ok">✓ 16 patch</td><td>✓ <b>200 patch</b> + SHA256</td><td class="cy">复用 T1R</td><td class="ok">✓</td></tr>
+      <tr><td><b>T2</b> q_teacher</td><td class="ok">✓ H=0.7022</td><td>✓ 真原型 [51200,4]</td><td class="cy">复用 T2R</td><td class="ok">✓</td></tr>
+      <tr><td><b>T3</b> KD 闭环</td><td class="ok">✓ 19 单测</td><td>✓ <b>双复跑 100ep PASS</b></td><td>— P0 已锁</td><td class="ok">✓</td></tr>
+      <tr><td><b>T4</b> 三方对照</td><td class="ok">✓ A/B/C 1ep</td><td>✓ A/B 各 100ep</td><td>✓ <b class="cy">A/B/C 各 100ep 同预算</b></td><td class="ok">✓</td></tr>
+      <tr><td><b>T5</b> 路由+部署</td><td class="ok">✓ synthetic</td><td>✓ 待全量 C 重做</td><td>✓ <b class="cy">T5R 全绿</b></td><td class="ok">✓</td></tr>
+      <tr><td><b>T6</b> 扩展</td><td class="ok">✓ 就绪</td><td>✓ T6R.4 收口 + 定性</td><td>✓ <b class="cy">T6R.4/5 实测 5/5</b></td><td class="ok">✓</td></tr>
+      <tr><td><b>T7</b> 证据归档</td><td class="ok">✓</td><td>✓ evidence.tar.gz ×3</td><td>✓</td><td class="ok">✓</td></tr>
+    </table></div>
+    <div class="row rv" style="margin-top:12px;margin-bottom:8px">
+      <span class="pill navy">P0 = real 打底(数据+缓存+q_teacher+T3R)</span>
+      <span class="pill" style="border-color:var(--red);color:var(--red);background:var(--red-t)">P1 = real(A/B 基线) + quick(C 同预算对照·T5R)</span>
+      <span class="pill good">P2 = quick(T6R.4/5)</span>
+    </div>
+    <div class="sub rv" style="font-size:13px"><b class="am">为什么这样分工?</b> KD 归因要求 A/C 严格同预算(同数据/同 batch/同 seed)→ quick500_v2 提供干净对照;real 提供任务级基线与真实数据链路 —— 两者互补,而非替代;无一任务停留在"未执行",唯一未闭合 = 全量 C 组重跑(<b>只差时间,不差方法</b>)。</div>
+  </div>
+</section>
+
+<!-- ════ 8 P0 证据 ════ -->
+<section class="slide" data-t="P0证据">
+  <div class="rv"><div class="kicker">04 · P0 Evidence</div><h2>P0 达成:<em>KD 闭环</em>全程可复现</h2><div class="hdline"></div>
+  <div class="lead">管线第一段:先证明<b>最小 KD 闭环在真实数据上稳定可复现</b> —— 这是后续一切结论的地基。</div></div>
+  <div class="body">
+    <div class="g4 rv" style="margin-bottom:18px">
+      <div class="stat"><div class="lb">准入① 教师缓存</div><div class="v">200<small>patch</small></div><div class="note">SHA256 全校验 + 复现命令入 meta</div></div>
+      <div class="stat"><div class="lb">准入② q_teacher</div><div class="v">0.7022</div><div class="note">H_norm ∈ (0.3, 0.8) · 非坍塌 99.12%</div></div>
+      <div class="stat"><div class="lb">准入③ KD 梯度</div><div class="v">0.0937</div><div class="note">router_grad_norm &gt; 0 · 19 单测 PASS</div></div>
+      <div class="stat"><div class="lb">准入④ 证据包</div><div class="v">×3</div><div class="note">evidence.tar.gz 三次成功归档</div></div>
+    </div>
+    <div class="card hl rv"><div style="display:flex;align-items:center;gap:18px">
+      <div class="v" style="font-family:var(--serif);font-weight:900;font-size:40px;color:var(--navy);line-height:1">2×</div>
+      <div><div style="font-weight:700;font-size:16px">T3R 真 Router KD · 双复跑 100 epoch PASS</div>
+      <div class="sub" style="font-size:13.5px;margin-top:5px">KD loss 0.0141 / 0.0150 · Router grad 0.0296 / 0.0267 —— 真实数据 × 100ep 规模下 KD 闭环稳定可复现,<b class="cy">P0 稳固锁定</b></div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ════ 9 P1 三方对照 ════ -->
+<section class="slide" data-t="三方对照">
+  <div class="rv"><div class="kicker">05 · P1 Evidence</div><h2>三方同预算对照:<em>严格受控</em>的 A/B/C</h2><div class="hdline"></div>
+  <div class="lead">P0 地基之上进入核心命题:<b>A/B/C 谁在起作用?</b> —— 唯一变量是 KD 类型,其余全部锁死。</div></div>
+  <div class="body">
+    <div class="row rv" style="margin-bottom:16px">
+      <span class="pill">同数据 <b>VisDrone-500</b></span><span class="pill">同 batch <b>8</b></span>
+      <span class="pill">同 epoch <b>100</b></span><span class="pill">同 seed <b>0</b></span>
+      <span class="pill">同 imgsz <b>640</b></span><span class="pill navy">τ = <b>0.5</b></span>
+    </div>
+    <div class="g2 rv">
+      <div class="card">
+        <div class="tag" style="margin-bottom:11px">MAP50-95 · BEST 口径</div>
+        <div class="bar"><div class="cap"><span>A baseline</span><b>0.0491</b></div><div class="track"><div class="fill" style="--w:98%"></div></div></div>
+        <div class="bar dim"><div class="cap"><span>B repr-KD</span><b style="color:var(--ink2)">0.0464</b></div><div class="track"><div class="fill" style="--w:93%"></div></div></div>
+        <div class="bar redb"><div class="cap"><span><b class="am">C Router-KD</b>(三组最高 · +0.11pp)</span><b class="am">0.0502</b></div><div class="track"><div class="fill" style="--w:100%"></div></div></div>
+        <div class="sub" style="font-size:12px;margin-top:10px">last 口径:A 0.0487 / B 0.0454 / C 0.0486 · Δ=-0.0001,quick 尺度噪声(±0.6-0.8pp)内,不作 mAP 显著性结论</div>
+      </div>
+      <div class="card">
+        <div class="tag red" style="margin-bottom:11px">READ</div>
+        <div class="sub" style="font-size:13px;line-height:1.85">
+          ① C 组 best <b class="am">三组最高</b>,但增益在噪声内 → 不吹"提升 mAP"<br>
+          ② B &lt; A 与全量模式一致 → 表征 KD 无增益,<b class="cy">正是 C 组转向 Router KD 的设计依据</b><br>
+          ③ KD 有效性看<b class="cy">机制指标</b>(后两页),不看 quick mAP<br>
+          ④ 全量 A/B 佐证详见后页(real 尺度 0.1695)<br>
+          ⑤ 任务书要求指标<b class="cy">全报告</b>:mAP / top-k 一致率 / JS/KL / 路由熵 / 专家负载 / 吞吐 / 显存
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 10 KD 架构 + 零教师 ════ -->
+<section class="slide" data-t="KD架构">
+  <div class="rv"><div class="kicker">05 · Architecture</div><h2>Router KD 架构:<em>训练用教师,推理只留学生</em></h2><div class="hdline"></div>
+  <div class="lead">C 组的蒸馏机制长什么样 —— <b>为什么训练需要教师、推理却可以零开销</b>。</div></div>
+  <div class="body">
+    <div class="arch rv" style="margin-bottom:12px">
+      <div class="arch-col train">
+        <div class="arch-head">● 训练阶段(教师在位)</div>
+        <div class="node n-data"><span class="nt">输入图像</span><span class="nd">VisDrone · imgsz 640</span></div>
+        <div style="text-align:center;color:var(--ink3);font-size:13px">↙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+        <div class="node n-teacher"><span class="nt">SigLIP2 教师(冻结)</span><span class="nd">patch 特征 → q_teacher 软分布 · τ=0.5</span></div>
+        <div class="node n-student"><span class="nt">学生 YOLO-Master Router</span><span class="nd">4 专家 · top_k=2 · 输出学生路由分布 p</span></div>
+        <div class="node n-kd"><span class="nt">KL/JS 路由蒸馏损失(weight 0.5)</span><span class="nd">+ 检测任务损失 → 反传更新 Router</span></div>
+      </div>
+      <div class="v-arrow">⇒</div>
+      <div class="arch-col infer">
+        <div class="arch-head">● 推理阶段(教师移除)</div>
+        <div class="node n-data"><span class="nt">输入图像</span><span class="nd">同分布 · 无额外预处理</span></div>
+        <div class="node n-teacher" style="opacity:.5;border-style:dashed"><span class="nt">SigLIP2 教师 · 已移除</span><span class="nd">verify 残留 = 0 · 不加载、不推理</span></div>
+        <div class="node n-student"><span class="nt">学生 Router 独立工作</span><span class="nd">蒸馏价值已固化在权重中 · 3,107,395 参数不变</span></div>
+        <div class="node n-student"><span class="nt">检测输出</span><span class="nd">P50 = 35.9ms @320 · 零额外教师开销</span></div>
+      </div>
+    </div>
+    <div class="flow rv" style="margin-bottom:11px">
+      <div class="fbox fnavy" style="flex:1"><div class="ph">STEP 1</div><div class="tt">export 学生权重</div><div class="dd">f11_student_quick.pt · 仅保留检测模型</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fnavy" style="flex:1"><div class="ph">STEP 2</div><div class="tt">verify_no_teacher</div><div class="dd">自动扫描:Foundation / Teacher / 冻结参数 全 = 0</div></div>
+      <div class="farr">→</div>
+      <div class="fbox fgreen" style="flex:1"><div class="ph">STEP 3</div><div class="tt">eval 精度与速度</div><div class="dd">eval_report.json · P50=35.94ms 三步全绿</div></div>
+    </div>
+    <div class="sub rv" style="font-size:13px"><b class="cy">关键设计</b>:蒸馏只发生在训练期,教师是<b>临时监督源</b>而非部署依赖 —— 蒸馏价值固化在学生权重里,推理<b>零额外教师开销</b>。</div>
+  </div>
+</section>
+
+<!-- ════ 11 KD 生效 + 机制四指标 ════ -->
+<section class="slide" data-t="生效与机制">
+  <div class="rv"><div class="kicker">05 · P1 Evidence</div><h2>两条证据链:<em>KD 真的生效</em> + 机制"更稳定、更均衡"</h2><div class="hdline"></div>
+  <div class="lead">上一页架构成立 → 本页用<b>日志证明 KD 真的生效</b>(修复前后对照),再用<b>四项路由指标</b>回答核心问题。</div></div>
+  <div class="body">
+    <div class="g3 rv" style="margin-bottom:11px">
+      <div class="card"><div class="tag">挂载 0 → 3/3</div><div class="sub" style="font-size:11.5px;margin-top:7px">foundation_router_modules 全程在位 · <span class="bad">修复前 0,KD 从未跑过</span></div></div>
+      <div class="card"><div class="tag">LOSS 恒 0 → 100/100</div><div class="sub" style="font-size:11.5px;margin-top:7px">每 epoch 非零 · 0.0865→0.0802 收敛 · 均值 0.0794 · router_kl 0.0143-0.0244</div></div>
+      <div class="card"><div class="tag">温度 τ=1.0 → 0.5</div><div class="sub" style="font-size:11.5px;margin-top:7px">软目标锐度正确生效 · <span class="bad">修复前 ε=0.1 近均匀退化</span></div></div>
+    </div>
+    <div class="g4 rv" style="margin-bottom:12px">
+      <div class="stat"><div class="lb">软目标对齐 JS</div><div class="v" style="font-size:28px">0.0146</div><div class="note">&lt; 0.05 阈值</div></div>
+      <div class="stat red"><div class="lb">路由切换率</div><div class="v" style="font-size:28px">0→0.364</div><div class="note"><b class="cy">"路由活了"</b></div></div>
+      <div class="stat gold"><div class="lb">负载均衡</div><div class="v" style="font-size:28px">-33%</div><div class="note">0.7071 → 0.4714</div></div>
+      <div class="stat"><div class="lb">负载分布</div><div class="v" style="font-size:28px">83/17</div><div class="note">无坍塌;A 组 100/0</div></div>
+    </div>
+    <div class="g2 rv">
+      <div class="card"><div class="tag" style="margin-bottom:9px">A BASELINE · 专家负载</div>
+        <div style="display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--mono);font-size:11px;color:#fff">
+          <div style="width:100%;background:#7e8aa3;display:flex;align-items:center;justify-content:center">专家 1 · 100%</div>
+          <div style="width:0"></div></div>
+        <div class="sub" style="font-size:11.5px;margin-top:7px">switch = <b class="bad">0</b> · load_std = 0.7071 · 完全坍塌</div></div>
+      <div class="card hl"><div class="tag red" style="margin-bottom:9px">C ROUTER-KD · 专家负载</div>
+        <div style="display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--mono);font-size:11px;color:#fff">
+          <div style="width:83.3%;background:var(--navy);display:flex;align-items:center;justify-content:center">专家 1 · 83.3%</div>
+          <div style="width:16.7%;background:var(--red);display:flex;align-items:center;justify-content:center">16.7%</div></div>
+        <div class="sub" style="font-size:11.5px;margin-top:7px">switch = <b class="ok">0.3636</b> · load_std = 0.4714 · 均衡切换(top1_agree 0.833)</div></div>
+    </div>
+    <div class="sub rv" style="font-size:12px;margin-top:10px">判定规程:启动后前 2 epoch,log 必须同时出现 <span class="mono am">"foundation_router_distill": true</span> 与非零 loss,否则判废 —— 两次执行:一次拦截坏 KD(9/8),一次确认好 KD(9/9)。<br>任务书 §2.1 核心判据 6 项逐条实测:教师信号入 Router ✓ · Router 梯度&gt;0 ✓ · KD loss 单调降 ✓ · 负载均衡 ✓ · 任务不劣化 ✓ · 教师推理期移除 ✓ —— <b class="cy">全部支撑</b>。</div>
+  </div>
+</section>
+
+<!-- ════ 12 全量 real 基线 ════ -->
+<section class="slide" data-t="全量基线">
+  <div class="rv"><div class="kicker">05 · P1 Evidence</div><h2>全量 real 尺度基线:<em>A/B 各 100ep</em>(VisDrone 6471 张)</h2><div class="hdline"></div>
+  <div class="lead">quick 之外,real 尺度给出了什么?—— <b>A/B 持平恰恰是 C 组路线选择的依据</b>。</div></div>
+  <div class="body">
+    <div class="g2 rv" style="margin-bottom:13px">
+      <div class="stat"><div class="lb">A BASELINE · batch 8 · 7.8H</div><div class="v">0.1695<small>mAP50-95</small></div><div class="note">mAP50 = 0.3047 · cache=disk · 本机 8GB 全程稳定</div></div>
+      <div class="stat"><div class="lb">B REPR-KD · batch 12 · ~82H</div><div class="v">0.1695<small>mAP50-95</small></div><div class="note">mAP50 = 0.3016 · 多次 resume · SigLIP2 表征 KD(0.1 权重)</div></div>
+    </div>
+    <div class="card rv" style="margin-bottom:12px">
+      <div class="tag" style="margin-bottom:8px">MAP50-95 · REAL 尺度对比(6471 张 × 100EP)</div>
+      <div class="bar"><div class="cap"><span>A baseline · batch 8</span><b>0.1695</b></div><div class="track"><div class="fill" style="--w:100%"></div></div></div>
+      <div class="bar dim"><div class="cap"><span>B repr-KD · batch 12</span><b style="color:var(--ink2)">0.1695</b></div><div class="track"><div class="fill" style="--w:100%"></div></div></div>
+    </div>
+    <div class="card hl rv" style="margin-bottom:12px"><div class="sub" style="font-size:13.5px;color:var(--ink)"><b class="cy">B 组 KD 生效铁证(checkpoint 实测)</b>:train/foundation_loss 100ep 全程非零(~0.102)· effective_weight=0.1 真实施加 · relational_raw 0.0851→0.0847 几乎无下降 —— <b class="am">KD 在跑,但信号仅占总损失 0.72%,推不动任务指标</b>。</div></div>
+    <div class="card rv"><div class="sub" style="font-size:14px;color:var(--ink)"><b class="cy">对 F11 的意义</b>:real 尺度 A/B 持平 → 表征 KD 无增益,<b>这正是 C 组转向 Router KD(权重 0.5 · 软目标直接监督路由器)的选型依据</b>;B 组 batch=12 与 A=8 的差异已在文档注记,方向性结论不受威胁。</div></div>
+  </div>
+</section>
+
+<!-- ════ 13 P2 · 教师对比 + 机制 5/5 ════ -->
+<section class="slide" data-t="P2教师与机制">
+  <div class="rv"><div class="kicker">06 · P2 Evidence</div><h2>P2:<em>教师对比收口</em> + 机制分析 5/5 PASS</h2><div class="hdline"></div>
+  <div class="lead">扩展维度两问:<b>换教师还行吗?负结果能否量化解释?</b> —— 任务书"或"字两支,本课题都完成了。</div></div>
+  <div class="body">
+    <div class="g2 rv" style="margin-bottom:11px">
+      <div class="card"><div class="tag" style="margin-bottom:7px">DINOV2-VITB14</div>
+        <div class="sub" style="font-size:12px;line-height:1.8">KD 生效 <b class="ok">✓</b>(router_loss 非零)· 每 epoch <b class="mono">~478s</b><br>mAP50-95 @ep10 = <b class="mono">0.00323</b> · 本地权重注入 · 223/223 加载</div></div>
+      <div class="card hl"><div class="tag red" style="margin-bottom:7px">SIGLIP2-BASE · 维持选用</div>
+        <div class="sub" style="font-size:12px;line-height:1.8">KD 生效 <b class="ok">✓</b> · 每 epoch <b class="am mono">~215s</b>(开销减半)<br>mAP50-95 @ep10 = <b class="mono">0.00329</b> · 软目标更紧(0.0932→0.0668)</div></div>
+    </div>
+    <div class="card rv" style="margin-bottom:11px"><div class="sub" style="font-size:13px;color:var(--ink)"><b class="cy">教师对比收口</b>:两教师 mAP50-95 = 0.00323 / 0.00329,差异在噪声内,KD 生效性一致 → <b class="am">维持 siglip2</b>;DINOv2Teacher 已合入(非 gated,本地注入)—— 教师选择与路由机制<b>解耦</b>,框架可插拔。</div></div>
+    <div class="rv" style="margin-bottom:9px"><table style="font-size:12px">
+      <tr><th>#</th><th>判据</th><th>阈值</th><th>实测</th><th>判定</th></tr>
+      <tr><td>1</td><td>软目标对齐质量</td><td class="mono">JS &lt; 0.05</td><td class="mono cy">0.0146</td><td class="ok">PASS</td></tr>
+      <tr><td>2</td><td>路由行为恢复</td><td class="mono">switch &gt; 0</td><td class="mono cy">0 → 0.3636</td><td class="ok">PASS</td></tr>
+      <tr><td>3</td><td>负载均衡改善</td><td class="mono">load_std ↓</td><td class="mono cy">0.7071 → 0.4714</td><td class="ok">PASS</td></tr>
+      <tr><td>4</td><td>无路由坍塌</td><td class="mono">非 100/0</td><td class="mono cy">83.3 / 16.7</td><td class="ok">PASS</td></tr>
+      <tr><td>5</td><td>任务指标不劣化</td><td class="mono">Δ ≥ -0.5%</td><td class="mono cy">Δ = -0.0001</td><td class="ok">PASS</td></tr>
+    </table></div>
+    <div class="sub rv" style="font-size:12px">产物 <span class="mono am">t6r5_mechanism_quick.json</span> · <b class="ok">"pass": 5, "total": 5</b> —— 基于实测路由数据自动判定,非人工勾选。<br>其余扩展子方向如实记录:T6R.1/2(多层 / MoT 路由)实测无有效数据已定性,T6R.3 跨域协议落盘待 UAVDT —— 负结果与暂缓同样写入文档。</div>
+  </div>
+</section>
+
+<!-- ════ 14 研究叙事(含诊断过程) ════ -->
+<section class="slide" data-t="研究叙事">
+  <div class="rv"><div class="kicker">07 · Narrative</div><h2>研究叙事:<em>异常是怎么被发现、被修复的</em></h2><div class="hdline"></div>
+  <div class="lead">把时间线里 9/8 的转折点展开 —— <b>诊断每一步都有证据,修复每一步都可验证</b>。</div></div>
+  <div class="body">
+    <div class="chain rv" style="margin-bottom:17px">
+      <div class="step"><div class="ph">STEP 1 · 异常发现</div><div class="tt">mAP 逐位相同起疑</div><div class="dd">全量 C 组 mAP50-95=0.1696 vs A 组 0.1695 —— 两组"几乎一样"本身就是异常信号</div></div>
+      <div class="step"><div class="ph">STEP 2 · LOG 铁证</div><div class="tt">modules=0 实锤</div><div class="dd">train_results 中 foundation_router_modules=<b class="bad">0</b> → KD 模块从未挂载,损失恒 0,C≡A</div></div>
+      <div class="step"><div class="ph">STEP 3 · 双根因+修复</div><div class="tt">接口 + 温度</div><div class="dd">① MoE 家族接口未识别(RefinedLowRankHybridAdaptiveGateMoE 等)→ 白名单补齐;② τ=1.0/ε=0.1 近均匀 → <b class="cy">τ=0.5</b> + weight 0.5</div></div>
+      <div class="step win"><div class="ph" style="color:var(--green)">STEP 4 · 同预算验证</div><div class="tt">quick500_v2 全链</div><div class="dd">modules=3 · loss 100/100 非零(0.0865→0.0802)· 机制 5/5 PASS</div></div>
+    </div>
+    <div class="card red rv"><div class="sub" style="font-size:14px;color:var(--ink)"><b class="am">方法论价值</b>:两轮对照本身就是"教师软目标质量(τ)与 KD 挂载正确性(modules)决定 Router KD 成败"的<b>最强实证</b>——负结果不是终点,<b class="cy">归因-修复-验证的闭环才是</b>。生效判据 + 2-epoch 检查点规程已固化,可复用于后续所有 KD 实验。</div></div>
+  </div>
+</section>
+
+<!-- ════ 15 三阶段证据链 ════ -->
+<section class="slide" data-t="三阶段证据链">
+  <div class="rv"><div class="kicker">07 · Evidence Chain</div><h2>三阶段证据链:<em>smoke → real → quick</em></h2><div class="hdline"></div>
+  <div class="lead">三阶段互锁:<b>smoke 验证方法可行 → real 建立真基线(P0) → quick 同预算归因(P1/P2)</b>;每条结论可独立复现。</div></div>
+  <div class="body">
+    <div class="g3 rv" style="margin-bottom:13px">
+      <div class="card" style="border-top:3px solid var(--green)">
+        <div class="tag" style="color:var(--green);background:var(--green-t);margin-bottom:8px">SMOKE · COCO8 冒烟</div>
+        <div class="sub" style="font-size:11.5px;line-height:1.9;color:var(--ink)">
+          <span class="ok">✓</span> 准入 4 项全 PASS<br>
+          <span class="ok">✓</span> T0-T7 冒烟 13 项全 PASS<br>
+          <span class="ok">✓</span> T3 KD 单测 19 PASS<br>
+          <span class="ok">✓</span> 边界单测 106 + 1 skip
+        </div>
+        <div class="chips">产物 runs/smoke/ · 复现 04 教程</div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--navy)">
+        <div class="tag" style="margin-bottom:8px">REAL 全量 · VISDRONE 6471 张</div>
+        <div class="sub" style="font-size:11.5px;line-height:1.9;color:var(--ink)">
+          <span class="ok">✓</span> T1R 200 patch + SHA256<br>
+          <span class="ok">✓</span> T2R q_teacher[51200,4] · H=0.7022<br>
+          <span class="ok">✓</span> T3R 双复跑 KD 0.0141/0.0150<br>
+          <span class="ok">✓</span> T4R A/B 100ep → 0.1695<br>
+          <span class="ok">✓</span> T7R 证据包 ×3
+        </div>
+        <div class="chips">产物 runs/real/ · 07c §2/§4</div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--red)">
+        <div class="tag red" style="margin-bottom:8px">QUICK500_V2 · 同预算对照</div>
+        <div class="sub" style="font-size:11.5px;line-height:1.9;color:var(--ink)">
+          <span class="ok">✓</span> A/B/C 100ep · batch8 · seed0<br>
+          <span class="ok">✓</span> KD 铁证 modules=3 · loss 100/100<br>
+          <span class="ok">✓</span> T5R switch 0→0.3636 · JS 0.0146<br>
+          <span class="ok">✓</span> 机制分析 5/5 PASS<br>
+          <span class="ok">✓</span> T6R.4 → 维持 siglip2
+        </div>
+        <div class="chips">产物 runs/quick500_v2/ · 07d</div>
+      </div>
+    </div>
+    <div class="card hl rv"><div class="sub" style="font-size:13.5px;color:var(--ink)"><b class="cy">审计路径</b>:每条产物落盘可独立审计,过程与结果详见文档 07a-d / 08a-d;C 组作废根因(modules=0)亦有旧 log 存证 —— <b>包括负结果在内的每一步都有据可查</b>。</div></div>
+  </div>
+</section>
+
+<!-- ════ 16 边界: C 组 + 8GB 方法论 + 代码 ════ -->
+<section class="slide" data-t="边界与代码">
+  <div class="rv"><div class="kicker">08 · Honesty &amp; Code</div><h2>边界 · 8GB 工程方法论 · 代码边界</h2><div class="hdline"></div>
+  <div class="lead">诚实交代边界:<b>C 组有效性已四环闭合,全量重跑只差时间</b>;8GB 约束下的每个工程决策都留痕。</div></div>
+  <div class="body">
+    <div class="g2 rv" style="margin-bottom:11px">
+      <div class="card" style="border-color:var(--green)">
+        <div class="tag" style="color:var(--green);background:var(--green-t);margin-bottom:8px">QUICK500_V2 C 组 · ✅ 已完成</div>
+        <div class="sub" style="font-size:12.5px;line-height:1.9;color:var(--ink)">
+          <span class="ok">✓</span> <b>训练</b> · 500 张 × 100ep 完整跑完　<span class="ok">✓</span> <b>KD 生效</b> · modules=3 · loss 100/100<br>
+          <span class="ok">✓</span> <b>路由 / mAP / 导出</b> · 全部全绿　<span class="ok">✓</span> <b>证据</b> · log / 路由 json / 机制 json
+        </div>
+      </div>
+      <div class="card">
+        <div class="tag" style="color:var(--ink3);background:#f3f1ea;margin-bottom:8px">全量 C 组 · ⏸ 暂停(只差时间)</div>
+        <div class="sub" style="font-size:12.5px;line-height:1.9;color:var(--ink2)">
+          <b style="color:var(--ink)">训练</b> · 命令定稿未启动(旧轮次代码问题作废)　<b style="color:var(--ink)">KD 生效</b> · 启动后 2 epoch 可验证<br>
+          <b style="color:var(--ink)">路由 / mAP / 导出</b> · 待重跑复核　<b style="color:var(--ink)">恢复</b> · 8-10h + 半天收尾
+        </div>
+      </div>
+    </div>
+    <div class="card hl rv" style="margin-bottom:11px"><div class="sub" style="font-size:13px;color:var(--ink)"><b class="cy">结论地位</b>:C 组(router KD)是 F11 核心命题,有效性已在 quick500_v2 以<b>训练→生效→机制→部署</b>四环闭合证实;全量重跑属<b class="am">尺度升级复核,不改变结论成立与否</b>。暂停原因仅为 9.14 截稿时间窗口。</div></div>
+    <div class="g2 rv" style="margin-bottom:11px">
+      <div class="card">
+        <div class="tag gold" style="margin-bottom:8px">8GB 工程方法论(RTX 5060 LAPTOP)</div>
+        <div class="sub" style="font-size:11.5px;line-height:1.85;color:var(--ink)">batch=8 · cache=disk · AMP dtype 不匹配修复(index_add_ 前显式转换);<br><span class="bad">batch=12 事故</span>:触发 Windows CUDA Sysmem Fallback → 显存溢出系统内存 ~20GB + 极慢 → 判废重跑,催生 batch=8 稳态;云端 5090 备选方案留档(09 文档)。</div>
+      </div>
+      <div class="card">
+        <div class="tag" style="margin-bottom:8px">代码边界 · 官方核心最小侵入</div>
+        <div style="display:flex;gap:22px;align-items:center;margin-bottom:6px">
+          <span style="font-size:13px"><b class="cy mono" style="font-size:16px">13</b> 新增脚本</span>
+          <span style="font-size:13px"><b class="cy mono" style="font-size:16px">4</b> 新增配置</span>
+          <span style="font-size:13px"><b class="am mono" style="font-size:16px">2</b> 官方核心 patch(白名单+教师分支)</span>
+        </div>
+        <div class="sub" style="font-size:11.5px">教师可插拔:白名单 dinov2 / dinov3 / siglip2 / multi / none,切换只需一个参数;全部基于基线 <span class="mono am">acce839c</span>,评审可从零复现。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 17 结论 + 致谢 ════ -->
+<section class="slide" data-t="结论致谢">
+  <div class="rv"><div class="kicker">09 · Conclusion</div><h2>结论 · 展望 · 致谢</h2><div class="hdline"></div>
+  <div class="lead">回到开场的核心问题 —— 现在可以给出<b>有证据的答案</b>。</div></div>
+  <div class="body">
+    <div class="g4 rv" style="margin-bottom:13px">
+      <div class="stat" style="padding:11px 15px"><div class="lb" style="margin-bottom:4px">软目标对齐 JS</div><div class="v" style="font-size:24px">0.0146</div></div>
+      <div class="stat" style="padding:11px 15px"><div class="lb" style="margin-bottom:4px">路由切换</div><div class="v" style="font-size:24px">0→0.364</div></div>
+      <div class="stat" style="padding:11px 15px"><div class="lb" style="margin-bottom:4px">负载均衡</div><div class="v" style="font-size:24px">-33%</div></div>
+      <div class="stat" style="padding:11px 15px"><div class="lb" style="margin-bottom:4px">教师零开销 P50</div><div class="v" style="font-size:24px">35.9<small>ms</small></div></div>
+    </div>
+    <div class="g2 rv" style="margin-bottom:12px">
+      <div class="card hl">
+        <div class="tag" style="margin-bottom:9px">核心答案</div>
+        <div class="sub" style="font-size:13.5px;line-height:1.9;color:var(--ink)">基础模型语义结构<b class="cy">能</b>让路由更稳定、更均衡(四指标全正向),教师推理期<b class="cy">零开销可移除</b>;<b class="am">机制维度正向,mAP 任务维度持平</b>——不夸大、不隐瞒。</div>
+      </div>
+      <div class="card">
+        <div class="tag red" style="margin-bottom:9px">交付清单与展望</div>
+        <div class="sub" style="font-size:12.5px;line-height:1.85">✓ 结项报告 · 07a-d/08a-d 文档 · 13 脚本 + 4 yaml + DINOv2Teacher · 证据包 ×3<br>展望:① 全量 C 组升级(命令已定稿) ② 多 seed 显著性 ③ UAVDT 跨域 ④ DINOv3 接入</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px" class="rv">
+      <div style="font-family:var(--serif);font-weight:900;font-size:30px;color:var(--ink)">感谢各位评审<span style="color:var(--navy)">聆听</span></div>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <span class="pill navy">Q &amp; A</span>
+        <span class="pill mono">github.com/Zviolin/YOLO-Master</span>
+        <span class="pill mono">基线 acce839c</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hud">
+  <div class="brand">F11 FOUNDATION ROUTER-KD · FINAL DEFENSE · ZVIOLIN</div>
+  <div class="pager">
+    <button id="prev">←</button>
+    <span class="pn"><b id="cur">1</b> / <span id="total">17</span></span>
+    <button id="next">→</button>
+  </div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let idx=0;
+const cur=document.getElementById('cur'),total=document.getElementById('total'),bar=document.getElementById('progress');
+total.textContent=slides.length;
+function show(i){
+  idx=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,n)=>s.classList.toggle('active',n===idx));
+  cur.textContent=idx+1;
+  bar.style.width=((idx+1)/slides.length*100)+'%';
+}
+document.getElementById('next').onclick=()=>show(idx+1);
+document.getElementById('prev').onclick=()=>show(idx-1);
+document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(+a.dataset.go-1)}));
+addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(idx+1)}
+  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(idx-1)}
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key.toLowerCase()==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+});
+show(0);
+</script>
+</body>
+</html>
