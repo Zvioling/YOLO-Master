@@ -7,6 +7,9 @@
 ## ⏸ 全量 C 组重跑命令(已暂停,保留供结项后恢复)
 
 > 结项口径为 quick500_v2 同预算全链(见 07d);全量 C 组重跑需 ~3 天,结项后如需补跑直接执行下述命令。
+>
+> **2026-09-10 实况**:batch=12 首启触发 Windows CUDA Sysmem Fallback 判废;batch=8 试跑至 epoch 1 中段因系统内存受限中断(实测 ~46min/ep → 全量 ~3 天)。`c-router-kd-v2/` 目录仅存启动残留(args.yaml + last_healthy.pt 初始权重,**无 results.csv / last.pt,不可 `--resume`**)——恢复时先删除该目录,再全新启动下方命令。
+>
 > 参数:`batch=8 / workers=8`(8GB 实测稳态,与 A 组同预算);启动后前 2 epoch 确认 log 出现 `"foundation_router_distill": true` 和 `"foundation_teacher": "siglip2"`;中断续跑在命令末尾加 `--resume`。
 
 ```powershell
@@ -52,12 +55,14 @@ python scripts/cache_teacher_features.py --teacher dinov2_vitb14 --data "G:\Code
 
 ### T2R 真基线(51200 patches,~5 分钟,VisDrone + use_real_protos)
 
+> **实况注记(2026-09-12 磁盘实证)**:8/26 实际执行参数为 `--temperature 1.0 --smoothing_eps 0.1`(report.json config 为证),H_norm=0.8385(非坍塌 100% / 非均匀 89.9%),q_teacher.pt 此后未重新生成——9/8 修复位于训练侧(挂载接口 + router_temperature),quick500_v2 复用该软目标(见 06 §4.2 注记)。下方命令中的 τ=0.5/ε=0.0 为 smoke 验证过的修复参数,**结项后如重生成 q_teacher 可直接使用**。
+
 ```powershell
 Set-Location "G:\Codes\OpenSource\Rhino-bird\Practice\Code\YOLO-Master"
 
-# log:     experiments/f11_real_baseline/logs/real/t2_q_teacher/q_teacher_real.log
-# 产物:    experiments/f11_real_baseline/T2_q_teacher/{q_teacher.pt + entropy.csv + report.json}(H_norm=0.8385)|
-python scripts/gen_q_teacher.py --use_real_protos --cache experiments/f11_real_baseline/T1_teacher_cache --model ultralytics/cfg/models/master/v0_8/det/yolo-master-n.yaml --device cuda:0 --out experiments/f11_real_baseline/T2_q_teacher --n_experts 4 --expert_dim 768 --temperature 0.5 --smoothing_eps 0.0 2>&1 | Tee-Object -FilePath experiments/f11_real_baseline/logs/real/t2_q_teacher/q_teacher_real.log
+# log:     experiments/f11_real_baseline/logs/real/t2_q_teacher/q_teacher_real_051129.log
+# 产物:    experiments/f11_real_baseline/T2_q_teacher/{q_teacher.pt + entropy.csv + report.json}(H_norm=0.8385,τ 实况见上方注记)|
+python scripts/gen_q_teacher.py --use_real_protos --cache experiments/f11_real_baseline/T1_teacher_cache --model ultralytics/cfg/models/master/v0_8/det/yolo-master-n.yaml --device cuda:0 --out experiments/f11_real_baseline/T2_q_teacher --n_experts 4 --expert_dim 768 --temperature 0.5 --smoothing_eps 0.0 2>&1 | Tee-Object -FilePath experiments/f11_real_baseline/logs/real/t2_q_teacher/q_teacher_real_051129.log
 ```
 
 ---
@@ -86,7 +91,7 @@ epoch 100/100: task_loss=0.7195, kd_loss=0.0141, router_grad_norm=0.029582
 
 # ⑤ T4R — 三方对照真基线(A/B 全量)
 
-### T4R-A 真基线(A 组 100 epoch, ~8.7 h, 纯本地)
+### T4R-A 真基线(A 组 100 epoch, ~7.8 h, 纯本地)
 
 ```powershell
 Set-Location "G:\Codes\OpenSource\Rhino-bird\Practice\Code\YOLO-Master"

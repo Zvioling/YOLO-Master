@@ -73,10 +73,10 @@ G:\Codes\OpenSource\Rhino-bird\Backup\runs\real\t4_ablation\real_100ep\
 | **T0R.1** VisDrone 下载 | `python scripts/download_visdrone.py` | `scripts/download_visdrone.py` | `DATASETS/VisDrone/{images/{train,val,test}, VisDrone.yaml}` | train 6471 + val 548 + test 1610 张 | ✅ |
 | **T0R.2** yolo-master-n 在 VisDrone smoke | (内建 Python 1 句)| ultralytics | `runs/smoke/`(共用 smoke)| 已验 | ✅ |
 | **T1R** 真教师缓存 | `python scripts/cache_teacher_features.py --teacher dinov2_vitb14 --data VisDrone.yaml --num 200 --out experiments/f11_real_baseline/T1_teacher_cache` | `cache_teacher_features.py` | `experiments/f11_real_baseline/T1_teacher_cache/{manifest.json, meta.json, patches/200 个 patch.pt}` | num_cached=**200** / SHA256 全 | ✅ |
-| **T2R** 真 q_teacher | `python scripts/gen_q_teacher.py --use_real_protos --cache .../T1_teacher_cache --out experiments/f11_real_baseline/T2_q_teacher` | `gen_q_teacher.py` | `experiments/f11_real_baseline/T2_q_teacher/{q_teacher.pt, entropy.csv, report.json}` | q_teacher.pt **[51200, 4]** / H_norm=**0.8385** / use_real_protos=**true** | ✅ |
+| **T2R** 真 q_teacher | `python scripts/gen_q_teacher.py --use_real_protos --cache .../T1_teacher_cache --out experiments/f11_real_baseline/T2_q_teacher` | `gen_q_teacher.py` | `experiments/f11_real_baseline/T2_q_teacher/{q_teacher.pt, entropy.csv, report.json}` | q_teacher.pt **[51200, 4]** / H_norm=**0.8385** / use_real_protos=**true** / 实际执行 τ=1.0·ε=0.1(report.json,pass=false 未过当时判读线;修复与复用叙事见 06 §4.2 注记) | ✅ |
 | **T3R.1** Router KD 真基线 #1 | `python scripts/smoke_router_kd.py --epochs 100 --layers 1 --experts 2 --q_teacher_path .../T2_q_teacher/q_teacher.pt` | `smoke_router_kd.py` | `runs/real/t3_router_kd/smoke_report_real.json` + train.log | epoch 100/100 / KD=**0.0141** / Task=0.7195 / Router grad=**0.029582** / PASS | ✅ |
 | **T3R.2** Router KD 真基线 #2 | (同上,2026-08-27)| `smoke_router_kd.py` | `experiments/f11_real_baseline/logs/real/t3_router_kd/kd_real_#2_042002.log` | epoch 100/100 / KD=**0.0150** / Task=0.7150 / Router grad=**0.026710** / PASS | ✅ |
-| **T4R-A** a-baseline 6 份 × 100 epoch | `python scripts/compare_f11_ablation.py --train --groups a --epochs 100 --data VisDrone.yaml --batch 8` | `compare_f11_ablation.py` | `runs/real/t4_ablation/real_100ep/a-baseline/`(Backup 另存)| mAP50=0.3047 / mAP50-95=**0.1695** / 1.93GB / 8.7-9.0 h/run | ✅ |
+| **T4R-A** a-baseline 6 份 × 100 epoch | `python scripts/compare_f11_ablation.py --train --groups a --epochs 100 --data VisDrone.yaml --batch 8` | `compare_f11_ablation.py` | `runs/real/t4_ablation/real_100ep/a-baseline/`(Backup 另存)| mAP50=0.3047 / mAP50-95=**0.1695** / 1.93GB / ~7.8 h/run | ✅ |
 | **T4R-B** b-repr-kd 真基线 | `python scripts/compare_f11_ablation.py --train --groups b --epochs 100 --data VisDrone.yaml` | `compare_f11_ablation.py` | `runs/real/t4_ablation/real_100ep/b-repr-kd/` | mAP50=0.3016 / mAP50-95=**0.1695** / repr-KD 生效(foundation_loss 全程非零)| ✅ |
 | **T4R-C** c-router-kd | quick500_v2 同预算版(500 张 × 100ep,batch 8,τ=0.5)| `compare_f11_ablation.py` | `runs/quick500_v2/t4_ablation/c-router-kd/` | mAP50-95 best=**0.0502**(三组最高)/ **KD 生效**(modules=3,loss 100/100 非零)| ✅ |
 | **T4R-summary** | `python scripts/compare_f11_ablation.py --summary-only --project runs\real\t4_ablation\real_100ep` | `compare_f11_ablation.py` | `runs/real/t4_ablation/real_100ep/f11_ablation_summary.json` | 全量口径 a=0.1695 / b=0.1695 | ✅ |
@@ -89,9 +89,9 @@ G:\Codes\OpenSource\Rhino-bird\Backup\runs\real\t4_ablation\real_100ep\
 | **T6R.3** 跨域 | `scripts/convert_uavdt_to_yolo.py` 协议落盘 | `compare_f11_ablation.py` | 协议已落盘 | v2 设计:VisDrone 零重训 + UAVDT 目标域(classes=[3,5,8] 公共类)| ⏸ 待 UAVDT |
 | **T6R.4** 教师对比 | `python scripts/compare_f11_ablation.py --train --groups c --teacher dinov2 --name c-router-kd-dinov2 ...`(siglip2 侧同参)| `compare_f11_ablation.py` | `runs/quick500_v2/t6_extension/teacher_compare/{c-router-kd-dinov2, c-router-kd-siglip2}/` | DINOv2 vs SigLIP2 均 KD 生效;SigLIP2 开销减半 → **维持 siglip2** | ✅ 收口(2026-09-10) |
 | **T6R.5** 机制分析 | `python scripts/analyze_f11_mechanism.py --summary runs/quick500_v2/t4_ablation/f11_ablation_summary.json --routing runs/quick500_v2/t5_routing/routing_analysis_quick.json/routing_analysis.json --out runs/quick500_v2/t6_extension/mechanism/t6r5_mechanism_quick.json` | **`scripts/analyze_f11_mechanism.py`** | `runs/quick500_v2/t6_extension/mechanism/t6r5_mechanism_quick.json` | **5/5 PASS(KD 有效)**,详见 08d §8.7 | ✅ |
-| **T7R** 证据归档 | `python scripts/archive_evidence.py --output experiments/f11_real_baseline/evidence.tar.gz` | `archive_evidence.py` | `experiments/f11_real_baseline/evidence.tar.gz/`(内含 manifest + 摘要)| 3 次成功打包 | ✅ |
+| **T7R** 证据归档 | `python scripts/archive_evidence.py --output experiments/f11_real_baseline/evidence.tar.gz` | `archive_evidence.py` | `experiments/f11_real_baseline/evidence.tar.gz/`(目录,内含 manifest + 摘要)| 3 次归档执行(8/25-27,包内容为准入期证据);real/quick 证据以 runs/ + logs/ 落盘归档(§5.2)| ✅ |
 
-> **真基线完成度**:✅ 21/23 + ❌ 无有效数据 2(T6R.1/2)+ ⏸ 待 UAVDT 1(T6R.3);全量 C 组重跑暂停,结项口径为 quick500_v2(见 08a §6)。
+> **真基线完成度**:✅ 17/20(配对表逐项)+ ❌ 无有效数据 2(T6R.1/2)+ ⏸ 待 UAVDT 1(T6R.3);全量 C 组重跑暂停,结项口径为 quick500_v2(见 08a §6)。
 
 ---
 
@@ -117,8 +117,8 @@ G:\Codes\OpenSource\Rhino-bird\Backup\runs\real\t4_ablation\real_100ep\
 | `t4_ablation/` | `T4R_b_b12_w16_ram_20260830_131243.log` | **11,108 KB** | B 组完整训练主 log(100ep)|
 | `t4_ablation/` | `T4R_b_b16/b12/b12_w8_ram/resume_*.log` | 0-33 KB ×7 | B 组调参过程链 |
 | `t4_ablation/` | `T4R_summary_20260906_235521.log` | 1 KB | 三方 summary 重生成 |
-| `t5_routing/` | `T5R_routing_20260906_235417.log` | 1 KB | real 版路由分析(A 侧有效)|
-| `t5_student/` | `T5R_eval_20260906_235435.log` | 6 KB | 学生推理精度(0.0793/0.1555)|
+| `t5_routing/` | `T5R_routing_20260906_235417.log` | 1 KB | real 版路由分析(旧口径:A 侧有效,C 侧随 C-3 作废)|
+| `t5_student/` | `T5R_eval_20260906_235435.log` | 6 KB | 学生推理精度(0.0793/0.1555;旧口径,随 C-3 作废)|
 
 ## 5.2.3 T6R log(T6R.1/2/3/5)
 
@@ -217,9 +217,10 @@ python scripts/gen_q_teacher.py \
 |------|------|------|
 | q_teacher.pt | [N, E=4] | **[51200, 4]** |
 | H_norm mean | ∈ (0.3, 1.0) | **0.8385**(真原型分布更均匀,属预期)|
+| 非坍塌 / 非均匀 | > 90% / > 90% | **100% ✅ / 89.9%**(距阈差 0.1pp,如实披露)|
 | use_real_protos | ✅ | **true** |
 | entropy.csv | 每行一 patch | ✅ 51200 行 |
-| report.json | pass 字段 | ✅ pass=true |
+| report.json | pass 字段 | ⚠️ **pass=false**(8/26 实际执行 τ=1.0/ε=0.1,当时判读线 (0.3,0.8) 下未过;9/8 修复位于训练侧,q_teacher 未重新生成、quick500_v2 复用后 JS=0.0146 实证传递有效——完整叙事见 06 §4.2 注记)|
 
 ## B.6 真基线 T3 Router KD 训练
 

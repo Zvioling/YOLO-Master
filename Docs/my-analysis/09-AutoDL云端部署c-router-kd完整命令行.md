@@ -21,7 +21,7 @@
 | CPU | 25 核 Xeon Platinum 8470Q |
 | 内存 | 90 GB |
 | 系统盘 | 50 GB 数据盘 |
-| SSH | `ssh -p 26076 root@connect.westc.seetacloud.com`,密码 `<见 AutoDL 控制台>` |
+| SSH | `ssh -p 26076 root@connect.westc.seetacloud.com`,密码 <见 AutoDL 控制台>(已脱敏,不入库)|
 | 数据盘路径 | `/root/autodl-tmp/`(主用) |
 
 ---
